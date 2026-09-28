@@ -1,0 +1,139 @@
+{
+  "BRAND": "Granite Models Automations",
+  "BRAND_SHORT": "GMA",
+  "INBOX": "granitemodels@gmail.com",
+  "PHONE_DISPLAY": "(978) 647-3933",
+  "PHONE_E164": "+19786473933",
+  "WORKFLOW_BASE_PATH": "/workflow-automation",
+  "DOMAIN": "https://granitemodels.store",
+  "STEEL_SITE": "https://granitemodels.store/steel-estimating/",
+  "LOGO_ALT": "Granite Models Automations logo",
+  "LOGO_LOCKUP_PNG": "/assets/brand/gma-logo-clean.png",
+  "LOGO_LOCKUP_WEBP": "/assets/brand/gma-logo-clean.webp",
+  "LOGO_ICON": "/assets/brand/gma-icon-256.png",
+  "FAVICON_192": "/assets/brand/gma-icon-192.png",
+  "FAVICON_256": "/assets/brand/gma-icon-256.png",
+  "FAVICON_512": "/assets/brand/gma-icon-512.png",
+  "APPLE_TOUCH_ICON": "/assets/brand/gma-icon-192.png",
+  "WORKFLOW_MAP_PRICE": 249,
+  "ONE_WORKFLOW_BUILD_PRICE": 499,
+  "CONNECTED_WORKFLOWS_FROM": 1200,
+  "ADS_VIDEO_FROM": 99,
+  "LAUNCH": true,
+  "FORM_ENABLED": false,
+  "DELIVERY_REVIEW": "TODO-CONFIRM",
+  "LICENSED_IMAGES": {
+    "hero": "",
+    "heroAlt": ""
+  },
+  "PHOTOS": [
+    {
+      "id": "f01",
+      "alt": "A small-business owner at a desk late at night, with papers piled around a glowing laptop."
+    },
+    {
+      "id": "f31",
+      "alt": "A small-business owner working calmly at a laptop in a bright office."
+    },
+    {
+      "id": "f19",
+      "alt": "A small-business owner at a tidy desk with a laptop and organized papers."
+    },
+    {
+      "id": "f17",
+      "alt": "An owner at a whiteboard talking with two coworkers in an office."
+    },
+    {
+      "id": "f22",
+      "alt": "A shop owner on a shop floor, holding a binder and a tablet."
+    },
+    {
+      "id": "f07",
+      "alt": "A contractor in a hard hat on a jobsite, looking at plans."
+    },
+    {
+      "id": "f13",
+      "alt": "An HVAC technician on a commercial rooftop beside rooftop equipment."
+    },
+    {
+      "id": "f36",
+      "alt": "A tradesperson in a hard hat standing in a workshop."
+    },
+    {
+      "id": "f38",
+      "alt": "A small crew walking together outside a jobsite."
+    },
+    {
+      "id": "f08",
+      "alt": "A laptop on a desk showing a sample quote and proposal screen. The screen is labeled SAMPLE DATA and INTERNAL DEMONSTRATION."
+    }
+  ],
+  "DOCUMENT_PACKS": [
+    {
+      "group": "Document packs",
+      "name": "Document Synopsis",
+      "price": 79,
+      "url": "https://buy.stripe.com/14A6oHavcem94nBgApdZ60m"
+    },
+    {
+      "group": "Document packs",
+      "name": "Deep Extract + Q&A",
+      "price": 179,
+      "url": "https://buy.stripe.com/cNidR9dHoem9aLZ97XdZ60n"
+    },
+    {
+      "group": "Quote packs",
+      "name": "Quote Pack: Quote from Scope",
+      "price": 99,
+      "url": "https://buy.stripe.com/bJe28rdHo3Hv4nB1FvdZ60o"
+    },
+    {
+      "group": "Quote packs",
+      "name": "Quote Pack: Full Proposal",
+      "price": 249,
+      "url": "https://buy.stripe.com/5kQ7sLfPwce15rF0BrdZ60p"
+    },
+    {
+      "group": "Quote packs",
+      "name": "Quote Pack: Quote + Proposal Bundle",
+      "price": 399,
+      "url": "https://buy.stripe.com/3cIbJ11YGfqd6vJck9dZ60q"
+    },
+    {
+      "group": "Drawing packs",
+      "name": "Drawing Pack: Drawing Log (up to 50 sheets)",
+      "price": 149,
+      "url": "https://buy.stripe.com/6oUeVd1YGguhbQ397XdZ60r"
+    },
+    {
+      "group": "Drawing packs",
+      "name": "Drawing Pack: Conformed Set + Revision Log (up to 100 sheets)",
+      "price": 299,
+      "url": "https://buy.stripe.com/8x28wPfPw0vjdYbeshdZ60s"
+    },
+    {
+      "group": "Drawing packs",
+      "name": "Drawing Pack: Large or Rush Conformed Set",
+      "price": 499,
+      "url": "https://buy.stripe.com/4gMaEX1YGfqd8DRbg5dZ60t"
+    }
+  ],
+  "QUOTE_ONLY_PACKS": [
+    "Intake to deliverable",
+    "Business forms"
+  ],
+  "STEEL_ESTIMATE": [
+    {
+      "name": "Estimate packet, up to 8 sheets",
+      "price": 149,
+      "turnaround": "48 hours",
+      "url": "https://buy.stripe.com/dRmdR97j0a5Tf2f83TdZ60j"
+    },
+    {
+      "name": "Estimate packet, up to 20 sheets",
+      "price": 399,
+      "turnaround": "3 days",
+      "url": "https://buy.stripe.com/aFa7sLeLs7XL4nB6ZPdZ60k"
+    }
+  ]
+}

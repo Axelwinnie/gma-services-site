@@ -1,0 +1,27 @@
+{
+  "name": "Granite Models Automations",
+  "short_name": "GMA",
+  "icons": [
+    {
+      "src": "/assets/brand/gma-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/brand/gma-icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/brand/gma-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "display": "browser",
+  "background_color": "#0B1426",
+  "theme_color": "#0B1426"
+}

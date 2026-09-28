@@ -1,0 +1,35 @@
+# Launch static site for https://granitemodels.store.
+# LAUNCH is true, so pages are allowed to be indexed.
+# Static site for https://granitemodels.store on branch site-launch.
+# Leave Root Directory blank.
+# The prebuilt public/ directory is the site. Do not run scripts/build.mjs.
+# Build command: echo prebuilt. Publish directory: public.
+# Render serves public/404.html for unknown paths. Do not add a catch-all rewrite.
+services:
+  - type: web
+    name: gma-services
+    runtime: static
+    buildCommand: echo prebuilt
+    staticPublishPath: ./public
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /css/*
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /*.html
+        name: Cache-Control
+        value: no-cache
