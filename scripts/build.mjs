@@ -304,6 +304,7 @@ function homeMain() {
           ${card("Zapier and Make setup", "Connect the apps you already pay for. Map first, fixed price before you pay.", "/zapier-make-consultant/", false, "f17")}
           ${card("Contractor lead follow-up", "Missed-call text-back, one place for every new lead, and quote reminders while you are on the job.", "/contractor-lead-follow-up/", false, "f07")}
           ${card("Workflow Map", `A written plan for one process, ${mapPrice}. Three business days, one revision round, and you keep it.`, "/workflow-map/", false, "f31")}
+          ${card("Fab shop workflow map", `Where RFQs, quotes, and drawings get stuck in your shop, and what to fix first. ${mapPrice}.`, "/fabrication-shop-workflow-map/", false, "f36")}
           ${card("Trade office workflow setup", "Paperwork, handoffs, and follow-up for contractors, fabrication, and small offices.", "/trade-office-workflow/", false, "f22")}
           ${card("Websites, SEO and AEO", "Not offered yet.", "/websites-seo-aeo/", true)}
           ${card("Ads and video", `Short video ads for contractors and trades, from ${adsPrice}. People-and-workflow scenes, a voiceover, and branded cards.`, "/ads-video/", false, "f38")}
@@ -408,6 +409,7 @@ function workflowMain() {
       <h2>Pricing</h2>
       <p>Pricing starts at ${esc(mapPrice)}.</p>
       ${priceGrid()}
+      ${ladderFigure("pricing")}
       <p class="note">The turnaround starts once we have what we need from you (see "What you provide") and a start date is confirmed in writing. We take one build at a time, so we'll confirm your start date before you pay.</p>
     </div></section>
     <section class="section" id="includes"><div class="wrap">
@@ -548,6 +550,15 @@ function seoLandingPages() {
       crumbs: [["Workflow Map"]],
       main: workflowMapLandingMain(),
       jsonLd: seoFaqJsonLd("/workflow-map/", "Workflow Map", `A Workflow Map is a written plan for one process for ${mapPrice}. Three business days, one revision round, and you keep it.`, workflowMapFaqs()),
+    },
+    {
+      path: "/fabrication-shop-workflow-map/",
+      title: "Fabrication Shop Workflow Automation: RFQ and Quote Follow-Up Map",
+      description: `A ${mapPrice} Workflow Map for metal fab and steel shops. I map how RFQs, estimates, quotes, and drawings move through your shop, where they leak, and what to fix first.`,
+      active: "/fabrication-shop-workflow-map/",
+      crumbs: [["Workflow Map", "/workflow-map/"], ["Fab shop workflow map"]],
+      main: fabShopMapMain(),
+      jsonLd: seoFaqJsonLd("/fabrication-shop-workflow-map/", "Fabrication shop workflow map", `A Workflow Map for small metal fabrication and steel shops, ${mapPrice}. A written map of how RFQs, estimates, quotes, and drawings move through the shop, where work leaks, and ranked fixes.`, fabShopMapFaqs()),
     },
   ];
   return pages.map((item) => ({
@@ -735,6 +746,8 @@ function workflowMapLandingMain() {
         ${priceCard("One Workflow Build", buildPrice, "7 business days", ["1 trigger, up to 5 steps, up to 2 apps", "Built in your accounts", "Human approval before customer-facing output", "14-day fix window"], "Ask about a Build", "/contact/", false)}
       </div>
       <p>Connected Workflows, from ${esc(connectedPrice)}, covers up to 3 workflows and 4 apps when one build is not enough. See <a href="/#pricing">pricing</a>.</p>
+      <h2>From Map to Build</h2>
+      ${ladderFigure("map")}
       <h2>What I need from you</h2>
       <ul>
         <li>What comes in.</li>
@@ -746,6 +759,8 @@ function workflowMapLandingMain() {
       </ul>
       <h2>What happens next</h2>
       <p>You get the Map in three business days (clock starts once your inputs are in). Then you can hire me to build it at the quoted price, or build it yourself. Either way, the Map is yours.</p>
+      <h2>Fab and steel shops</h2>
+      <p>If you run a fab or steel shop, read the <a href="/fabrication-shop-workflow-map/">fabrication shop workflow map</a>. It walks through RFQs, estimates, quote follow-up, and the handoff to the floor.</p>
       <h2>Sample outline (fictional)</h2>
       <p>This is a minimal fictional outline, not a client file and not a real Map.</p>
       <ul>
@@ -761,6 +776,133 @@ function workflowMapLandingMain() {
     ${landingCta()}`;
 }
 
+
+function fabShopMapFaqs() {
+  return [
+    {
+      q: "Do I have to change my estimating software?",
+      a: "No. The Map works from what you use now, spreadsheets included. If a change is worth it, I'll say so and tell you why.",
+    },
+    {
+      q: "Will anything go to my customers without me seeing it?",
+      a: "No. A person checks quotes, follow-ups, and anything else a customer sees before it goes out. Your pricing stays with you.",
+    },
+    {
+      q: "Do you need our drawings?",
+      a: "Only a few examples, and redacted or sample files are fine. Files are used for your job only and deleted 30 days after handoff. I never ask for passwords.",
+    },
+    {
+      q: "What if I only want the Map?",
+      a: "That's fine. You keep it. Build the fixes yourself, with me, or with someone else.",
+    },
+  ];
+}
+
+function fabShopMapMain() {
+  const faqs = fabShopMapFaqs();
+  return `
+    <article class="section"><div class="wrap">
+      ${photoFigure("f36", "page-banner", "(max-width: 780px) 100vw, 72rem")}
+      <h1>Find where RFQs and quotes leak in your fab shop</h1>
+      <p class="lede">RFQs come in by email, phone, and PDF. Estimates live in spreadsheets. Quotes go out and nobody follows up. For ${esc(mapPrice)} I'll map how work moves through your shop, from the first RFQ to the job on the floor, and show you where it leaks and what to fix first.</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <p>I come out of steel and fab work, and I build <a href="${esc(steelPath)}">steel estimate packets</a> from drawings. I know how an RFQ actually moves through a shop, and where it stalls.</p>
+      <h2>Where work leaks in a fab shop</h2>
+      <div class="points">
+        ${point("01", "RFQs everywhere", "They come in by email, phone, and PDF attachments. Some get logged. Others sit in one inbox until they go stale.")}
+        ${point("02", "Estimates in spreadsheets", "Each estimator keeps their own version. When a customer calls back, nobody can find the last quote.")}
+        ${point("03", "Quotes nobody chases", "The quote goes out and that's it. No reminder, no follow-up call, and the job goes to whoever called back first.")}
+        ${point("04", "Rough handoff to the floor", "You win the job, then the details get retyped or walked out to the shop. Things get missed between the office and the floor.")}
+        ${point("05", "Chasing drawings", "Approved drawings, revisions, the current rev. Somebody ends up on the phone just to get the right set.")}
+      </div>
+      <h2>What the Map is</h2>
+      <p>It's a written map of how work moves through your shop today. RFQ in, takeoff and estimate, quote out, follow-up, then the handoff to the floor once you win it. I mark every spot where work stalls, gets retyped, or drops. Then I rank the fixes, biggest leak first.</p>
+      <p>Pricing, scope calls, and anything your customer sees stay with you. I don't touch your numbers.</p>
+      <p>Your ERP or shop software stays. The Map looks at what it already does before I suggest anything new.</p>
+      <h2>What you get</h2>
+      <ul>
+        <li>A 30 to 45 minute intake call, or a written questionnaire if you'd rather.</li>
+        <li>A written map of how an RFQ moves through your shop, from the first email to the job on the floor.</li>
+        <li>Every spot where work stalls or drops, marked on the map.</li>
+        <li>Ranked fixes. Which steps to automate, which stay human, and why.</li>
+        <li>Tool options with each vendor's published price. You check before buying.</li>
+        <li>A fixed price to build the top fix.</li>
+        <li>One revision round. The Map is yours to keep.</li>
+      </ul>
+      <p>Three business days once your inputs are in.</p>
+      <h2>Price</h2>
+      <p>The Workflow Map is ${esc(mapPrice)}, fixed. I confirm it's a fit by email first, then send a Stripe payment link. Nothing is charged before that. You keep the Map whether or not you hire me to build anything.</p>
+      <h2>From Map to Build</h2>
+      ${ladderFigure("fab")}
+      <p>If the top fix is one workflow, say every RFQ logged in one place with a reminder to the estimator, that's a One Workflow Build at ${esc(buildPrice)}. It covers 1 trigger, up to 5 steps, and up to 2 apps.</p>
+      <p>If the fixes tie together, like RFQ intake feeding quote follow-up feeding the job handoff, that's Connected Workflows, from ${esc(connectedPrice)}. It covers up to 3 workflows and 4 apps. You get a fixed price in writing before you pay for either. See <a href="/#pricing">pricing</a>.</p>
+      <h2>Your drawings and files</h2>
+      <p>Send a few examples. Redacted or sample files are fine. Your files are used for your job only and deleted 30 days after handoff. I'll sign a reasonable mutual NDA if you want one, and I never ask for passwords. Read the <a href="/file-retention-policy/">file retention policy</a>.</p>
+      <h2>Start with one RFQ</h2>
+      <p>Send me one RFQ the way it came in, redacted is fine, plus a line on who touches it after that. I'll tell you if the Map fits.</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+    </div></article>
+    ${faqSection(faqs)}
+    ${landingCta()}`;
+}
+
+function ladderSteps() {
+  return [
+    { label: "STEP 1", name: "Workflow Map", from: "", price: mapPrice, text: "Written plan of where work leaks" },
+    { label: "STEP 2", name: "One Workflow Build", from: "", price: buildPrice, text: "One fix built in your tools" },
+    { label: "STEP 3", name: "Connected Workflows", from: "from ", price: connectedPrice, text: "Up to 3 linked workflows" },
+  ];
+}
+
+function ladderSummary() {
+  return ladderSteps().map((item) => `${item.name}, ${item.from}${item.price}. ${item.text}.`).join(" Then ");
+}
+
+function ladderPrice(item, x, y, size) {
+  const from = item.from ? `<tspan font-size="${Math.round(size * 0.5)}" font-weight="700" fill="#c5d0df">${esc(item.from)}</tspan>` : "";
+  return `<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" font-weight="800" fill="#ff7a18">${from}${esc(item.price)}</text>`;
+}
+
+function ladderBox(item, index, x, y, w, h, scale) {
+  const cx = x + w / 2;
+  const stroke = index === 0 ? "#ff7a18" : "#2a3d58";
+  return `<g>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#121c2f" stroke="${stroke}" stroke-width="2"/>
+      <text x="${cx}" y="${y + scale.label}" text-anchor="middle" font-size="13" font-weight="800" letter-spacing="1.5" fill="#ffc48a">${esc(item.label)}</text>
+      <text x="${cx}" y="${y + scale.name}" text-anchor="middle" font-size="22" font-weight="800" fill="#f4f7fb">${esc(item.name)}</text>
+      ${ladderPrice(item, cx, y + scale.price, scale.priceSize)}
+      <text x="${cx}" y="${y + scale.text}" text-anchor="middle" font-size="${scale.textSize}" fill="#c5d0df">${esc(item.text)}</text>
+    </g>`;
+}
+
+function ladderFigure(prefix) {
+  const steps = ladderSteps();
+  const summary = ladderSummary();
+  const wideScale = { label: 40, name: 78, price: 128, priceSize: 36, text: 168, textSize: 16 };
+  const wide = steps.map((item, i) => ladderBox(item, i, 10 + i * 330, 10, 280, 190, wideScale)).join("");
+  const wideArrows = [0, 1].map((i) => {
+    const x = 296 + i * 330;
+    return `<path d="M${x} 105 H${x + 26}" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/><polygon points="${x + 24},96 ${x + 38},105 ${x + 24},114" fill="#ff7a18"/>`;
+  }).join("");
+  const tallScale = { label: 32, name: 64, price: 106, priceSize: 34, text: 138, textSize: 17 };
+  const tall = steps.map((item, i) => ladderBox(item, i, 10, 10 + i * 195, 340, 155, tallScale)).join("");
+  const tallArrows = [0, 1].map((i) => {
+    const y = 170 + i * 195;
+    return `<path d="M180 ${y} V${y + 20}" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/><polygon points="171,${y + 18} 180,${y + 32} 189,${y + 18}" fill="#ff7a18"/>`;
+  }).join("");
+  const svgOpen = (id, cls, viewBox, width, height) => `<svg class="${cls}" xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${width}" height="${height}" role="img" aria-labelledby="${id}-title ${id}-desc" font-family="Segoe UI, system-ui, -apple-system, sans-serif">
+      <title id="${id}-title">From Map to Build</title>
+      <desc id="${id}-desc">${esc(summary)}</desc>`;
+  return `<figure class="ladder">
+    ${svgOpen(`${prefix}-ladder-wide`, "ladder-wide", "0 0 960 210", 960, 210)}
+      ${wide}${wideArrows}
+    </svg>
+    ${svgOpen(`${prefix}-ladder-tall`, "ladder-tall", "0 0 360 560", 360, 560)}
+      ${tall}${tallArrows}
+    </svg>
+    <figcaption>Start with the Map. Build only what it says is worth building.</figcaption>
+  </figure>`;
+}
 
 function solutionPages() {
   const pages = [
@@ -822,6 +964,7 @@ function solutionPages() {
       demoName: "Trade office demo",
       photo: "f22",
       gallery: ["f07", "f13", "f36"],
+      extra: `<p>Fab and steel shops can start with the <a href="/fabrication-shop-workflow-map/">fabrication shop workflow map</a>. It covers RFQs, quote follow-up, and the handoff to the floor.</p>`,
     },
     {
       path: "/custom-workflow-systems/",
@@ -1455,6 +1598,7 @@ ${banner}  <header class="site-header">
             ${drop("/contractor-lead-follow-up/", "Contractor lead follow-up")}
             ${drop("/zapier-make-consultant/", "Zapier and Make consultant")}
             ${drop("/workflow-map/", "Workflow Map")}
+            ${drop("/fabrication-shop-workflow-map/", "Fab shop workflow map")}
             ${drop("/trade-office-workflow/", "Trade office workflow setup")}
             ${drop("/ai-document-packs/", "AI document and business packs")}
             ${drop("/custom-workflow-systems/", "Custom business workflow systems")}
@@ -1486,6 +1630,7 @@ ${banner}  <header class="site-header">
         <ul class="footer-links">
           <li><a href="${base}/">Workflow setup</a></li>
           <li><a href="/workflow-map/">Workflow Map</a></li>
+          <li><a href="/fabrication-shop-workflow-map/">Fab shop workflow map</a></li>
           <li><a href="/zapier-make-consultant/">Zapier and Make</a></li>
           <li><a href="/contractor-lead-follow-up/">Contractor lead follow-up</a></li>
           <li><a href="/websites-seo-aeo/">Websites, SEO and AEO</a></li>
