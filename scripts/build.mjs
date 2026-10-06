@@ -102,6 +102,8 @@ writePage(`${base}/demo/`, page({
 for (const item of solutionPages()) writePage(item.path, page(item.page));
 for (const item of demoPages()) writePage(item.path, page(item.page));
 
+for (const item of seoLandingPages()) writePage(item.path, page(item.page));
+
 writePage("/websites-seo-aeo/", page({
   title: "Websites, SEO and AEO",
   description: "Not offered yet. Write through the contact page.",
@@ -299,6 +301,9 @@ function homeMain() {
           ${card("Quote and proposal automation", "Turn client information into organized quotes and proposals.", "/quote-proposal-automation/")}
           ${card("Document intake and processing", "Turn incoming documents into summaries, extracted fields, and checklists a person can review.", "/document-intake/", false, "f19")}
           ${card("Lead follow-up and booking", "Sort new inquiries and draft follow-ups so they do not sit until someone has time.", "/lead-follow-up/", false, "f31")}
+          ${card("Zapier and Make setup", "Connect the apps you already pay for. Map first, fixed price before you pay.", "/zapier-make-consultant/", false, "f17")}
+          ${card("Contractor lead follow-up", "Missed-call text-back, one place for every new lead, and quote reminders while you are on the job.", "/contractor-lead-follow-up/", false, "f07")}
+          ${card("Workflow Map", `A written plan for one process, ${mapPrice}. Three business days, one revision round, and you keep it.`, "/workflow-map/", false, "f31")}
           ${card("Trade office workflow setup", "Paperwork, handoffs, and follow-up for contractors, fabrication, and small offices.", "/trade-office-workflow/", false, "f22")}
           ${card("Websites, SEO and AEO", "Not offered yet.", "/websites-seo-aeo/", true)}
           ${card("Ads and video", `Short video ads for contractors and trades, from ${adsPrice}. People-and-workflow scenes, a voiceover, and branded cards.`, "/ads-video/", false, "f38")}
@@ -514,6 +519,249 @@ function workflowMain() {
     </div></section>`;
 }
 
+
+function seoLandingPages() {
+  const pages = [
+    {
+      path: "/zapier-make-consultant/",
+      title: "Zapier and Make Consultant for Small Business",
+      description: "Zapier and Make setup done for you. I map one process, give you a fixed price, and build it in the tools you already pay for.",
+      active: "/zapier-make-consultant/",
+      crumbs: [["Zapier and Make consultant"]],
+      main: zapierMakeMain(),
+      jsonLd: seoFaqJsonLd("/zapier-make-consultant/", "Zapier and Make setup", `Zapier and Make setup for small businesses. Workflow Map ${mapPrice}, One Workflow Build from ${buildPrice}.`, zapierMakeFaqs()),
+    },
+    {
+      path: "/contractor-lead-follow-up/",
+      title: "Lead Follow-Up and CRM Automation for Contractors",
+      description: "Stop losing jobs to missed calls and slow quotes. Follow-up that runs while you are on the job, and you approve every message first.",
+      active: "/contractor-lead-follow-up/",
+      crumbs: [["Contractor lead follow-up"]],
+      main: contractorLeadMain(),
+      jsonLd: seoFaqJsonLd("/contractor-lead-follow-up/", "Contractor lead follow-up", "Lead follow-up and CRM automation for contractors. Missed-call text-back, one place for every new lead, and quote reminders.", contractorLeadFaqs()),
+    },
+    {
+      path: "/workflow-map/",
+      title: "Workflow Map ($249): A Fixed-Price Plan Before You Automate",
+      description: `Map one process for ${mapPrice} before you build anything. Steps, what stays human, and a fixed price to build it. Three business days, one revision round.`,
+      active: "/workflow-map/",
+      crumbs: [["Workflow Map"]],
+      main: workflowMapLandingMain(),
+      jsonLd: seoFaqJsonLd("/workflow-map/", "Workflow Map", `A Workflow Map is a written plan for one process for ${mapPrice}. Three business days, one revision round, and you keep it.`, workflowMapFaqs()),
+    },
+  ];
+  return pages.map((item) => ({
+    path: item.path,
+    page: {
+      title: item.title,
+      description: item.description,
+      path: item.path,
+      active: item.active,
+      crumbs: item.crumbs,
+      main: item.main,
+      jsonLd: item.jsonLd,
+    },
+  }));
+}
+
+function seoFaqJsonLd(path, serviceName, serviceDescription, faqs) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      orgNode(),
+      {
+        "@type": "Service",
+        "@id": `${domain}${path}#service`,
+        name: serviceName,
+        description: serviceDescription,
+        provider: { "@id": `${domain}/#org` },
+        url: `${domain}${path}`,
+        offers: {
+          "@type": "Offer",
+          name: "Workflow Map",
+          price: Number(config.WORKFLOW_MAP_PRICE).toFixed(2),
+          priceCurrency: "USD",
+          url: `${domain}/contact/`,
+        },
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${domain}${path}#faq`,
+        mainEntity: faqs.map((item) => ({
+          "@type": "Question",
+          name: item.q,
+          acceptedAnswer: { "@type": "Answer", text: item.a },
+        })),
+      },
+    ],
+  };
+}
+
+function faqSection(faqs) {
+  return `<section class="section" id="faq"><div class="wrap">
+    <h2>FAQ</h2>
+    ${faqs.map((item) => `<h3>${esc(item.q)}</h3><p>${esc(item.a)}</p>`).join("\n")}
+  </div></section>`;
+}
+
+function landingCta() {
+  return `<section class="section" id="request"><div class="wrap">
+    <h2>Request a Workflow Map</h2>
+    <p>Three lines is enough: what comes in, what should come out, and who touches it today. Nothing is charged until you approve a fixed price.</p>
+    <p class="btn-row"><a class="btn" href="/contact/" data-cta-id="request-map">Request a Workflow Map</a></p>
+    ${contactBlock()}
+    <p>Also see the <a href="/workflow-map/">Workflow Map</a> page and <a href="/#pricing">pricing</a> on the home page.</p>
+  </div></section>`;
+}
+
+function zapierMakeFaqs() {
+  return [
+    {
+      q: "Do I need to pay for Zapier or Make myself?",
+      a: "Yes. You keep your own Zapier or Make subscription, paid to the vendor. I set the workflow up in your accounts. I do not sell those subscriptions.",
+    },
+    {
+      q: "Do you need my passwords?",
+      a: "No. Access is through your tool's own invite or sharing feature. I never ask for passwords.",
+    },
+    {
+      q: "Who owns the workflow?",
+      a: "You do. It lives in your accounts. At handoff I ask you to remove my access.",
+    },
+  ];
+}
+
+function contractorLeadFaqs() {
+  return [
+    {
+      q: "Will it text my customers without me knowing?",
+      a: "No. You approve the wording first. A person checks anything that goes to a customer before it goes out.",
+    },
+    {
+      q: "Do I need a new CRM?",
+      a: "Not usually. The Workflow Map says whether your current tools can carry the follow-up, or whether a change is worth it.",
+    },
+    {
+      q: "What does it cost monthly?",
+      a: "There is no monthly fee from Granite Models Automations. You only keep paying for the tools you already use.",
+    },
+  ];
+}
+
+function workflowMapFaqs() {
+  return [
+    {
+      q: "What do you need from me?",
+      a: "What comes in, what should come out, and who touches it today. One named person who can approve outputs, and 3 to 5 examples (redacted or made-up is fine).",
+    },
+    {
+      q: "What happens after the Map?",
+      a: "You can hire me to build it at the quoted fixed price, or build it yourself from the plan. You keep the Map either way.",
+    },
+    {
+      q: "Can I get a refund?",
+      a: "Full refund if you cancel before kickoff. After kickoff, a full refund only if I cannot deliver what the signed scope describes, even after the included revision round. See the refund policy page for the full rules.",
+    },
+  ];
+}
+
+function zapierMakeMain() {
+  const faqs = zapierMakeFaqs();
+  return `
+    <article class="section"><div class="wrap">
+      ${photoFigure("f17", "page-banner", "(max-width: 780px) 100vw, 72rem")}
+      <h1>Zapier and Make setup, done for you</h1>
+      <p class="lede">If your apps don't talk to each other, I'll connect them. Tell me what comes in and what should come out, and I'll map it and give you a fixed price before you pay anything.</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <h2>What I build</h2>
+      <p>These are examples of the kind of setup, not client work and not results from a named business.</p>
+      <ul>
+        <li><strong>Example:</strong> a form entry goes to your CRM, then a follow-up email is drafted for you to approve.</li>
+        <li><strong>Example:</strong> an invoice marked paid creates a project in the tool you already use.</li>
+        <li><strong>Example:</strong> a new lead triggers a text draft and a calendar hold for you to confirm.</li>
+      </ul>
+      <h2>Zapier or Make?</h2>
+      <p>Both connect apps. Which one fits depends on the apps you already pay for, how many steps you need, and the plan price at your volume. Sometimes neither, if your current app already does the handoff. I have not published a long platform list. The <a href="/workflow-map/">Workflow Map</a> picks the path for your process.</p>
+      <h2>Pricing</h2>
+      <p>Quoted before you pay. Scope for a One Workflow Build: 1 trigger, up to 5 steps, up to 2 apps.</p>
+      ${priceGrid()}
+      <p>See <a href="/#pricing">pricing</a> on the home page for the same tiers.</p>
+      <h2>How it works</h2>
+      ${stepsHtml()}
+      <p><a href="/how-it-works/">Read the full steps</a></p>
+    </div></article>
+    ${faqSection(faqs)}
+    ${landingCta()}`;
+}
+
+function contractorLeadMain() {
+  const faqs = contractorLeadFaqs();
+  return `
+    <article class="section"><div class="wrap">
+      ${photoFigure("f07", "page-banner", "(max-width: 780px) 100vw, 72rem")}
+      <h1>Stop losing jobs to missed calls and slow quotes</h1>
+      <p class="lede">When you can't pick up, most people don't leave a message. They call the next contractor. I set up follow-up that runs while you're on the job, and you approve every message first.</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <h2>Three problems, three fixes</h2>
+      <div class="points">
+        ${point("01", "Missed call text-back", "When a call goes unanswered, a draft text is ready for you to approve so the lead does not vanish.")}
+        ${point("02", "One place for every new lead", "Web forms, voicemail, and inbox inquiries land in one list you can work from.")}
+        ${point("03", "Quote follow-up reminders", "After you send a quote, reminders draft the next nudge so it does not depend on memory.")}
+      </div>
+      <h2>Works with what you have</h2>
+      <p>I build in the CRM or apps you already pay for. I have not published a platform list. The Map checks what your tools can already do. For the general version of this offer, see <a href="/lead-follow-up/">lead follow-up and booking</a>.</p>
+      <h2>Pricing</h2>
+      <p>Start with a Workflow Map at ${esc(mapPrice)}. A One Workflow Build is ${esc(buildPrice)}. Connected Workflows start from ${esc(connectedPrice)}.</p>
+      ${priceGrid()}
+      <p><a href="/#pricing">Full pricing</a> on the home page. Or begin with a <a href="/workflow-map/">Workflow Map</a>.</p>
+      <h2>Want a video ad too?</h2>
+      <p>Short video ads for contractors and trades, from ${esc(adsPrice)}. See <a href="/ads-video/">ads and video</a>.</p>
+    </div></article>
+    ${faqSection(faqs)}
+    ${landingCta()}`;
+}
+
+function workflowMapLandingMain() {
+  const faqs = workflowMapFaqs();
+  return `
+    <article class="section"><div class="wrap">
+      ${photoFigure("f31", "page-banner", "(max-width: 780px) 100vw, 72rem")}
+      <h1>Map one process for ${esc(mapPrice)} before you build anything</h1>
+      <p class="lede">A Workflow Map is a written plan for one process: the steps, what stays human, and a fixed price to build it. Three business days, one revision round, and you keep it.</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <h2>Map vs build</h2>
+      <div class="price-grid">
+        ${priceCard("Workflow Map", mapPrice, "3 business days", ["Written plan for one process", "What stays human", "Fixed price to build it", "1 revision round", "You keep the document"], "Start with a Map", "/contact/", true)}
+        ${priceCard("One Workflow Build", buildPrice, "7 business days", ["1 trigger, up to 5 steps, up to 2 apps", "Built in your accounts", "Human approval before customer-facing output", "14-day fix window"], "Ask about a Build", "/contact/", false)}
+      </div>
+      <p>Connected Workflows, from ${esc(connectedPrice)}, covers up to 3 workflows and 4 apps when one build is not enough. See <a href="/#pricing">pricing</a>.</p>
+      <h2>What I need from you</h2>
+      <ul>
+        <li>What comes in.</li>
+        <li>What should come out.</li>
+        <li>Who touches it today.</li>
+        <li>One named person who can approve outputs.</li>
+        <li>3 to 5 examples (redacted or made-up is fine).</li>
+        <li>The list of tools you already pay for.</li>
+      </ul>
+      <h2>What happens next</h2>
+      <p>You get the Map in three business days (clock starts once your inputs are in). Then you can hire me to build it at the quoted price, or build it yourself. Either way, the Map is yours.</p>
+      <h2>Sample outline (fictional)</h2>
+      <p>This is a minimal fictional outline, not a client file and not a real Map.</p>
+      <ul>
+        <li>Trigger: new form entry.</li>
+        <li>Steps: log the inquiry, draft a reply, wait for your approval.</li>
+        <li>Stays human: the reply text and any price you quote.</li>
+        <li>Build price on the Map: a fixed number for your stack, quoted before you pay.</li>
+      </ul>
+      <h2>Refunds</h2>
+      <p>Full refund if you cancel before kickoff. After kickoff, a full refund only if I cannot deliver what the signed scope describes, even after the included revision round. Scope changes you request, and long delays on your side, are not refundable. Read the <a href="/refund-policy/">refund policy</a>.</p>
+    </div></article>
+    ${faqSection(faqs)}
+    ${landingCta()}`;
+}
+
+
 function solutionPages() {
   const pages = [
     {
@@ -558,6 +806,7 @@ function solutionPages() {
       demoHref: "/demos/lead-follow-up/",
       demoName: "Lead follow-up demo",
       photo: "f31",
+      extra: `<p>Contractors who lose jobs to missed calls can also read the <a href="/contractor-lead-follow-up/">contractor lead follow-up</a> page. Start with a <a href="/workflow-map/">Workflow Map</a> if you want the plan first. See <a href="/#pricing">pricing</a> on the home page.</p>`,
     },
     {
       path: "/trade-office-workflow/",
@@ -645,6 +894,7 @@ function solutionMain(item) {
       <h2>Demo</h2>
       ${demoBanner()}
       <p><a href="${esc(item.demoHref)}">${esc(item.demoName)}</a></p>
+      ${item.extra || ""}
       <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
     </div></article>`;
 }
@@ -1202,6 +1452,9 @@ ${banner}  <header class="site-header">
             ${drop("/quote-proposal-automation/", "Quote and proposal automation")}
             ${drop("/document-intake/", "Document intake and processing")}
             ${drop("/lead-follow-up/", "Lead follow-up and booking")}
+            ${drop("/contractor-lead-follow-up/", "Contractor lead follow-up")}
+            ${drop("/zapier-make-consultant/", "Zapier and Make consultant")}
+            ${drop("/workflow-map/", "Workflow Map")}
             ${drop("/trade-office-workflow/", "Trade office workflow setup")}
             ${drop("/ai-document-packs/", "AI document and business packs")}
             ${drop("/custom-workflow-systems/", "Custom business workflow systems")}
@@ -1232,6 +1485,9 @@ ${banner}  <header class="site-header">
       <nav aria-label="Footer">
         <ul class="footer-links">
           <li><a href="${base}/">Workflow setup</a></li>
+          <li><a href="/workflow-map/">Workflow Map</a></li>
+          <li><a href="/zapier-make-consultant/">Zapier and Make</a></li>
+          <li><a href="/contractor-lead-follow-up/">Contractor lead follow-up</a></li>
           <li><a href="/websites-seo-aeo/">Websites, SEO and AEO</a></li>
           <li><a href="/ads-video/">Ads and video</a></li>
           <li><a href="/demos/">Demos</a></li>
