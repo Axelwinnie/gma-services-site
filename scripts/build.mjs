@@ -1497,14 +1497,14 @@ function documentPacksHtml() {
     <div class="pack-grid">${quotes}</div>`;
 }
 function callLink(className) {
-  // Touch devices dial the tel: link. A desktop with no calling app follows that
-  // same URL and shows a blank page, so those visitors get the number as text.
+  // The tel: link stays clickable on every device, including desktops with a calling app.
+  // The Copy button is only a fallback for computers that cannot dial.
   const wrap = className === "call-prominent"
     ? "phone-line phone-line-prominent"
     : className
       ? `phone-line ${className}`
       : "phone-line";
-  return `<span class="${wrap}"><a href="tel:${esc(phoneE164)}">${esc(phoneDisplay)}</a><span class="phone-text">${esc(phoneDisplay)}</span><button type="button" class="phone-copy" data-copy="${esc(phoneDisplay)}" aria-label="Copy phone number">Copy</button></span>`;
+  return `<span class="${wrap}"><a href="tel:${esc(phoneE164)}">${esc(phoneDisplay)}</a><button type="button" class="phone-copy" data-copy="${esc(phoneDisplay)}" aria-label="Copy phone number">Copy</button></span>`;
 }
 function phoneCopyScript() {
   return `<script>

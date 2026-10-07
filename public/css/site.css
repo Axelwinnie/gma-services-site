@@ -250,8 +250,7 @@ a { color: var(--link); text-underline-offset: 0.18em; }
   text-decoration: none;
   white-space: nowrap;
 }
-.header-call > a,
-.header-call > .phone-text {
+.header-call > a {
   color: var(--ink);
   font-weight: 750;
   text-decoration: none;
@@ -602,15 +601,14 @@ fieldset {
   border-radius: 10px;
 }
 .contact-callout p { margin: 0.2rem 0; }
-.contact-callout .phone-line-prominent > a,
-.contact-callout .phone-line-prominent > .phone-text {
+.contact-callout .phone-line-prominent > a {
+  display: inline-block;
   font-size: clamp(1.45rem, 3vw, 1.9rem);
   font-weight: 800;
   line-height: 1.2;
   color: var(--orange);
   text-decoration: none;
 }
-.contact-callout .phone-line-prominent > a { display: inline-block; }
 .contact-callout .phone-note {
   color: var(--ink);
   font-size: 1.05rem;
@@ -621,12 +619,6 @@ fieldset {
   align-items: center;
   gap: 0.4rem;
   max-width: 100%;
-}
-.phone-line > .phone-text { display: none; user-select: text; cursor: text; }
-.phone-line:not(.header-call):not(.phone-line-prominent) > .phone-text {
-  color: var(--link);
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
 }
 .phone-copy {
   display: none;
@@ -648,10 +640,6 @@ fieldset {
 .phone-copy:hover,
 .phone-copy:focus-visible { color: var(--ink); border-color: var(--link); }
 @media (hover: hover) and (pointer: fine) {
-  .phone-line > a[href^="tel:"] { display: none; }
-  .phone-line > .phone-text { display: inline; }
-  .header-call > .phone-text { display: inline-flex; align-items: center; min-height: 44px; }
-  .contact-callout .phone-line-prominent > .phone-text { display: inline-block; }
   .phone-copy { display: inline-flex; }
 }
 .footer-contact {
