@@ -1,0 +1,168 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Organization",
+        "LocalBusiness"
+      ],
+      "@id": "https://granitemodels.store/#org",
+      "name": "Granite Models Automations",
+      "url": "https://granitemodels.store/",
+      "email": "granitemodels@gmail.com",
+      "telephone": "+19786473933",
+      "logo": "https://granitemodels.store/assets/brand/gma-logo-clean.png"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://granitemodels.store/workflow-automation#service",
+      "name": "Workflow Automation Setup for Small Businesses",
+      "serviceType": "Business workflow automation setup",
+      "description": "We map one repetitive business process and set up a workflow for it in the client's own tools, with a human-approval step before anything goes to a customer. Fixed price, quoted before payment. Client tool subscriptions are paid separately to the vendors.",
+      "provider": {
+        "@id": "https://granitemodels.store/#org",
+        "name": "Granite Models Automations"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Small service and trade businesses"
+      },
+      "url": "https://granitemodels.store/workflow-automation",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Workflow Map",
+          "description": "One process mapped, an automation plan with vendor-published tool prices, and a fixed build price. 3 business days after intake. 1 revision round.",
+          "price": "249.00",
+          "priceCurrency": "USD",
+          "url": "https://granitemodels.store/workflow-automation#pricing"
+        },
+        {
+          "@type": "Offer",
+          "name": "One Workflow Build",
+          "description": "One workflow set up and tested in the client's accounts (1 trigger, up to 5 steps, up to 2 apps), human-approval step, runbook and walkthrough. 7 business days after inputs. 14-day fix window.",
+          "price": "499.00",
+          "priceCurrency": "USD",
+          "url": "https://granitemodels.store/workflow-automation#pricing"
+        },
+        {
+          "@type": "Offer",
+          "name": "Connected Workflows",
+          "description": "Up to 3 connected workflows and up to 4 apps, failure alerts, training, runbook and walkthrough. Written scope and fixed price before payment. 15 business days. 30-day fix window.",
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "minPrice": "1200.00",
+            "priceCurrency": "USD"
+          },
+          "priceCurrency": "USD",
+          "url": "https://granitemodels.store/workflow-automation#pricing"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://granitemodels.store/workflow-automation#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does \"AI workflow\" mean here?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A set of steps that runs in your software when something happens: a form comes in, an email arrives, a file is dropped. Some steps use an AI model to draft or summarize. A person checks the result before it reaches a customer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which tools do you use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yours, first. The workflow is built in the tools you already use. We have not published a platform list. We never ask for passwords."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will this replace my staff?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It takes repetitive steps off someone's plate, and a person still approves anything customer-facing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much time will it save?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We don't promise a number. The Workflow Map records how long the process takes you today, so you can compare afterwards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who owns the workflow?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You do. It's built in your accounts, and the runbook explains how to change it or turn it off."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What will it cost me each month?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only your own tool subscriptions, paid directly to the vendors. The plan lists each vendor's published price. We don't charge a monthly fee."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to my files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "They're used only for your job and deleted 30 days after handoff, or sooner if you ask in writing. We never ask for passwords, and we ask you to remove our access at handoff. Parts of the material you send may be processed by the AI tools we use, so we work from redacted or sample data wherever the job allows."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if it breaks?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If the workflow doesn't do what the signed scope says, we fix it free within 14 days of handoff for a One Workflow Build, or 30 days for Connected Workflows. After that, fixes are quoted per request."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I get a refund?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, in full if you cancel before kickoff. After kickoff, you get a full refund if we can't deliver what the signed scope describes, even after the included revision round or fix window. Changes you request to the scope, and delays of more than 30 days on your side, aren't refundable."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "Service",
+      "@id": "https://granitemodels.store/ads-video/#service",
+      "name": "Ads and video",
+      "serviceType": "Short video ads for small businesses",
+      "description": "Short video ads for contractors and trades. People-and-workflow scenes, a voiceover, and branded cards, exported for 16:9, 9:16, and 1:1. Ask for a quote. No public payment link.",
+      "provider": {
+        "@id": "https://granitemodels.store/#org"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Contractors and trades"
+      },
+      "url": "https://granitemodels.store/ads-video/",
+      "offers": {
+        "@type": "Offer",
+        "name": "Short video ad",
+        "description": "Ask for a quote. Nothing is charged until the quote is approved.",
+        "priceSpecification": {
+          "@type": "PriceSpecification",
+          "minPrice": "99.00",
+          "priceCurrency": "USD"
+        },
+        "priceCurrency": "USD",
+        "url": "https://granitemodels.store/contact/"
+      }
+    }
+  ]
+}

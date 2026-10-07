@@ -455,6 +455,12 @@ h3 { font-size: 1.15rem; margin: 0 0 0.4rem; }
 .price-card ul { margin: 0.4rem 0 0; padding-left: 1.1rem; color: var(--muted); }
 .price-card.featured { border-color: var(--orange); }
 
+.ladder { margin: 1.2rem 0 1.4rem; }
+.ladder svg { display: block; width: 100%; height: auto; }
+.ladder text { font-family: var(--sans); }
+.ladder .ladder-tall { display: none; max-width: 26rem; margin-inline: auto; }
+.ladder figcaption { margin-top: 0.6rem; color: var(--muted); font-size: 0.92rem; }
+
 .crumbs ol { display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; list-style: none; padding: 0; margin: 0 0 1rem; color: var(--muted); }
 .crumbs li:not(:last-child)::after { content: "/"; margin-left: 0.5rem; color: #8ea0b8; }
 
@@ -595,6 +601,11 @@ fieldset {
   .solutions, .points, .steps, .price-grid, .pack-grid, .photo-row { grid-template-columns: 1fr; }
   .hero-visual { min-height: 16rem; }
   .dash { width: calc(100% - 1.2rem); }
+}
+
+@media (max-width: 900px) {
+  .ladder .ladder-wide { display: none; }
+  .ladder .ladder-tall { display: block; }
 }
 
 @media (min-width: 781px) {
