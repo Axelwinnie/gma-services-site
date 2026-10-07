@@ -133,11 +133,20 @@ function checkPhone(label, html) {
   if (siteConfig.PHONE_E164 !== e164) errors.push(`PHONE_E164 must be ${e164}`);
   if (siteConfig.PHONE_NOTE !== phoneNote) errors.push(`PHONE_NOTE must be "${phoneNote}"`);
   if (!html.includes(requiredBrand)) errors.push(`${label}: missing brand "${requiredBrand}"`);
-  if (!html.includes(`href="tel:${e164}"`)) errors.push(`${label}: missing tel:${e164}`);
-  if (!html.includes(`Call ${display}`)) errors.push(`${label}: missing Call ${display}`);
+  const exactTel = `<a href="tel:${e164}">${display}</a>`;
+  if (!html.includes(exactTel)) errors.push(`${label}: missing ${exactTel}`);
   if (!html.includes(phoneNote)) errors.push(`${label}: missing answering-service note`);
   const tels = [...html.matchAll(/href="tel:([^"]+)"/g)].map((match) => match[1]);
   if (tels.some((value) => value !== e164)) errors.push(`${label}: phone link is not ${e164}`);
+  for (const tag of html.matchAll(/<a\b[^>]*>/gi)) {
+    if (!/href="tel:/i.test(tag[0])) continue;
+    if (tag[0] !== `<a href="tel:${e164}">`) errors.push(`${label}: tel link must be exactly <a href="tel:${e164}">`);
+    if (/\btarget\s*=/i.test(tag[0]) || /\bonclick\s*=/i.test(tag[0]) || /\brel\s*=/i.test(tag[0])) {
+      errors.push(`${label}: tel link must not set target, rel, or onclick`);
+    }
+  }
+  if (!html.includes(`class="phone-text">${display}</span>`)) errors.push(`${label}: missing readable phone number`);
+  if (!html.includes(`class="phone-copy" data-copy="${display}"`)) errors.push(`${label}: missing phone copy button`);
   if (html.includes("24/7") || /call us anytime/i.test(html)) errors.push(`${label}: phone label must not promise a response time`);
   if (/live receptionist|24\/7 human/i.test(html)) errors.push(`${label}: phone note must not claim a live receptionist`);
   const prominent = new Set([
