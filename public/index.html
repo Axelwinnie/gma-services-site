@@ -349,13 +349,14 @@
         area.style.left = "-9999px";
         document.body.appendChild(area);
         area.select();
-        document.execCommand("copy");
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
         area.remove();
+        return ok;
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(value).then(mark, function () { legacyCopy(); mark(); });
-      } else {
-        legacyCopy();
+        navigator.clipboard.writeText(value).then(mark, function () { if (legacyCopy()) mark(); });
+      } else if (legacyCopy()) {
         mark();
       }
     });

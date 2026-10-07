@@ -256,6 +256,12 @@ a { color: var(--link); text-underline-offset: 0.18em; }
   font-weight: 750;
   text-decoration: none;
 }
+.header-call > a {
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  min-height: 44px;
+}
 .header-cta { margin-left: 0.5rem; }
 
 .btn {
