@@ -128,14 +128,41 @@ function checkBrand(label, html) {
 function checkPhone(label, html) {
   const display = "(978) 647-3933";
   const e164 = "+19786473933";
+  const phoneNote = "automated answering service that routes to me.";
   if (siteConfig.PHONE_DISPLAY !== display) errors.push(`PHONE_DISPLAY must be ${display}`);
   if (siteConfig.PHONE_E164 !== e164) errors.push(`PHONE_E164 must be ${e164}`);
+  if (siteConfig.PHONE_NOTE !== phoneNote) errors.push(`PHONE_NOTE must be "${phoneNote}"`);
   if (!html.includes(requiredBrand)) errors.push(`${label}: missing brand "${requiredBrand}"`);
   if (!html.includes(`href="tel:${e164}"`)) errors.push(`${label}: missing tel:${e164}`);
   if (!html.includes(`Call ${display}`)) errors.push(`${label}: missing Call ${display}`);
+  if (!html.includes(phoneNote)) errors.push(`${label}: missing answering-service note`);
   const tels = [...html.matchAll(/href="tel:([^"]+)"/g)].map((match) => match[1]);
   if (tels.some((value) => value !== e164)) errors.push(`${label}: phone link is not ${e164}`);
   if (html.includes("24/7") || /call us anytime/i.test(html)) errors.push(`${label}: phone label must not promise a response time`);
+  if (/live receptionist|24\/7 human/i.test(html)) errors.push(`${label}: phone note must not claim a live receptionist`);
+  const prominent = new Set([
+    "index.html",
+    "contact/index.html",
+    "steel-estimating/index.html",
+    "order-received/index.html",
+    "payment-cancelled/index.html",
+    "ai-document-packs/index.html",
+    "ads-video/index.html",
+    "trade-office-workflow/index.html",
+    "lead-follow-up/index.html",
+    "quote-proposal-automation/index.html",
+    "document-intake/index.html",
+    "custom-workflow-systems/index.html",
+    "workflow-map/index.html",
+    "zapier-make-consultant/index.html",
+    "contractor-lead-follow-up/index.html",
+    "fabrication-shop-workflow-map/index.html",
+    "workflow-automation/index.html",
+    "websites-seo-aeo/index.html",
+  ]);
+  if (prominent.has(label) && !html.includes('class="contact-callout"')) {
+    errors.push(`${label}: contact callout missing`);
+  }
 }
 
 function checkDemoLabel(label, html) {

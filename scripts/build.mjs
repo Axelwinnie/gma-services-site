@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { writeLegacyRedirects } from "./legacy-redirects.mjs";
@@ -12,6 +13,7 @@ const short = requiredString(config.BRAND_SHORT, "BRAND_SHORT");
 const inbox = requiredString(config.INBOX, "INBOX");
 const phoneDisplay = requiredString(config.PHONE_DISPLAY, "PHONE_DISPLAY");
 const phoneE164 = requiredString(config.PHONE_E164, "PHONE_E164");
+const phoneNote = requiredString(config.PHONE_NOTE, "PHONE_NOTE");
 const launch = process.env.LAUNCH === "true" || config.LAUNCH === true;
 const formEnabled = process.env.FORM_ENABLED === "true" || config.FORM_ENABLED === true;
 const domain = requiredString(config.DOMAIN, "DOMAIN").replace(/\/+$/, "");
@@ -41,6 +43,8 @@ const DEMO_LABEL = "Internal GMA demonstration using fictional sample data. Not 
 const DRAFT = "DRAFT — pending Jon's approval";
 
 const publicDir = join(siteRoot, "public");
+const assetStash = join(tmpdir(), "gma-public-assets");
+stashPublishedMedia();
 rmSync(publicDir, { recursive: true, force: true });
 mkdirSync(join(publicDir, "css"), { recursive: true });
 writeFileSync(join(publicDir, "css", "site.css"), readFileSync(join(siteRoot, "src", "site.css")));
@@ -306,6 +310,7 @@ function workflowMapMain() {
     </ol>
     <p>That's it. I'll reply by email and tell you straight if a Map makes sense. If it does, I'll send a Stripe link for ${esc(mapPrice)}. No public pay button on this page on purpose. I check fit first.</p>
     <p class="btn-row"><a class="btn" href="${mail}">Email ${esc(inbox)}</a></p>
+    ${contactCallout()}
     <h2>Turnaround and price</h2>
     <p>Workflow Map: ${esc(mapPrice)}. 3 business days. 1 revision.</p>
     <p>One Workflow Build: ${esc(buildPrice)}, sold only off a finished Map at the fixed price that Map quotes.</p>
@@ -339,11 +344,14 @@ function workflowMapMain() {
       <li>You get the Map in 3 business days, with a fixed build price on it.</li>
       <li>If you want the build, you say so by email. No pressure either way. You keep the Map.</li>
     </ol>
-    <p>You can call <a href="tel:${esc(phoneE164)}">${esc(phoneDisplay)}</a> if you prefer the phone. Email works fine and is the default path.</p>
+    <p>Email works fine and is the default path.</p>
+    ${contactCallout()}
     <h2>Fab and steel shops</h2>
     <p>If you run a fab or steel shop, read the <a href="/fabrication-shop-workflow-map/">fabrication shop workflow map</a>. It walks through RFQs, estimates, quote follow-up, and the handoff to the floor.</p>
     <h2>Contact</h2>
-    <p>Jon Anderson<br>${esc(brand)}<br><a href="mailto:${esc(inbox)}">Email ${esc(inbox)}</a><br>${callLink()}<br><a href="${esc(domain)}/">granitemodels.store</a></p>
+    <p>Jon Anderson<br>${esc(brand)}</p>
+    ${contactCallout()}
+    <p><a href="${esc(domain)}/">granitemodels.store</a></p>
     <p>${esc(brand)} · 231 Arah St, Manchester, NH 03104</p>
   </div></article>
   ${faqSection(workflowMapFaqs())}`;
@@ -501,7 +509,7 @@ function workflowMain() {
           <a class="btn" href="#start" data-cta-id="describe-process">Describe your process</a>
           <a class="btn secondary" href="${base}/demo/" data-cta-id="watch-demo">Watch the demo (fictional data)</a>
         </div>
-        <p>${emailFallback()}</p>
+        ${contactCallout()}
         <p>Pricing starts at ${esc(mapPrice)} for a <a href="/workflow-map/">Workflow Map</a>.</p>
       </div>
     </section>
@@ -798,7 +806,8 @@ function zapierMakeMain() {
       ${photoFigure("f17", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <h1>Zapier and Make setup, done for you</h1>
       <p class="lede">If your apps don't talk to each other, I'll connect them. Tell me what comes in and what should come out, and I'll map it and give you a fixed price before you pay anything.</p>
-      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+      ${contactCallout()}
       <h2>What I build</h2>
       <p>These are examples of the kind of setup, not client work and not results from a named business.</p>
       <ul>
@@ -827,7 +836,8 @@ function contractorLeadMain() {
       ${photoFigure("f07", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <h1>Stop losing jobs to missed calls and slow quotes</h1>
       <p class="lede">When you can't pick up, most people don't leave a message. They call the next contractor. I set up follow-up that runs while you're on the job, and you approve every message first.</p>
-      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+      ${contactCallout()}
       <h2>Three problems, three fixes</h2>
       <div class="points">
         ${point("01", "Missed call text-back", "When a call goes unanswered, a draft text is ready for you to approve so the lead does not vanish.")}
@@ -875,7 +885,8 @@ function fabShopMapMain() {
       ${photoFigure("f36", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <h1>Find where RFQs and quotes leak in your fab shop</h1>
       <p class="lede">RFQs come in by email, phone, and PDF. Estimates live in spreadsheets. Quotes go out and nobody follows up. For ${esc(mapPrice)} I'll map how work moves through your shop, from the first RFQ to the job on the floor, and show you where it leaks and what to fix first.</p>
-      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+      ${contactCallout()}
       <p>I come out of steel and fab work, and I build <a href="${esc(steelPath)}">steel estimate packets</a> from drawings. I know how an RFQ actually moves through a shop, and where it stalls.</p>
       <h2>Where work leaks in a fab shop</h2>
       <div class="points">
@@ -910,7 +921,8 @@ function fabShopMapMain() {
       <p>Send a few examples. Redacted or sample files are fine. Your files are used for your job only and deleted 30 days after handoff. I'll sign a reasonable mutual NDA if you want one, and I never ask for passwords. Read the <a href="/file-retention-policy/">file retention policy</a>.</p>
       <h2>Start with one RFQ</h2>
       <p>Send me one RFQ the way it came in, redacted is fine, plus a line on who touches it after that. I'll tell you if the Map fits.</p>
-      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+      ${contactCallout()}
     </div></article>
     ${faqSection(faqs)}
     ${landingCta()}`;
@@ -1100,6 +1112,7 @@ function solutionMain(item) {
       <h2>Deliverables</h2>
       <p>${item.deliverables}</p>
       ${packs}
+      ${item.packs ? contactCallout() : ""}
       <h2>Timeline</h2>
       <p>${item.timeline}</p>
       <h2>Which tier fits</h2>
@@ -1108,7 +1121,8 @@ function solutionMain(item) {
       ${demoBanner()}
       <p><a href="${esc(item.demoHref)}">${esc(item.demoName)}</a></p>
       ${item.extra || ""}
-      <p class="btn-row"><a class="btn" href="/workflow-map/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <p class="btn-row"><a class="btn" href="/workflow-map/">Request a Workflow Map</a></p>
+      ${contactCallout()}
     </div></article>`;
 }
 
@@ -1198,8 +1212,8 @@ function adsMain() {
     <p>Ask for a quote. Nothing is charged until you approve that quote. This page has no payment button.</p>
     <div class="btn-row">
       <a class="btn" href="/contact/">Ask for a quote</a>
-      ${emailFallback()}
     </div>
+    ${contactCallout()}
     <h2>What you get</h2>
     <ul>
       <li>People-and-workflow scenes, made the same way as our own overview.</li>
@@ -1220,7 +1234,8 @@ function comingSoonMain(title, text, photoId) {
     <p class="soon">Coming soon</p>
     <h1>${esc(title)}</h1>
     <p class="lede">${esc(text)}</p>
-    <p>This is not offered yet. ${emailFallback()}.</p>
+    <p>This is not offered yet.</p>
+    ${contactCallout()}
     <p><a class="btn" href="/contact/">Contact us</a></p>
   </div></article>`;
 }
@@ -1485,8 +1500,18 @@ function callLink(className) {
   const cls = className ? ` class="${esc(className)}"` : "";
   return `<a${cls} href="tel:${esc(phoneE164)}">Call ${esc(phoneDisplay)}</a>`;
 }
+function emailLink(href) {
+  return `<a href="${esc(href || `mailto:${inbox}`)}">Email ${esc(inbox)}</a>`;
+}
 function emailFallback() {
-  return `<a href="mailto:${esc(inbox)}">Email ${esc(inbox)}</a> ${callLink()}`;
+  return `${callLink()} <span class="phone-note">— ${esc(phoneNote)}</span> ${emailLink()}`;
+}
+function contactCallout(mailtoHref) {
+  return `<div class="contact-callout">
+    <p class="contact-phone">${callLink("call-prominent")}</p>
+    <p class="phone-note">${esc(phoneNote)}</p>
+    <p>${emailLink(mailtoHref)}</p>
+  </div>`;
 }
 function headerMark() {
   return `<picture>
@@ -1564,8 +1589,7 @@ function quoteMailto() {
 }
 function contactBlock() {
   return `<div class="contact-block">
-    <p>${callLink()}</p>
-    <p><a href="${quoteMailto()}">Email ${esc(inbox)}</a></p>
+    ${contactCallout(quoteMailto())}
     <p>In the email, include:</p>
     <ul>
       <li>Business type</li>
@@ -1694,7 +1718,7 @@ ${banner}  <header class="site-header">
       <div>
         ${lockup("lockup-footer")}
         <p>AI workflow setup for real work.</p>
-        <p>${emailFallback()}</p>
+        <p class="footer-contact">${emailFallback()}</p>
       </div>
       <nav aria-label="Footer">
         <ul class="footer-links">
@@ -1885,12 +1909,29 @@ function brandAssetPath(value, key) {
   }
   return path;
 }
+function stashPublishedMedia() {
+  rmSync(assetStash, { recursive: true, force: true });
+  const media = join(publicDir, "assets");
+  if (existsSync(media)) cpSync(media, join(assetStash, "assets"), { recursive: true });
+}
+function restoreStashedFile(relPath, dest) {
+  const src = join(assetStash, relPath);
+  if (!existsSync(src)) throw new Error(`Missing ${relPath}. Add the source under assets/ or keep the prebuilt file in public/.`);
+  mkdirSync(dirname(dest), { recursive: true });
+  copyFileSync(src, dest);
+}
 function publishBrandAssets() {
   const srcDir = join(siteRoot, "assets", "brand");
   const outDir = join(publicDir, "assets", "brand");
   mkdirSync(outDir, { recursive: true });
   const master = join(srcDir, "gma-logo-clean.png");
   const iconMaster = join(srcDir, "gma-icon-512.png");
+  if (!existsSync(master) || !existsSync(iconMaster)) {
+    for (const name of ["gma-icon-192.png", "gma-icon-256.png", "gma-icon-512.png", "gma-logo-clean.png", "gma-logo-clean.webp"]) {
+      restoreStashedFile(join("assets", "brand", name), join(outDir, name));
+    }
+    return;
+  }
   runFfmpeg(["-i", iconMaster, "-vf", "scale=192:192", join(outDir, favicon192.slice("/assets/brand/".length))]);
   runFfmpeg(["-i", iconMaster, "-vf", "scale=256:256", join(outDir, logoIcon.slice("/assets/brand/".length))]);
   copyFileSync(iconMaster, join(outDir, favicon512.slice("/assets/brand/".length)));
@@ -1923,7 +1964,15 @@ function publishPhotos() {
   mkdirSync(outDir, { recursive: true });
   for (const photo of config.PHOTOS) {
     const src = join(srcDir, `${photo.id}.png`);
-    if (!existsSync(src)) throw new Error(`Missing photo ${src}`);
+    if (!existsSync(src)) {
+      for (const width of [1600, 960, 640]) {
+        const name = `${photo.id}-${width}.webp`;
+        restoreStashedFile(join("assets", "photos", name), join(outDir, name));
+      }
+      photoMeta[photo.id] = mediaSize(join(outDir, `${photo.id}-1600.webp`));
+      if (photoMeta[photo.id].width > 1600) throw new Error(`${photo.id} is wider than 1600px`);
+      continue;
+    }
     for (const width of [1600, 960, 640]) {
       runFfmpeg(["-i", src, "-vf", `scale=${width}:-2`, "-c:v", "libwebp", "-quality", "76", join(outDir, `${photo.id}-${width}.webp`)]);
     }
@@ -2004,7 +2053,8 @@ function steelMain() {
     <p class="lede">An estimate packet from your drawings. This is a fixed-price file job, not a software subscription.</p>
     <div class="price-grid">${cards}</div>
     <h2>What to send</h2>
-    <p>Pay on the button for the sheet count, then email the files to <a href="mailto:${esc(inbox)}">Email ${esc(inbox)}</a> ${callLink()}. Include the page count and the due date.</p>
+    ${contactCallout()}
+    <p>Pay on the button for the sheet count, then email the files. Include the page count and the due date.</p>
     <p>Do not send passwords, card numbers, health information, or bank details.</p>
     <p>If the set has no text list, or it is scans only, email first. We will say whether the job can be done before you pay. Those sets are not booked as a 48-hour job.</p>
     <p><a class="btn secondary" href="/contact/">Ask a question first</a></p>
@@ -2013,8 +2063,9 @@ function steelMain() {
 function orderReceivedMain() {
   return `<article class="section"><div class="wrap">
     <h1>Payment received</h1>
-    <p class="lede">If you paid for an estimate packet, email the drawings to <a href="mailto:${esc(inbox)}">${esc(inbox)}</a>. Include the page count and the due date.</p>
-    <p>A person reviews anything customer-facing. ${callLink()}</p>
+    <p class="lede">If you paid for an estimate packet, email the drawings. Include the page count and the due date.</p>
+    ${contactCallout()}
+    <p>A person reviews anything customer-facing.</p>
     <p><a class="btn" href="${esc(steelPath)}">Steel estimating</a></p>
   </div></article>`;
 }
@@ -2022,7 +2073,7 @@ function paymentCancelledMain() {
   return `<article class="section"><div class="wrap">
     <h1>Payment was not completed</h1>
     <p class="lede">No charge was recorded on this page. You can return to the estimate packet or email us.</p>
-    <p>${emailFallback()}</p>
+    ${contactCallout()}
     <p><a class="btn" href="${esc(steelPath)}">Steel estimating</a></p>
   </div></article>`;
 }

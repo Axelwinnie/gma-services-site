@@ -563,6 +563,35 @@ fieldset {
 .choice input { width: 1.15rem; height: 1.15rem; margin-top: 0.25rem; flex: none; }
 .form-status { background: #1a140f; border: 1px solid #8a4e12; border-radius: 8px; padding: 0.8rem 1rem; }
 
+.contact-callout {
+  margin: 1.25rem 0;
+  padding: 1rem 1.15rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--orange);
+  border-radius: 10px;
+}
+.contact-callout p { margin: 0.2rem 0; }
+.contact-callout .call-prominent {
+  display: inline-block;
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--orange);
+  text-decoration: none;
+}
+.contact-callout .phone-note {
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+.phone-note { color: var(--muted); }
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+}
+
 .site-footer {
   background: #0B1426;
   border-top: 1px solid var(--line);
