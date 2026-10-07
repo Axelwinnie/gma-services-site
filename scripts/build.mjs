@@ -51,6 +51,7 @@ syncRenderYaml();
 publishBrandAssets();
 publishPhotos();
 publishVideo();
+publishSamples();
 writeFileSync(join(publicDir, "site.webmanifest"), `${JSON.stringify({
   name: brand,
   short_name: short,
@@ -243,6 +244,16 @@ writePage("/payment-cancelled/", page({
   main: paymentCancelledMain(),
 }), { sitemap: false });
 
+writePage("/workflow-map/", page({
+  title: "Workflow Map ($249): A Fixed-Price Plan Before You Automate",
+  description: "One process on one page. Fixed price to build it. No call required. Workflow Map is $249. Email three lines to start.",
+  path: "/workflow-map/",
+  active: "/workflow-map/",
+  crumbs: [["Workflow Map"]],
+  main: workflowMapMain(),
+  jsonLd: workflowMapJsonLd(),
+}));
+
 writeFileSync(join(publicDir, "404.html"), page({
   title: "Page not found",
   description: "That page is not on this site.",
@@ -259,6 +270,119 @@ writeFileSync(join(publicDir, "404.html"), page({
 writeSitemap();
 writeLegacyRedirects({ publicDir, siteRoot, domain });
 
+function mapMailto() {
+  const subject = encodeURIComponent("Workflow Map");
+  const body = encodeURIComponent("1. What comes in (missed calls, web forms, RFQs, something else):\n\n2. What should come out (a text back, a quote reminder, one list, etc.):\n\n3. Who touches it today:\n");
+  return `mailto:${inbox}?subject=${subject}&body=${body}`;
+}
+
+function workflowMapMain() {
+  const mail = mapMailto();
+  return `<article class="section"><div class="wrap">
+    <h1>One process on one page. Fixed price to build it. No call required.</h1>
+    ${photoFigure("f13", "page-banner", "(max-width: 780px) 100vw, 72rem")}
+    <h2>What a Map is</h2>
+    <p>A Workflow Map is a one-page write-up of one process in your shop. I list every step, who does it, what tool they use, and where it stalls. Then I tell you which steps I'd automate, which ones stay with a person, and a fixed price to build the first one.</p>
+    <p>You keep the page even if you never hire me to build anything.</p>
+    <h2>What's included</h2>
+    <ul>
+      <li>One process mapped end to end</li>
+      <li>What stays human (you approve anything that goes to a customer)</li>
+      <li>Ranked list of what I'd automate first</li>
+      <li>Tool options built around apps you already use</li>
+      <li>Fixed price for a One Workflow Build off that Map</li>
+      <li>1 revision round</li>
+      <li>Turnaround: 3 business days after I confirm fit</li>
+    </ul>
+    <h2>Sample PDF</h2>
+    <p class="demo-banner">SAMPLE ONLY. Stone Creek Heating &amp; Cooling is a made-up HVAC shop. Not a real customer.</p>
+    <p><a class="btn secondary" href="/samples/sample-map-hvac-missed-call.pdf">SAMPLE ONLY: See a sample Map (HVAC missed-call / lead intake, made-up shop)</a></p>
+    <h2 id="start">How to start (email, no call)</h2>
+    <p>Email <a href="mailto:${esc(inbox)}">${esc(inbox)}</a> with three lines:</p>
+    <ol>
+      <li>What comes in (missed calls, web forms, RFQs, something else)</li>
+      <li>What should come out (a text back, a quote reminder, one list, etc.)</li>
+      <li>Who touches it today</li>
+    </ol>
+    <p>That's it. I'll reply by email and tell you straight if a Map makes sense. If it does, I'll send a Stripe link for ${esc(mapPrice)}. No public pay button on this page on purpose. I check fit first.</p>
+    <p class="btn-row"><a class="btn" href="${mail}">Email ${esc(inbox)}</a></p>
+    <h2>Turnaround and price</h2>
+    <p>Workflow Map: ${esc(mapPrice)}. 3 business days. 1 revision.</p>
+    <p>One Workflow Build: ${esc(buildPrice)}, sold only off a finished Map at the fixed price that Map quotes.</p>
+    <p>Connected Workflows: from ${esc(connectedPrice)}, when the Map shows the problem crosses more apps.</p>
+    <p>Ads &amp; Video: from ${esc(adsPrice)}, if you want a short contractor ad before ops help. <a href="/ads-video/">Ads and video</a>.</p>
+    <div class="price-grid">
+      <article class="price-card">
+        <h3>Workflow Map</h3>
+        <p class="price">${esc(mapPrice)}</p>
+        <p>3 business days. 1 revision.</p>
+        <a class="btn" href="${mail}">Email ${esc(inbox)}</a>
+      </article>
+      <article class="price-card featured">
+        <h3>One Workflow Build</h3>
+        <p class="price">${esc(buildPrice)}</p>
+        <p>Sold only off a finished Map, at the fixed price that Map quotes.</p>
+      </article>
+      <article class="price-card">
+        <h3>Connected Workflows</h3>
+        <p class="price">From ${esc(connectedPrice)}</p>
+        <p>When the Map shows the problem crosses more apps.</p>
+      </article>
+    </div>
+    <h2>From Map to Build</h2>
+    ${ladderFigure("map")}
+    <h2>What happens next (no call required)</h2>
+    <ol>
+      <li>You email the three lines.</li>
+      <li>I reply by email. Fit check. Nothing charged yet.</li>
+      <li>If it's a fit, I send a Stripe link for the ${esc(mapPrice)} Map.</li>
+      <li>You get the Map in 3 business days, with a fixed build price on it.</li>
+      <li>If you want the build, you say so by email. No pressure either way. You keep the Map.</li>
+    </ol>
+    <p>You can call <a href="tel:${esc(phoneE164)}">${esc(phoneDisplay)}</a> if you prefer the phone. Email works fine and is the default path.</p>
+    <h2>Fab and steel shops</h2>
+    <p>If you run a fab or steel shop, read the <a href="/fabrication-shop-workflow-map/">fabrication shop workflow map</a>. It walks through RFQs, estimates, quote follow-up, and the handoff to the floor.</p>
+    <h2>Contact</h2>
+    <p>Jon Anderson<br>${esc(brand)}<br><a href="mailto:${esc(inbox)}">Email ${esc(inbox)}</a><br>${callLink()}<br><a href="${esc(domain)}/">granitemodels.store</a></p>
+    <p>${esc(brand)} · 231 Arah St, Manchester, NH 03104</p>
+  </div></article>
+  ${faqSection(workflowMapFaqs())}`;
+}
+
+function workflowMapJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      orgNode(),
+      {
+        "@type": "Service",
+        "@id": `${domain}/workflow-map/#service`,
+        name: "Workflow Map",
+        serviceType: "One-page process map",
+        description: "A one-page write-up of one process: every step, who does it, what tool they use, and where it stalls, plus a fixed price to build the first step.",
+        provider: { "@id": `${domain}/#org` },
+        url: `${domain}/workflow-map/`,
+        offers: {
+          "@type": "Offer",
+          name: "Workflow Map",
+          price: Number(config.WORKFLOW_MAP_PRICE).toFixed(2),
+          priceCurrency: "USD",
+          description: "Email three lines first. A Stripe link is sent only after a fit check. No public pay button.",
+        },
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${domain}/workflow-map/#faq`,
+        mainEntity: workflowMapFaqs().map((item) => ({
+          "@type": "Question",
+          name: item.q,
+          acceptedAnswer: { "@type": "Answer", text: item.a },
+        })),
+      },
+    ],
+  };
+}
+
 function homeMain() {
   return `
     <section class="hero">
@@ -274,7 +398,7 @@ function homeMain() {
             ${point("04", "Built in your accounts", "Approval controls stay on. We never ask for passwords.")}
           </div>
           <div class="btn-row">
-            <a class="btn" href="/contact/" data-cta-id="start-map">Start Here: Workflow Map — ${esc(mapPrice)}</a>
+            <a class="btn" href="/workflow-map/" data-cta-id="start-map">Start Here: Workflow Map — ${esc(mapPrice)}</a>
             <a class="btn secondary" href="/demos/" data-cta-id="watch-demo">Watch Demo Overview</a>
           </div>
         </div>
@@ -378,7 +502,7 @@ function workflowMain() {
           <a class="btn secondary" href="${base}/demo/" data-cta-id="watch-demo">Watch the demo (fictional data)</a>
         </div>
         <p>${emailFallback()}</p>
-        <p>Pricing starts at ${esc(mapPrice)} for a Workflow Map.</p>
+        <p>Pricing starts at ${esc(mapPrice)} for a <a href="/workflow-map/">Workflow Map</a>.</p>
       </div>
     </section>
     <section class="section" id="who"><div class="wrap">
@@ -541,15 +665,6 @@ function seoLandingPages() {
       crumbs: [["Contractor lead follow-up"]],
       main: contractorLeadMain(),
       jsonLd: seoFaqJsonLd("/contractor-lead-follow-up/", "Contractor lead follow-up", "Lead follow-up and CRM automation for contractors. Missed-call text-back, one place for every new lead, and quote reminders.", contractorLeadFaqs()),
-    },
-    {
-      path: "/workflow-map/",
-      title: "Workflow Map ($249): A Fixed-Price Plan Before You Automate",
-      description: `Map one process for ${mapPrice} before you build anything. Steps, what stays human, and a fixed price to build it. Three business days, one revision round.`,
-      active: "/workflow-map/",
-      crumbs: [["Workflow Map"]],
-      main: workflowMapLandingMain(),
-      jsonLd: seoFaqJsonLd("/workflow-map/", "Workflow Map", `A Workflow Map is a written plan for one process for ${mapPrice}. Three business days, one revision round, and you keep it.`, workflowMapFaqs()),
     },
     {
       path: "/fabrication-shop-workflow-map/",
@@ -731,51 +846,6 @@ function contractorLeadMain() {
     ${faqSection(faqs)}
     ${landingCta()}`;
 }
-
-function workflowMapLandingMain() {
-  const faqs = workflowMapFaqs();
-  return `
-    <article class="section"><div class="wrap">
-      ${photoFigure("f31", "page-banner", "(max-width: 780px) 100vw, 72rem")}
-      <h1>Map one process for ${esc(mapPrice)} before you build anything</h1>
-      <p class="lede">A Workflow Map is a written plan for one process: the steps, what stays human, and a fixed price to build it. Three business days, one revision round, and you keep it.</p>
-      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
-      <h2>Map vs build</h2>
-      <div class="price-grid">
-        ${priceCard("Workflow Map", mapPrice, "3 business days", ["Written plan for one process", "What stays human", "Fixed price to build it", "1 revision round", "You keep the document"], "Start with a Map", "/contact/", true)}
-        ${priceCard("One Workflow Build", buildPrice, "7 business days", ["1 trigger, up to 5 steps, up to 2 apps", "Built in your accounts", "Human approval before customer-facing output", "14-day fix window"], "Ask about a Build", "/contact/", false)}
-      </div>
-      <p>Connected Workflows, from ${esc(connectedPrice)}, covers up to 3 workflows and 4 apps when one build is not enough. See <a href="/#pricing">pricing</a>.</p>
-      <h2>From Map to Build</h2>
-      ${ladderFigure("map")}
-      <h2>What I need from you</h2>
-      <ul>
-        <li>What comes in.</li>
-        <li>What should come out.</li>
-        <li>Who touches it today.</li>
-        <li>One named person who can approve outputs.</li>
-        <li>3 to 5 examples (redacted or made-up is fine).</li>
-        <li>The list of tools you already pay for.</li>
-      </ul>
-      <h2>What happens next</h2>
-      <p>You get the Map in three business days (clock starts once your inputs are in). Then you can hire me to build it at the quoted price, or build it yourself. Either way, the Map is yours.</p>
-      <h2>Fab and steel shops</h2>
-      <p>If you run a fab or steel shop, read the <a href="/fabrication-shop-workflow-map/">fabrication shop workflow map</a>. It walks through RFQs, estimates, quote follow-up, and the handoff to the floor.</p>
-      <h2>Sample outline (fictional)</h2>
-      <p>This is a minimal fictional outline, not a client file and not a real Map.</p>
-      <ul>
-        <li>Trigger: new form entry.</li>
-        <li>Steps: log the inquiry, draft a reply, wait for your approval.</li>
-        <li>Stays human: the reply text and any price you quote.</li>
-        <li>Build price on the Map: a fixed number for your stack, quoted before you pay.</li>
-      </ul>
-      <h2>Refunds</h2>
-      <p>Full refund if you cancel before kickoff. After kickoff, a full refund only if I cannot deliver what the signed scope describes, even after the included revision round. Scope changes you request, and long delays on your side, are not refundable. Read the <a href="/refund-policy/">refund policy</a>.</p>
-    </div></article>
-    ${faqSection(faqs)}
-    ${landingCta()}`;
-}
-
 
 function fabShopMapFaqs() {
   return [
@@ -1038,7 +1108,7 @@ function solutionMain(item) {
       ${demoBanner()}
       <p><a href="${esc(item.demoHref)}">${esc(item.demoName)}</a></p>
       ${item.extra || ""}
-      <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a> ${emailFallback()}</p>
+      <p class="btn-row"><a class="btn" href="/workflow-map/">Request a Workflow Map</a> ${emailFallback()}</p>
     </div></article>`;
 }
 
@@ -1062,7 +1132,7 @@ function demoPages() {
         <p>${body}</p>
         <div class="media-placeholder"><p>Demo video coming soon</p></div>
         <p>Planned stills would be watermarked fictional data. None are posted yet.</p>
-        <p><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+        <p><a class="btn" href="/workflow-map/">Request a Workflow Map</a></p>
       </div></article>`,
     },
   }));
@@ -1115,7 +1185,7 @@ function demosHub() {
     <p><a href="/demos/lead-follow-up/">Open the lead follow-up demo</a></p>
     <h2>Trade Office Workflow</h2>
     <p><a href="/demos/trade-office/">Open the trade office demo</a></p>
-    <p><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+    <p><a class="btn" href="/workflow-map/">Request a Workflow Map</a></p>
   </div></article>`;
 }
 
@@ -1173,7 +1243,7 @@ function howMain() {
     <p>You own the workflow. Another process can be a new map later. This offer does not include an ongoing retainer.</p>
     <h2>Rules that sit beside the steps</h2>
     <p>What you provide, how payment works, and what happens if inputs are late are written on the <a href="/policies/">policies</a> page. Refunds, revisions, and file deletion each have their own page.</p>
-    <p><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+    <p><a class="btn" href="/workflow-map/">Request a Workflow Map</a></p>
   </div></article>`;
 }
 
@@ -1187,7 +1257,7 @@ function aboutMain() {
     <p>We're new to building workflows for outside clients, and we'd rather tell you that than dress it up. The demos are our own internal workflows on fictional data.</p>
     <p>Fixed price, quoted before you pay. Built in your accounts. No passwords. Written policies are linked in the footer.</p>
     <p>Steel estimate packets are listed on the <a href="${esc(steelPath)}">steel estimating</a> page.</p>
-    <p><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+    <p><a class="btn" href="/workflow-map/">Request a Workflow Map</a></p>
   </div></article>`;
 }
 
@@ -1228,7 +1298,7 @@ function policiesMain() {
     </ul>
     <h2>Delay rule</h2>
     <p>If inputs have not arrived 10 business days after kickoff, the clock pauses. After 30 days without a response the job is paused. It can restart within 60 days at the same price.</p>
-    <p><a class="btn" href="/contact/">Request a Workflow Map</a></p>
+    <p><a class="btn" href="/workflow-map/">Request a Workflow Map</a></p>
   </div></article>`;
 }
 
@@ -1591,13 +1661,13 @@ ${banner}  <header class="site-header">
           ${navItem("/", "Home", active)}
           <li><details class="dropdown"><summary>Workflow Setup</summary><ul class="dropdown-menu">
             ${drop(`${base}/`, "Workflow setup hub")}
+            ${drop("/workflow-map/", "Workflow Map")}
             ${drop(steelPath, "Steel estimating")}
             ${drop("/quote-proposal-automation/", "Quote and proposal automation")}
             ${drop("/document-intake/", "Document intake and processing")}
             ${drop("/lead-follow-up/", "Lead follow-up and booking")}
             ${drop("/contractor-lead-follow-up/", "Contractor lead follow-up")}
             ${drop("/zapier-make-consultant/", "Zapier and Make consultant")}
-            ${drop("/workflow-map/", "Workflow Map")}
             ${drop("/fabrication-shop-workflow-map/", "Fab shop workflow map")}
             ${drop("/trade-office-workflow/", "Trade office workflow setup")}
             ${drop("/ai-document-packs/", "AI document and business packs")}
@@ -1612,7 +1682,7 @@ ${banner}  <header class="site-header">
         </ul>
       </details>
       ${callLink("header-call")}
-      <a class="btn header-cta" href="/contact/">Request a Workflow Map</a>
+      <a class="btn header-cta" href="/workflow-map/">Request a Workflow Map</a>
     </div>
   </header>
   <main id="main">
@@ -1836,6 +1906,14 @@ function publishVideo() {
   const src = join(siteRoot, file);
   if (!existsSync(src)) return;
   const dest = join(publicDir, file);
+  mkdirSync(dirname(dest), { recursive: true });
+  copyFileSync(src, dest);
+}
+function publishSamples() {
+  const name = "sample-map-hvac-missed-call.pdf";
+  const src = join(siteRoot, "assets", "samples", name);
+  if (!existsSync(src)) throw new Error(`Missing sample map PDF ${src}`);
+  const dest = join(publicDir, "samples", name);
   mkdirSync(dirname(dest), { recursive: true });
   copyFileSync(src, dest);
 }

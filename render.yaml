@@ -6,9 +6,19 @@
 # Build command: echo prebuilt. Publish directory: public.
 # Render serves public/404.html for unknown paths. Do not add a catch-all rewrite.
 services:
+  # Existing static site. Branch stays site-launch.
+  # autoDeploy is still accepted. autoDeployTrigger is the current name and
+  # is what updates an existing service (omitting it leaves the dashboard value).
+  # pullRequestPreviewsEnabled is still accepted and matches previews.generation.
   - type: web
     name: gma-services
     runtime: static
+    branch: site-launch
+    autoDeploy: true
+    autoDeployTrigger: commit
+    pullRequestPreviewsEnabled: true
+    previews:
+      generation: automatic
     buildCommand: echo prebuilt
     staticPublishPath: ./public
     headers:
@@ -33,3 +43,26 @@ services:
       - path: /*.html
         name: Cache-Control
         value: no-cache
+
+  # Stripe webhook for Workflow Map orders. Separate free web service.
+  # Does not replace gma-services or the TikTok service.
+  - type: web
+    name: gma-stripe-webhook
+    runtime: node
+    plan: free
+    branch: main
+    rootDir: stripe-webhook
+    buildCommand: echo no-build
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: NOTIFY_TO
+        value: granitemodels@gmail.com
