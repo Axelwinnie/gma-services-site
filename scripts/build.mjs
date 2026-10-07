@@ -502,9 +502,9 @@ function workflowMain() {
   return `
     <section class="hero">
       <div class="wrap">
-        ${photoFigure("f01", "page-banner", "(max-width: 780px) 100vw, 72rem")}
         <h1>Workflow automation setup for small businesses</h1>
         <p class="lede">Get one repetitive process off your plate. We map one process in your business (quotes, document intake, follow-ups, paperwork) and set up a workflow for it in the tools you already use. A person reviews anything that goes to a customer. Fixed price, quoted before you pay, and you own it.</p>
+        ${photoFigure("f01", "page-banner", "(max-width: 780px) 100vw, 72rem")}
         <div class="btn-row">
           <a class="btn" href="#start" data-cta-id="describe-process">Describe your process</a>
           <a class="btn secondary" href="${base}/demo/" data-cta-id="watch-demo">Watch the demo (fictional data)</a>
@@ -803,9 +803,9 @@ function zapierMakeMain() {
   const faqs = zapierMakeFaqs();
   return `
     <article class="section"><div class="wrap">
-      ${photoFigure("f17", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <h1>Zapier and Make setup, done for you</h1>
       <p class="lede">If your apps don't talk to each other, I'll connect them. Tell me what comes in and what should come out, and I'll map it and give you a fixed price before you pay anything.</p>
+      ${photoFigure("f17", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a></p>
       ${contactCallout()}
       <h2>What I build</h2>
@@ -833,9 +833,9 @@ function contractorLeadMain() {
   const faqs = contractorLeadFaqs();
   return `
     <article class="section"><div class="wrap">
-      ${photoFigure("f07", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <h1>Stop losing jobs to missed calls and slow quotes</h1>
       <p class="lede">When you can't pick up, most people don't leave a message. They call the next contractor. I set up follow-up that runs while you're on the job, and you approve every message first.</p>
+      ${photoFigure("f07", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a></p>
       ${contactCallout()}
       <h2>Three problems, three fixes</h2>
@@ -882,9 +882,9 @@ function fabShopMapMain() {
   const faqs = fabShopMapFaqs();
   return `
     <article class="section"><div class="wrap">
-      ${photoFigure("f36", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <h1>Find where RFQs and quotes leak in your fab shop</h1>
       <p class="lede">RFQs come in by email, phone, and PDF. Estimates live in spreadsheets. Quotes go out and nobody follows up. For ${esc(mapPrice)} I'll map how work moves through your shop, from the first RFQ to the job on the floor, and show you where it leaks and what to fix first.</p>
+      ${photoFigure("f36", "page-banner", "(max-width: 780px) 100vw, 72rem")}
       <p class="btn-row"><a class="btn" href="/contact/">Request a Workflow Map</a></p>
       ${contactCallout()}
       <p>I come out of steel and fab work, and I build <a href="${esc(steelPath)}">steel estimate packets</a> from drawings. I know how an RFQ actually moves through a shop, and where it stalls.</p>
@@ -1100,8 +1100,8 @@ function solutionMain(item) {
     : "";
   return `
     <article class="section"><div class="wrap">
-      ${banner}
       <h1>${esc(item.title)}</h1>
+      ${banner}
       <h2>Who it's for</h2>
       <p>${item.who}</p>
       <h2>The problem</h2>
@@ -1205,9 +1205,9 @@ function demosHub() {
 
 function adsMain() {
   return `<article class="section"><div class="wrap">
-    ${photoFigure("f38", "page-banner", "(max-width: 780px) 100vw, 72rem")}
     <h1>Short video ads for small businesses</h1>
     <p class="lede">Short ads for contractors and trades. The same approach as the Granite Models Automations overview on this page: people-and-workflow scenes, a voiceover, and branded cards.</p>
+    ${photoFigure("f38", "page-banner", "(max-width: 780px) 100vw, 72rem")}
     <p class="price">from ${esc(adsPrice)}</p>
     <p>Ask for a quote. Nothing is charged until you approve that quote. This page has no payment button.</p>
     <div class="btn-row">
@@ -1230,10 +1230,10 @@ function adsMain() {
 }
 function comingSoonMain(title, text, photoId) {
   return `<article class="section"><div class="wrap">
-    ${photoId ? photoFigure(photoId, "page-banner", "(max-width: 780px) 100vw, 72rem") : ""}
-    <p class="soon">Coming soon</p>
     <h1>${esc(title)}</h1>
+    <p class="soon">Coming soon</p>
     <p class="lede">${esc(text)}</p>
+    ${photoId ? photoFigure(photoId, "page-banner", "(max-width: 780px) 100vw, 72rem") : ""}
     <p>This is not offered yet.</p>
     ${contactCallout()}
     <p><a class="btn" href="/contact/">Contact us</a></p>
@@ -1278,9 +1278,9 @@ function aboutMain() {
 
 function contactMain() {
   return `<article class="section"><div class="wrap">
-    ${photoFigure("f31", "page-banner", "(max-width: 780px) 100vw, 40rem")}
     <h1>Tell us one process you'd like off your plate.</h1>
     <p class="lede">Three lines is enough: what comes in, what should come out, and who touches it today. We'll reply with whether it fits and a fixed price. Nothing is charged until you approve.</p>
+    ${photoFigure("f31", "page-banner", "(max-width: 780px) 100vw, 40rem")}
     ${formEnabled ? `<p>The form does not send. ${emailFallback()}.</p>${intakeForm("ct")}${formNotes()}` : contactBlock()}
   </div></article>`;
 }
@@ -1523,6 +1523,7 @@ function photoFigure(id, className, sizes) {
   const photo = photos[id];
   if (!photo) throw new Error(`Unknown photo ${id}`);
   const meta = photoMeta[id];
+  if (!meta || !existsSync(join(publicDir, "assets", "photos", `${id}-1600.webp`))) return "";
   const srcset = [640, 960, 1600].map((width) => `/assets/photos/${id}-${width}.webp ${width}w`).join(", ");
   return `<figure class="photo ${className}">
     <picture>
@@ -2048,9 +2049,9 @@ function steelMain() {
     <a class="btn" href="${esc(row.url)}" target="_blank" rel="noopener noreferrer">Buy</a>
   </article>`).join("");
   return `<article class="section"><div class="wrap">
-    ${photoFigure("f07", "page-banner", "(max-width: 780px) 100vw, 72rem")}
     <h1>Steel estimating</h1>
     <p class="lede">An estimate packet from your drawings. This is a fixed-price file job, not a software subscription.</p>
+    ${photoFigure("f07", "page-banner", "(max-width: 780px) 100vw, 72rem")}
     <div class="price-grid">${cards}</div>
     <h2>What to send</h2>
     ${contactCallout()}
