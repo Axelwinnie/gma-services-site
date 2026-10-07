@@ -6,6 +6,10 @@ This branch is `services-site`. It replaces the previous apex site. Do not deplo
 
 `node scripts/build.mjs` reads `site.config.json` and `src/site.css`, then writes `public/`.
 
+## Demo Lab (private)
+
+`demo-lab/` is a separate static site. It is not linked from this store. Do not post it. See `demo-lab/README.md`.
+
 ## Render
 
 Use a **Static Site** pointed at this branch.
