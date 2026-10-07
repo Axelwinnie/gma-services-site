@@ -66,3 +66,41 @@ services:
         sync: false
       - key: NOTIFY_TO
         value: granitemodels@gmail.com
+
+  # Private Demo Lab. Separate from gma-services. Not linked from the store.
+  # Jon attaches demo.granitemodels.store by hand. See demo-lab/README.md.
+  # Crawlers are blocked in demo-lab/public/robots.txt until he flips it live.
+  - type: web
+    name: gma-demo-lab
+    runtime: static
+    branch: main
+    rootDir: demo-lab
+    autoDeploy: true
+    autoDeployTrigger: commit
+    buildCommand: echo prebuilt
+    staticPublishPath: ./public
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /css/*
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /js/*
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /*.html
+        name: Cache-Control
+        value: no-cache
