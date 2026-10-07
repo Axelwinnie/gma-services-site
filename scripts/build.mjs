@@ -1497,8 +1497,48 @@ function documentPacksHtml() {
     <div class="pack-grid">${quotes}</div>`;
 }
 function callLink(className) {
-  const cls = className ? ` class="${esc(className)}"` : "";
-  return `<a${cls} href="tel:${esc(phoneE164)}">Call ${esc(phoneDisplay)}</a>`;
+  // Touch devices dial the tel: link. A desktop with no calling app follows that
+  // same URL and shows a blank page, so those visitors get the number as text.
+  const wrap = className === "call-prominent"
+    ? "phone-line phone-line-prominent"
+    : className
+      ? `phone-line ${className}`
+      : "phone-line";
+  return `<span class="${wrap}"><a href="tel:${esc(phoneE164)}">${esc(phoneDisplay)}</a><span class="phone-text">${esc(phoneDisplay)}</span><button type="button" class="phone-copy" data-copy="${esc(phoneDisplay)}" aria-label="Copy phone number">Copy</button></span>`;
+}
+function phoneCopyScript() {
+  return `<script>
+(function () {
+  document.querySelectorAll(".phone-copy").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var value = button.getAttribute("data-copy") || "";
+      var label = button.textContent;
+      function mark() {
+        button.textContent = "Copied";
+        window.setTimeout(function () { button.textContent = label; }, 1500);
+      }
+      function legacyCopy() {
+        var area = document.createElement("textarea");
+        area.value = value;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(mark, function () { legacyCopy(); mark(); });
+      } else {
+        legacyCopy();
+        mark();
+      }
+    });
+  });
+})();
+</script>
+`;
 }
 function emailLink(href) {
   return `<a href="${esc(href || `mailto:${inbox}`)}">Email ${esc(inbox)}</a>`;
@@ -1749,7 +1789,7 @@ ${banner}  <header class="site-header">
     </div>
     <div class="wrap"><p class="legal">© 2026 ${esc(brand)}. All rights reserved.</p></div>
   </footer>
-</body>
+${phoneCopyScript()}</body>
 </html>
 `;
 }
