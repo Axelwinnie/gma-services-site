@@ -113,7 +113,7 @@ a {
 
 .hero-frame {
   overflow: hidden;
-  aspect-ratio: 1672 / 730;
+  aspect-ratio: 1672 / 800;
   background: var(--bg-deep);
   border-bottom: 3px solid var(--orange);
   line-height: 0;
