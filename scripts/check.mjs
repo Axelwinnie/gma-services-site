@@ -101,6 +101,7 @@ checkDomain();
 checkLegacyRedirects();
 checkLogoPlate();
 checkLaunchFiles();
+checkTelLinksStayVisible();
 
 if (errors.length) {
   console.error(`\n${errors.length} check(s) failed:`);
@@ -145,7 +146,7 @@ function checkPhone(label, html) {
       errors.push(`${label}: tel link must not set target, rel, or onclick`);
     }
   }
-  if (!html.includes(`class="phone-text">${display}</span>`)) errors.push(`${label}: missing readable phone number`);
+  if (html.includes('class="phone-text"')) errors.push(`${label}: duplicate phone text must not be rendered`);
   if (!html.includes(`class="phone-copy" data-copy="${display}"`)) errors.push(`${label}: missing phone copy button`);
   if (html.includes("24/7") || /call us anytime/i.test(html)) errors.push(`${label}: phone label must not promise a response time`);
   if (/live receptionist|24\/7 human/i.test(html)) errors.push(`${label}: phone note must not claim a live receptionist`);
@@ -524,6 +525,17 @@ function checkLaunchFiles() {
   if (!workflow.includes('"price": "249.00"') || !workflow.includes('"price": "499.00"') || !workflow.includes('"minPrice": "1200.00"')) {
     errors.push("JSON-LD workflow prices must be the confirmed amounts");
   }
+}
+
+function checkTelLinksStayVisible() {
+  const css = readFileSync(join(publicDir, "css", "site.css"), "utf8");
+  const telRules = [...css.matchAll(/[^{}]*tel:[^{]*\{[^}]*\}/gi)];
+  for (const rule of telRules) {
+    if (/display\s*:\s*none|visibility\s*:\s*hidden|pointer-events\s*:\s*none/i.test(rule[0])) {
+      errors.push("site.css hides a tel link");
+    }
+  }
+  if (css.includes(".phone-text")) errors.push("site.css still styles a duplicate phone-text span");
 }
 
 function checkImages(label, html) {
