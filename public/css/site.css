@@ -708,3 +708,11 @@ fieldset {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* Demo Lab link (nav + hero) */
+.primary-nav > li > a.nav-demo-lab { color: var(--orange); font-weight: 700; border: 1px solid var(--orange); border-radius: 999px; padding: 0.2rem 0.75rem; min-height: 36px; margin: 4px 0.2rem; }
+.primary-nav > li > a.nav-demo-lab:hover, .primary-nav > li > a.nav-demo-lab:focus-visible { background: var(--orange); color: var(--orange-ink); }
+.demo-lab-note { margin: 0.5rem 0 0; color: var(--muted); font-size: 0.9rem; }
+.header-demo-lab { margin-left: 0.5rem; }
+@media (max-width: 1100px) { .header-demo-lab { margin-left: 0; } }
+@media (max-width: 780px) { .header-demo-lab { order: 2; } }
