@@ -1,8 +1,8 @@
 # GMA Demo Lab
 
-Private preview for Granite Models Automations. Jon owns this.
+Public demo site for Granite Models Automations. Jon owns this. Made public 2026-10-12.
 
-Do not promote it. Do not post it. Do not add a link from the granitemodels.store home page, nav, or sitemap.
+Live at https://gma-demo-lab.onrender.com (custom domain demo.granitemodels.store not attached yet). Linked from granitemodels.store.
 
 The store site in `public/` is unchanged. This folder is its own static site.
 
@@ -12,11 +12,10 @@ The store site in `public/` is unchanged. This folder is its own static site.
 - Tool Ticket System: `public/demos/ticket/` (client-side sandbox, fictional shop, tests in `tests/tickets.test.js`)
 - Doc Extract: `public/demos/extract/`
 - File Organizer: `public/demos/organizer/` (client-side sandbox, tests in `tests/organizer.test.js`)
-- `public/robots.txt` disallows every crawler
+- Steel Estimating: `public/demos/estimating/`
+- `public/robots.txt` allows all crawlers and points to `public/sitemap.xml`
 
-Every page sends `noindex, nofollow`. A banner on each page says **Internal preview — not public**.
-
-There is no password gate. A password in the browser is easy to walk around. Anyone who has the URL can open the site. Search engines are told to stay out. Share the URL only with people who should see it.
+Pages are indexable (only `404.html` is noindex). Every demo keeps its "Demo on fictional data" note. No real customer or shop names anywhere. If the custom domain goes on, update the canonical/og URLs, robots.txt and sitemap.xml.
 
 ## What you do by hand
 

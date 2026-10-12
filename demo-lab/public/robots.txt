@@ -1,2 +1,4 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://gma-demo-lab.onrender.com/sitemap.xml
