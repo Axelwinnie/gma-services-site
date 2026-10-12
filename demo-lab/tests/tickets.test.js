@@ -1,0 +1,20 @@
+// node demo-lab/tests/tickets.test.js
+const T = require('../public/demos/ticket/tickets.js'); let fail = 0;
+const ok = (c, m) => { if (!c) { fail++; console.log('FAIL', m); } };
+const thr = (f, m) => { try { f(); ok(false, m); } catch (e) { } };
+const s = T.seed(Date.UTC(2026, 9, 12, 14));
+ok(T.overdue(s).map(t => t.id).join() === 'T-102,T-105,T-108', 'overdue ' + T.overdue(s).map(t => t.id));
+ok(T.byPerson(s)['Marco (fab)'].length === 2, 'who has what');
+thr(() => T.checkout(s, 'T-104', 'Kim (paint)', 1), 'repair tool blocked');
+thr(() => T.checkout(s, 'T-101', 'Kim (paint)', 1), 'out tool blocked');
+T.checkout(s, 'T-103', 'Kim (paint)', 2, 'J2052 MillPond'); ok(T.tool(s, 'T-103').holder === 'Kim (paint)', 'checkout');
+T.checkin(s, 'T-102'); ok(T.overdue(s).length === 2, 'checkin clears overdue');
+thr(() => T.createTicket(s, { title: '' }), 'ticket needs title');
+const t = T.createTicket(s, { title: 'Grinder guard loose', requester: 'Marco (fab)', toolId: 'T-107', tagOut: true, priority: 'High' });
+ok(t.id === 1049 && t.status === 'New' && T.tool(s, 'T-107').status === 'repair', 'create + tag out');
+T.assign(s, t.id, 'Lou (maintenance)', 'Dana (office)'); ok(t.status === 'Assigned', 'assign moves status');
+thr(() => T.setStatus(s, t.id, 'Done', 'Lou (maintenance)', ''), 'close needs note');
+T.setStatus(s, t.id, 'Done', 'Lou (maintenance)', 'Tightened guard'); ok(T.tool(s, 'T-107').status === 'in', 'done returns tool');
+ok(t.log.length === 3, 'log ' + t.log.length);
+ok(T.seed().tickets.length === 4, 'fresh seed resets');
+console.log(fail ? fail + ' FAILED' : 'ALL PASS'); process.exit(fail ? 1 : 0);
