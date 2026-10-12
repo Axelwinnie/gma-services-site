@@ -8,22 +8,22 @@
   function seed(now) {
     now = now || Date.now();
     var t = function (days) { return now - days * DAY; };
-    return {
+    var st = {
       now: now, nextTicket: 1049,
       people: ["Dana (office)", "Marco (fab)", "Tess (welding)", "Lou (maintenance)", "Ray (shipping)", "Kim (paint)"],
       tools: [
-        { id: "T-101", name: "Magnetic drill press 1-3/8\"", area: "Fab bay 1", status: "out", holder: "Marco (fab)", outAt: t(1), dueAt: t(-2), job: "J2041 PineHollow" },
-        { id: "T-102", name: "Cordless 1/2\" impact", area: "Tool crib", status: "out", holder: "Ray (shipping)", outAt: t(6), dueAt: t(2), job: "J2052 MillPond" },
-        { id: "T-103", name: "4-1/2\" angle grinder", area: "Tool crib", status: "in", holder: "", outAt: 0, dueAt: 0, job: "" },
-        { id: "T-104", name: "Band saw, portable", area: "Tool crib", status: "repair", holder: "", outAt: 0, dueAt: 0, job: "", ticket: 1046 },
-        { id: "T-105", name: "Torque wrench 50-250 ft-lb", area: "Tool crib", status: "out", holder: "Tess (welding)", outAt: t(3), dueAt: t(1), job: "J2047 CedarRun" },
-        { id: "T-106", name: "Laser level", area: "Office", status: "in", holder: "", outAt: 0, dueAt: 0, job: "" },
-        { id: "T-107", name: "Plasma cutter, hand", area: "Fab bay 2", status: "in", holder: "", outAt: 0, dueAt: 0, job: "" },
-        { id: "T-108", name: "Chain hoist 2 ton", area: "Yard", status: "out", holder: "Marco (fab)", outAt: t(9), dueAt: t(4), job: "J2047 CedarRun" }
+        { id: "T-101", type: "Power tool", name: "Magnetic drill press 1-3/8\"", area: "Fab bay 1", status: "out", holder: "Marco (fab)", outAt: t(1), dueAt: t(-2), job: "J2041 PineHollow" },
+        { id: "T-102", type: "Power tool", name: "Cordless 1/2\" impact", area: "Tool crib", status: "out", holder: "Ray (shipping)", outAt: t(6), dueAt: t(2), job: "J2052 MillPond" },
+        { id: "T-103", type: "Power tool", name: "4-1/2\" angle grinder", area: "Tool crib", status: "in", holder: "", outAt: 0, dueAt: 0, job: "" },
+        { id: "T-104", type: "Saw", name: "Band saw, portable", area: "Tool crib", status: "repair", holder: "", outAt: 0, dueAt: 0, job: "", ticket: 1046 },
+        { id: "T-105", type: "Hand tool", name: "Torque wrench 50-250 ft-lb", area: "Tool crib", status: "out", holder: "Tess (welding)", outAt: t(3), dueAt: t(1), job: "J2047 CedarRun" },
+        { id: "T-106", type: "Measuring", name: "Laser level", area: "Office", status: "in", holder: "", outAt: 0, dueAt: 0, job: "" },
+        { id: "T-107", type: "Cutting", name: "Plasma cutter, hand", area: "Fab bay 2", status: "in", holder: "", outAt: 0, dueAt: 0, job: "" },
+        { id: "T-108", type: "Rigging", name: "Chain hoist 2 ton", area: "Yard", status: "out", holder: "Marco (fab)", outAt: t(9), dueAt: t(4), job: "J2047 CedarRun" }
       ],
       depts: { "Dana (office)": "Office", "Marco (fab)": "Fab", "Tess (welding)": "Welding", "Lou (maintenance)": "Maintenance", "Ray (shipping)": "Shipping", "Kim (paint)": "Paint" },
       tickets: [
-        { id: 1046, title: "Portable band saw blade keeps walking off", equipment: "T-104 Band saw, portable", area: "Tool crib", priority: "High", status: "Waiting on parts", requester: "Tess (welding)", assignee: "Lou (maintenance)", job: "", createdAt: t(4),
+        { id: 1046, tags: ["T-104"], title: "Portable band saw blade keeps walking off", equipment: "T-104 Band saw, portable", area: "Tool crib", priority: "High", status: "Waiting on parts", requester: "Tess (welding)", assignee: "Lou (maintenance)", job: "", createdAt: t(4),
           log: [{ at: t(4), who: "Tess (welding)", text: "Blade tracks off after a few cuts. Tagged out." }, { at: t(3), who: "Lou (maintenance)", text: "Guide bearings worn. Ordered a pair from Northfield Steel Supply, PO 6131." }] },
         { id: 1047, title: "Overhead door in bay 2 sticks halfway", equipment: "Bay 2 overhead door", area: "Fab bay 2", priority: "Normal", status: "Assigned", requester: "Ray (shipping)", assignee: "Lou (maintenance)", job: "", jhaRequired: true, jha: "JHA-13", createdAt: t(2),
           log: [{ at: t(2), who: "Ray (shipping)", text: "Have to push it the rest of the way. Slows down loading." }] },
@@ -62,14 +62,52 @@
       ],
       nextQa: 303, nextNcr: 1, nextJha: 14, nextReq: 90, nextRental: 8, nextLoto: 9, nextPo: 6140
     };
+    syncAll(st); return st;
   }
+  function err(msg, fields) { var e = new Error(msg); e.fields = fields || []; return e; }
+  function blank(v) { return v == null || String(v).trim() === ""; }
+  function need(f, spec) { var miss = spec.filter(function (k) { return blank(f[k[0]]); }); if (miss.length) throw err("Fill in " + miss.map(function (k) { return k[1]; }).join(", ") + ".", miss.map(function (k) { return k[0]; })); }
+  var TOOL_TYPES = ["Power tool", "Hand tool", "Saw", "Cutting", "Welding", "Measuring", "Rigging", "Lifting", "Other"];
+  function addTool(s, f) {
+    need(f, [["id", "tool ID"], ["name", "name"], ["type", "type"], ["area", "home location"]]);
+    var id = String(f.id).trim().toUpperCase();
+    if (!/^[A-Z]{1,4}-?\d{1,5}$/.test(id)) throw err("Tool ID should look like T-109.", ["id"]);
+    if (tool(s, id)) throw err(id + " is already in the crib.", ["id"]);
+    if (TOOL_TYPES.indexOf(f.type) < 0) throw err("Pick a type.", ["type"]);
+    var t = { id: id, type: f.type, name: f.name.trim(), area: f.area.trim(), status: "in", holder: "", outAt: 0, dueAt: 0, job: "" }; s.tools.push(t); return t;
+  }
+  function editTool(s, id, f) {
+    need(f, [["name", "name"], ["type", "type"], ["area", "home location"]]);
+    if (TOOL_TYPES.indexOf(f.type) < 0) throw err("Pick a type.", ["type"]);
+    var t = tool(s, id); t.name = f.name.trim(); t.type = f.type; t.area = f.area.trim(); return t;
+  }
+  // a tool is tagged out while any open ticket tags it or any LOTO on it is active
+  function syncTool(s, tl) {
+    if (!tl) return;
+    var tag = s.tickets.filter(function (t) { return t.status !== "Done" && (t.tags || []).indexOf(tl.id) >= 0; })[0], lk = activeLoto(s, { toolId: tl.id });
+    if (tag || lk) { if (tl.status === "out") { tl.holder = ""; tl.outAt = 0; tl.dueAt = 0; tl.job = ""; } tl.status = "repair"; tl.ticket = tag ? tag.id : (lk.ticket || null); tl.loto = lk ? lk.id : null; }
+    else if (tl.status === "repair") { tl.status = "in"; tl.ticket = null; tl.loto = null; }
+    else { tl.ticket = null; tl.loto = null; }
+  }
+  function syncAll(s) { s.tools.forEach(function (tl) { syncTool(s, tl); }); }
+  function tagTool(s, ticketId, toolId) {
+    var t = find(s, ticketId), tl = tool(s, toolId); if (!tl) throw err("Pick a tool to tag out.", ["toolId"]);
+    if (t.status === "Done") throw err("#" + t.id + " is closed. Open a new ticket to tag it out again.");
+    var other = s.tickets.filter(function (x) { return x.id !== t.id && x.status !== "Done" && (x.tags || []).indexOf(toolId) >= 0; })[0];
+    if (other) throw err(tl.name + " is already tagged out on ticket #" + other.id + ".", ["toolId"]);
+    t.tags = t.tags || []; if (t.tags.indexOf(toolId) >= 0) throw err(tl.name + " is already tagged on this ticket.");
+    t.tags.push(toolId); syncTool(s, tl); return tl;
+  }
+  function untagTool(s, ticketId, toolId) { var t = find(s, ticketId); t.tags = (t.tags || []).filter(function (x) { return x !== toolId; }); syncTool(s, tool(s, toolId)); }
   function find(s, id) { return s.tickets.filter(function (t) { return t.id === +id; })[0]; }
   function tool(s, id) { return s.tools.filter(function (t) { return t.id === id; })[0]; }
   function createTicket(s, f) {
-    if (!f.title || !f.requester) throw new Error("A ticket needs a short title and who it's from.");
-    var t = { id: s.nextTicket++, title: f.title, equipment: f.equipment || "", area: f.area || "", priority: PRIORITIES.indexOf(f.priority) >= 0 ? f.priority : "Normal", status: "New", requester: f.requester, assignee: "", job: f.job || "", createdAt: s.now, log: [{ at: s.now, who: f.requester, text: f.notes || "Opened." }], photos: [] };
+    need(f, [["title", "what's wrong"], ["requester", "who it's from"], ["area", "where"], ["priority", "priority"]]);
+    if (PRIORITIES.indexOf(f.priority) < 0) throw err("Pick a priority.", ["priority"]);
+    if (f.toolId && f.tagOut) { var other = s.tickets.filter(function (x) { return x.status !== "Done" && (x.tags || []).indexOf(f.toolId) >= 0; })[0]; if (other) throw err("That tool is already tagged out on ticket #" + other.id + ".", ["equipment"]); }
+    var t = { id: s.nextTicket++, title: f.title.trim(), equipment: f.equipment || "", area: f.area.trim(), priority: f.priority, status: "New", requester: f.requester, assignee: "", job: f.job || "", createdAt: s.now, log: [{ at: s.now, who: f.requester, text: f.notes || "Opened." }], photos: [], tags: [] };
     s.tickets.unshift(t);
-    if (f.toolId && f.tagOut) { var tl = tool(s, f.toolId); if (tl) { tl.status = "repair"; tl.holder = ""; tl.ticket = t.id; } }
+    if (f.toolId && f.tagOut) tagTool(s, t.id, f.toolId);
     return t;
   }
   function setStatus(s, id, status, who, note) {
@@ -82,7 +120,7 @@
     }
     if (status === "Done") { var lk = activeLoto(s, { ticket: t.id }); if (lk) throw new Error(lk.id + " on " + lk.machine + " is still locked out. Release it before closing."); }
     t.status = status; t.log.push({ at: s.now, who: who, text: "Status: " + status + (note ? ". " + note : "") });
-    if (status === "Done") s.tools.forEach(function (tl) { if (tl.ticket === t.id && tl.status === "repair") { tl.status = "in"; tl.ticket = null; } });
+    (t.tags || []).forEach(function (id) { syncTool(s, tool(s, id)); });
     return t;
   }
   function assign(s, id, person, who) { var t = find(s, id); t.assignee = person; if (t.status === "New") t.status = "Assigned"; t.log.push({ at: s.now, who: who, text: "Assigned to " + person }); return t; }
@@ -103,7 +141,7 @@
   function setCheck(s, id, i, result, note) { var q = rec(s.qa, id); if (q.signedBy) throw new Error(id + " is signed off."); if (result && RESULTS.indexOf(result) < 0) throw new Error("Unknown result"); q.checks[i].result = result; if (note != null) q.checks[i].note = note; return q; }
   function qaState(q) { var r = q.checks.map(function (c) { return c.result; }); return q.signedBy ? "signed off" : r.indexOf("fail") >= 0 ? "fail" : r.indexOf("hold") >= 0 ? "hold" : r.indexOf("") >= 0 ? "open" : "ready to sign"; }
   function signOff(s, id, who) { var q = rec(s.qa, id), st = qaState(q); if (st !== "ready to sign") throw new Error("Every check has to pass before " + id + " can be signed off."); q.signedBy = who; q.signedAt = s.now; return q; }
-  function createQa(s, f) { if (!f.job || !f.part) throw new Error("Pick a job and name the part."); var q = { id: "QA-" + s.nextQa++, job: f.job, part: f.part, signedBy: "", signedAt: 0, ncr: "", checks: ["Fit-up", "Weld visual", "Dimensions", "Coating"].map(function (c) { return { item: c, result: "", note: "" }; }) }; s.qa.unshift(q); return q; }
+  function createQa(s, f) { need(f, [["job", "job"], ["part", "part"]]); var q = { id: "QA-" + s.nextQa++, job: f.job, part: f.part, signedBy: "", signedAt: 0, ncr: "", checks: ["Fit-up", "Weld visual", "Dimensions", "Coating"].map(function (c) { return { item: c, result: "", note: "" }; }) }; s.qa.unshift(q); return q; }
   function raiseNcr(s, id, who, desc) {
     var q = rec(s.qa, id); if (q.ncr) throw new Error(id + " already has " + q.ncr + ".");
     var bad = q.checks.filter(function (c) { return c.result === "fail" || c.result === "hold"; });
@@ -113,15 +151,15 @@
     n.ticket = t.id; t.ncr = n.id; q.ncr = n.id; s.ncrs.unshift(n); return n;
   }
   // JHA
-  function createJha(s, f) { if (!f.task) throw new Error("Name the task."); var j = { id: "JHA-" + s.nextJha++, task: f.task, job: f.job || "", steps: [], ppe: f.ppe || [], crew: [] }; s.jhas.unshift(j); return j; }
-  function addStep(s, id, st) { if (!st.step || !st.hazards || !st.controls) throw new Error("Each step needs the step, the hazards and the controls."); var j = jha(s, id); j.steps.push(st); j.crew = []; return j; }
+  function createJha(s, f) { need({ task: f.task, ppe: (f.ppe || []).join("") }, [["task", "task"], ["ppe", "at least one piece of PPE"]]); var j = { id: "JHA-" + s.nextJha++, task: f.task, job: f.job || "", steps: [], ppe: f.ppe || [], crew: [] }; s.jhas.unshift(j); return j; }
+  function addStep(s, id, st) { need(st, [["step", "step"], ["hazards", "hazards"], ["controls", "controls"]]); var j = jha(s, id); j.steps.push(st); j.crew = []; return j; }
   function signOn(s, id, who) { var j = jha(s, id); if (!j.steps.length) throw new Error("Add at least one step before the crew signs on."); if (j.crew.some(function (c) { return c.who === who; })) throw new Error(who + " already signed on."); j.crew.push({ who: who, at: s.now }); return j; }
   function linkJha(s, ticketId, jhaId, who) { var t = find(s, ticketId); t.jha = jhaId; t.log.push({ at: s.now, who: who, text: "Linked " + jhaId }); return t; }
   // Requisitions
   var REQ_STATUSES = ["Requested", "Approved", "Rejected", "Ordered", "Received"];
-  function createReq(s, f) { if (!f.item || !(+f.qty > 0) || !f.vendor) throw new Error("A requisition needs an item, a quantity and a vendor."); var r = { id: "RQ-" + s.nextReq++, job: f.job || "", item: f.item, qty: +f.qty, vendor: f.vendor, by: f.by, status: "Requested", po: "", ticket: f.ticket || null, note: "" }; s.reqs.unshift(r); return r; }
+  function createReq(s, f) { need(f, [["item", "item"], ["qty", "quantity"], ["vendor", "vendor"], ["by", "who's asking"]]); if (!(+f.qty > 0) || +f.qty !== Math.floor(+f.qty)) throw err("Quantity has to be a whole number above zero.", ["qty"]); var r = { id: "RQ-" + s.nextReq++, job: f.job || "", item: f.item, qty: +f.qty, vendor: f.vendor, by: f.by, status: "Requested", po: "", ticket: f.ticket || null, note: "" }; s.reqs.unshift(r); return r; }
   function approveReq(s, id, who) { var r = rec(s.reqs, id); if (r.status !== "Requested") throw new Error(id + " is already " + r.status + "."); r.status = "Approved"; r.po = String(s.nextPo++); r.note = "Approved by " + who; return r; }
-  function rejectReq(s, id, who, why) { var r = rec(s.reqs, id); if (r.status !== "Requested") throw new Error(id + " is already " + r.status + "."); if (!why) throw new Error("Say why it's rejected."); r.status = "Rejected"; r.note = who + ": " + why; return r; }
+  function rejectReq(s, id, who, why) { var r = rec(s.reqs, id); if (r.status !== "Requested") throw new Error(id + " is already " + r.status + "."); if (blank(why)) throw err("Say why it's rejected.", ["why"]); r.status = "Rejected"; r.note = who + ": " + why; return r; }
   function orderReq(s, id) { var r = rec(s.reqs, id); if (r.status !== "Approved") throw new Error("Approve it first."); r.status = "Ordered"; return r; }
   function receiveReq(s, id, who) { var r = rec(s.reqs, id); if (r.status !== "Ordered" && r.status !== "Approved") throw new Error(id + " isn't on order."); r.status = "Received"; if (r.ticket) addNote(s, r.ticket, who, "Parts in: " + r.item + " (PO " + r.po + ")"); return r; }
   // Rentals
@@ -129,19 +167,27 @@
   function rentalCost(r, now) { return rentalDays(r, now) * r.rate; }
   function rentalAlert(r, now) { if (r.offAt) return "off rent"; if (r.dueBack < now) return "overdue"; if (r.dueBack - now < DAY) return "call off-rent"; return ""; }
   function offRent(s, id) { var r = rec(s.rentals, id); r.offAt = s.now; return r; }
-  function createRental(s, f) { if (!f.item || !f.vendor || !(+f.days > 0) || !(+f.rate > 0)) throw new Error("Rental needs item, vendor, days and a daily rate."); var r = { id: "RN-" + s.nextRental++, item: f.item, vendor: f.vendor, job: f.job || "", onRent: s.now, dueBack: s.now + f.days * DAY, rate: +f.rate, offAt: 0 }; s.rentals.unshift(r); return r; }
+  function createRental(s, f) { need(f, [["item", "what's rented"], ["vendor", "vendor"], ["days", "days"], ["rate", "daily rate"]]); if (!(+f.days > 0)) throw err("Days has to be above zero.", ["days"]); if (!(+f.rate > 0)) throw err("Daily rate has to be above zero.", ["rate"]); var r = { id: "RN-" + s.nextRental++, item: f.item, vendor: f.vendor, job: f.job || "", onRent: s.now, dueBack: s.now + f.days * DAY, rate: +f.rate, offAt: 0 }; s.rentals.unshift(r); return r; }
   // LOTO
   function createLoto(s, f) {
-    if (!f.machine || !f.energy || !f.energy.length) throw new Error("LOTO needs the machine and at least one energy source.");
+    need({ machine: f.machine, energy: (f.energy || []).join("") }, [["machine", "machine"], ["energy", "energy sources"]]);
+    var dup = s.lotos.filter(function (l) { return !l.released && (f.toolId ? l.toolId === f.toolId : l.machine === f.machine); })[0];
+    if (dup) throw err(f.machine + " already has an open lockout, " + dup.id + ". Use that one.", ["machine"]);
     var l = { id: "LOTO-" + s.nextLoto++, machine: f.machine, toolId: f.toolId || "", ticket: f.ticket || null, energy: f.energy, locks: [], verified: false, released: false }; s.lotos.unshift(l); return l;
   }
-  function applyLock(s, id, who) { var l = rec(s.lotos, id); if (l.released) throw new Error(id + " is released."); if (l.locks.some(function (k) { return k.owner === who; })) throw new Error(who + " already has a lock on."); l.locks.push({ owner: who, at: s.now }); var tl = l.toolId && tool(s, l.toolId); if (tl) { if (tl.status === "out") checkin(s, tl.id); tl.status = "repair"; tl.ticket = l.ticket || tl.ticket; } return l; }
+  function applyLock(s, id, who) {
+    var l = rec(s.lotos, id);
+    if (l.released) { var dup = s.lotos.filter(function (x) { return x !== l && !x.released && (l.toolId ? x.toolId === l.toolId : x.machine === l.machine); })[0]; if (dup) throw err(l.machine + " is already locked out under " + dup.id + "."); l.released = false; }
+    if (l.locks.some(function (k) { return k.owner === who; })) throw err(who + " already has a lock on.");
+    l.locks.push({ owner: who, at: s.now }); l.verified = false; syncTool(s, l.toolId && tool(s, l.toolId)); return l;
+  }
   function verifyLoto(s, id) { var l = rec(s.lotos, id); if (!l.locks.length) throw new Error("Put a lock on before verifying."); l.verified = true; return l; }
   function releaseLock(s, id, who) {
     var l = rec(s.lotos, id), k = l.locks.filter(function (x) { return x.owner === who; })[0];
-    if (!k) throw new Error("Only the person who hung a lock can take it off. " + who + " has no lock here.");
+    if (!k) throw err("Only the person who hung a lock can take it off. " + who + " has no lock here.");
     l.locks.splice(l.locks.indexOf(k), 1);
-    if (!l.locks.length && l.verified) { l.released = true; var tl = l.toolId && tool(s, l.toolId), t = l.ticket && find(s, l.ticket); if (tl && (!t || t.status === "Done")) { tl.status = "in"; tl.ticket = null; } }
+    if (!l.locks.length) { l.released = true; l.verified = false; }
+    syncTool(s, l.toolId && tool(s, l.toolId));
     return l;
   }
   function lotoState(l) { return l.released ? "released" : !l.locks.length ? "not applied" : l.verified ? "locked, verified" : "locked, verify zero energy"; }
@@ -177,6 +223,6 @@
   }
   function overdue(s) { return s.tools.filter(function (t) { return t.status === "out" && t.dueAt < s.now; }); }
   function byPerson(s) { var m = {}; s.tools.forEach(function (t) { if (t.status === "out") (m[t.holder] = m[t.holder] || []).push(t); }); return m; }
-  var api = { setCheck: setCheck, qaState: qaState, signOff: signOff, createQa: createQa, raiseNcr: raiseNcr, createJha: createJha, addStep: addStep, signOn: signOn, linkJha: linkJha, jha: jha, rec: rec, createReq: createReq, approveReq: approveReq, rejectReq: rejectReq, orderReq: orderReq, receiveReq: receiveReq, REQ_STATUSES: REQ_STATUSES, rentalCost: rentalCost, rentalDays: rentalDays, rentalAlert: rentalAlert, offRent: offRent, createRental: createRental, createLoto: createLoto, applyLock: applyLock, verifyLoto: verifyLoto, releaseLock: releaseLock, lotoState: lotoState, activeLoto: activeLoto, analytics: analytics, dept: dept, DEPTS: ["Office", "Fab", "Welding", "Maintenance", "Shipping", "Paint"], seed: seed, STATUSES: STATUSES, PRIORITIES: PRIORITIES, createTicket: createTicket, setStatus: setStatus, assign: assign, addNote: addNote, checkout: checkout, checkin: checkin, overdue: overdue, byPerson: byPerson, find: find, tool: tool, DAY: DAY };
+  var api = { addTool: addTool, editTool: editTool, TOOL_TYPES: TOOL_TYPES, tagTool: tagTool, untagTool: untagTool, syncAll: syncAll, setCheck: setCheck, qaState: qaState, signOff: signOff, createQa: createQa, raiseNcr: raiseNcr, createJha: createJha, addStep: addStep, signOn: signOn, linkJha: linkJha, jha: jha, rec: rec, createReq: createReq, approveReq: approveReq, rejectReq: rejectReq, orderReq: orderReq, receiveReq: receiveReq, REQ_STATUSES: REQ_STATUSES, rentalCost: rentalCost, rentalDays: rentalDays, rentalAlert: rentalAlert, offRent: offRent, createRental: createRental, createLoto: createLoto, applyLock: applyLock, verifyLoto: verifyLoto, releaseLock: releaseLock, lotoState: lotoState, activeLoto: activeLoto, analytics: analytics, dept: dept, DEPTS: ["Office", "Fab", "Welding", "Maintenance", "Shipping", "Paint"], seed: seed, STATUSES: STATUSES, PRIORITIES: PRIORITIES, createTicket: createTicket, setStatus: setStatus, assign: assign, addNote: addNote, checkout: checkout, checkin: checkin, overdue: overdue, byPerson: byPerson, find: find, tool: tool, DAY: DAY };
   if (typeof module !== "undefined" && module.exports) module.exports = api; else root.GMATickets = api;
 })(typeof window !== "undefined" ? window : this);

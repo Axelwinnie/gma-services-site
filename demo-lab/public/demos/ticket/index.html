@@ -61,15 +61,17 @@
 
     <section class="panel" id="tab-crib" hidden aria-label="Tool crib">
       <h2>Who has what</h2>
-      <div class="table-wrap"><table id="ttbl"><thead><tr><th>Tool</th><th>Name</th><th>Status</th><th>With</th><th>Job</th><th>Due back</th><th></th></tr></thead><tbody></tbody></table></div>
+      <p class="hint">Add a tool or edit one. ID, name, type and home location are all required.</p>
+      <div class="row" id="crib-form"></div>
+      <div class="table-wrap"><table id="ttbl"><thead><tr><th>Tool</th><th>Name</th><th>Type</th><th>Status</th><th>With</th><th>Job</th><th>Due back</th><th></th></tr></thead><tbody></tbody></table></div>
     </section>
 
     <section class="panel" id="tab-new" hidden aria-label="New request">
       <h2>Report a problem</h2>
-      <form id="nform" class="form">
+      <form id="nform" class="form" novalidate>
         <label>What's wrong (short)<input name="title" required maxlength="90" placeholder="Welder 2 wire feed slipping"></label>
         <label>Tool or equipment<select name="equipment" id="nequip"></select></label>
-        <label>Where<input name="area" placeholder="Weld bay"></label>
+        <label>Where<input name="area" required placeholder="Weld bay"></label>
         <label>Priority<select name="priority" id="nprio"></select></label>
         <label>Job (if it's holding one up)<select name="job"><option value="">None</option><option>J2041 PineHollow</option><option>J2047 CedarRun</option><option>J2052 MillPond</option></select></label>
         <label class="wide">Details<textarea name="notes" rows="3" placeholder="What happened, what you tried"></textarea></label>

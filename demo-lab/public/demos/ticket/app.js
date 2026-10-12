@@ -8,9 +8,20 @@
   function prioCls(p) { return p.indexOf("Down") === 0 ? "down" : p.toLowerCase(); }
   function opt(sel, list, val) { sel.innerHTML = ""; list.forEach(function (v) { var o = el("option", null, v); o.value = v; if (v === val) o.selected = true; sel.appendChild(o); }); }
   function act(fn) { try { fn(); render(); } catch (e) { say(e.message); } }
+  // inline validation: map is { fieldName: inputElement }. Bad fields get a red outline and the message shows under the form.
+  function clearErr(box) { box.querySelectorAll(".bad").forEach(function (x) { x.classList.remove("bad"); x.removeAttribute("aria-invalid"); }); var o = box.querySelector(".err"); if (o) o.remove(); }
+  function guard(box, map, fn) {
+    clearErr(box);
+    try { fn(); render(); }
+    catch (e) {
+      (e.fields || []).forEach(function (k) { var x = map[k]; if (x) { x.classList.add("bad"); x.setAttribute("aria-invalid", "true"); } });
+      var p = el("p", "err", e.message); p.setAttribute("role", "alert"); box.appendChild(p);
+      var first = (e.fields || []).map(function (k) { return map[k]; }).filter(Boolean)[0]; if (first) first.focus();
+    }
+  }
 
   function start() {
-    s = T.seed(); cur = null; opt($("who"), s.people, "Dana (office)"); opt($("nprio"), T.PRIORITIES, "Normal");
+    s = T.seed(); cur = null; if (cf.id) cancelEdit(); opt($("who"), s.people, "Dana (office)"); opt($("nprio"), T.PRIORITIES, "Normal");
     say("Fresh sample shop loaded. Change who you are to see it from the floor or the office."); show("board");
   }
   function show(t) {
@@ -60,6 +71,10 @@
     }
     s.lotos.filter(function (l) { return l.ticket === t.id; }).forEach(function (l) { lk.appendChild(el("span", "pill " + (l.released ? "released" : "locked"), l.id + " " + T.lotoState(l))); lk.appendChild(document.createTextNode(" ")); });
     s.reqs.filter(function (r) { return r.ticket === t.id; }).forEach(function (r) { lk.appendChild(document.createTextNode(" " + r.id + " " + r.item + ", " + r.status + (r.po ? ", PO " + r.po : "") + ".")); });
+    var tg = el("div", "row"); tg.appendChild(el("span", "hint", (t.tags && t.tags.length) ? "Tagged out on this ticket:" : "No tools tagged out on this ticket."));
+    (t.tags || []).forEach(function (id) { var x = T.tool(s, id); tg.appendChild(el("span", "pill repair", id + " " + x.name)); if (t.status !== "Done") tg.appendChild(btn("Remove tag", function () { T.untagTool(s, t.id, id); say(id + " untagged. It's back in the crib unless a lockout is still on it."); }, true)); });
+    if (t.status !== "Done") { var ts = sel("Tag out a tool", ["Tag out a tool..."].concat(s.tools.map(function (x) { return x.id + " " + x.name; }))); tg.appendChild(ts); tg.appendChild(btn("Tag out", function () { T.tagTool(s, t.id, ts.selectedIndex ? ts.value.split(" ")[0] : ""); say(ts.value.split(" ")[0] + " tagged out on #" + t.id + "."); }, true, tg, { toolId: ts })); }
+    d.appendChild(tg);
     if (lk.childNodes.length) d.appendChild(lk);
     var row = el("div", "row"), as = el("select", "detail-in"); as.setAttribute("aria-label", "Assign to");
     opt(as, ["Assign to..."].concat(s.people), "");
@@ -78,20 +93,39 @@
     d.appendChild(el("h3", "hint", "History"));
     var ul = el("ul", "log"); t.log.slice().reverse().forEach(function (l) { var li = el("li", null, l.text); li.appendChild(el("small", null, l.who + " · " + when(l.at))); ul.appendChild(li); }); d.appendChild(ul);
   }
+  var editing = null, cf = {};
+  function cribForm() {
+    once("crib-form", function (box) {
+      cf.id = inp("Tool ID, like T-109", "9rem"); cf.name = inp("Name", "16rem"); cf.type = sel("Type", ["Type..."].concat(T.TOOL_TYPES)); cf.area = inp("Home location", "10rem");
+      [cf.id, cf.name, cf.type, cf.area].forEach(function (x) { box.appendChild(x); });
+      cf.save = btn("Add tool", function () {
+        var f = { id: cf.id.value, name: cf.name.value, type: cf.type.selectedIndex ? cf.type.value : "", area: cf.area.value };
+        if (editing) { T.editTool(s, editing, f); say(editing + " saved."); } else { var t = T.addTool(s, f); say(t.id + " added to the crib."); }
+        cancelEdit();
+      }, false, box, cf);
+      cf.cancel = btn("Cancel", function () { cancelEdit(); }, true); cf.cancel.hidden = true;
+      box.appendChild(cf.save); box.appendChild(cf.cancel);
+    });
+  }
+  function cancelEdit() { editing = null; cf.id.disabled = false; ["id", "name", "area"].forEach(function (k) { cf[k].value = ""; }); cf.type.selectedIndex = 0; cf.save.textContent = "Add tool"; cf.cancel.hidden = true; clearErr($("crib-form")); }
+  function startEdit(tl) { editing = tl.id; cf.id.value = tl.id; cf.id.disabled = true; cf.name.value = tl.name; cf.type.value = tl.type || "Other"; cf.area.value = tl.area; cf.save.textContent = "Save changes"; cf.cancel.hidden = false; clearErr($("crib-form")); cf.name.focus(); }
   function crib() {
+    cribForm();
     var tb = $("ttbl").querySelector("tbody"); tb.innerHTML = "";
     s.tools.forEach(function (tl) {
       var tr = el("tr"), late = tl.status === "out" && tl.dueAt < s.now;
-      tr.appendChild(el("td", null, tl.id)); tr.appendChild(el("td", null, tl.name));
-      var sc = el("td"); sc.appendChild(el("span", "pill " + (late ? "late" : tl.status), late ? "overdue" : { in: "in crib", out: "checked out", repair: "tagged out" }[tl.status])); tr.appendChild(sc);
-      tr.appendChild(el("td", null, tl.holder || (tl.status === "repair" ? "Repair, ticket #" + tl.ticket : tl.area)));
+      tr.appendChild(el("td", null, tl.id)); tr.appendChild(el("td", null, tl.name)); tr.appendChild(el("td", null, tl.type || ""));
+      var sc = el("td"); sc.appendChild(el("span", "pill " + (late ? "late" : tl.status), late ? "overdue" : tl.status === "repair" && tl.loto ? "locked out" : { in: "in crib", out: "checked out", repair: "tagged out" }[tl.status])); tr.appendChild(sc);
+      tr.appendChild(el("td", null, tl.holder || (tl.status === "repair" ? [tl.ticket ? "Ticket #" + tl.ticket : "", tl.loto ? tl.loto : ""].filter(Boolean).join(", ") : tl.area)));
       tr.appendChild(el("td", null, tl.job || ""));
       tr.appendChild(el("td", null, tl.status === "out" ? day(tl.dueAt) : ""));
       var a = el("td"), b;
       if (tl.status === "out") { b = el("button", "btn btn-ghost", "Check in"); b.addEventListener("click", function () { act(function () { T.checkin(s, tl.id); say(tl.name + " is back in the crib."); }); }); }
       else if (tl.status === "in") { b = el("button", "btn", "Check out to me"); b.addEventListener("click", function () { act(function () { T.checkout(s, tl.id, me(), 2, ""); say(tl.name + " checked out to " + me() + ", due back in 2 days."); }); }); }
-      else { b = el("button", "btn btn-ghost", "Open ticket"); b.addEventListener("click", function () { cur = tl.ticket; show("detail"); }); }
-      b.type = "button"; a.appendChild(b); tr.appendChild(a); if (late) tr.className = "flag"; tb.appendChild(tr);
+      else if (tl.ticket) { b = el("button", "btn btn-ghost", "Open ticket"); b.addEventListener("click", function () { cur = tl.ticket; show("detail"); }); }
+      else { b = el("button", "btn btn-ghost", "Open LOTO"); b.addEventListener("click", function () { show("loto"); }); }
+      b.type = "button"; a.appendChild(b);
+      var ed = el("button", "btn btn-ghost", "Edit"); ed.type = "button"; ed.addEventListener("click", function () { startEdit(tl); }); a.appendChild(document.createTextNode(" ")); a.appendChild(ed); tr.appendChild(a); if (late) tr.className = "flag"; tb.appendChild(tr);
     });
   }
   function newForm() { opt($("nequip"), ["Other / not a crib tool"].concat(s.tools.map(function (t) { return t.id + " " + t.name; })), ""); }
@@ -99,7 +133,7 @@
   // ---- shared small builders
   function inp(ph, w) { var x = el("input", "mini"); x.placeholder = ph; x.setAttribute("aria-label", ph); if (w) x.style.width = w; return x; }
   function sel(label, list) { var x = el("select", "mini"); x.setAttribute("aria-label", label); opt(x, list, ""); return x; }
-  function btn(text, fn, ghost) { var b = el("button", "btn sm" + (ghost ? " btn-ghost" : ""), text); b.type = "button"; b.addEventListener("click", function () { act(fn); }); return b; }
+  function btn(text, fn, ghost, box, map) { var b = el("button", "btn sm" + (ghost ? " btn-ghost" : ""), text); b.type = "button"; b.addEventListener("click", function () { if (box) guard(box, map || {}, fn); else act(fn); }); return b; }
   var JOBS = ["J2041 PineHollow", "J2047 CedarRun", "J2052 MillPond"], VENDORS = ["Northfield Steel Supply", "Kettle Brook Coatings", "Blue Ledge Building Supply"];
   function money(n) { return "$" + n.toLocaleString(); }
   function goTicket(id) { cur = id; show("detail"); }
@@ -110,7 +144,7 @@
     once("qa-new", function (box) {
       var j = sel("Job", ["Job..."].concat(JOBS)), part = inp("Part, like Beam B7");
       box.appendChild(j); box.appendChild(part);
-      box.appendChild(btn("New inspection", function () { var q = T.createQa(s, { job: j.selectedIndex ? j.value : "", part: part.value.trim() }); part.value = ""; say(q.id + " started."); }));
+      box.appendChild(btn("New inspection", function () { var q = T.createQa(s, { job: j.selectedIndex ? j.value : "", part: part.value.trim() }); part.value = ""; say(q.id + " started."); }, false, box, { job: j, part: part }));
     });
     var list = $("qa-list"); list.innerHTML = "";
     s.qa.forEach(function (q) {
@@ -135,9 +169,9 @@
   }
   function jhaTab() {
     once("jha-new", function (box) {
-      var task = inp("Task, like Grind out cracked weld", "18rem"), j = sel("Job", ["No job"].concat(JOBS));
-      box.appendChild(task); box.appendChild(j);
-      box.appendChild(btn("New JHA", function () { var x = T.createJha(s, { task: task.value.trim(), job: j.selectedIndex ? j.value : "", ppe: ["Safety glasses"] }); task.value = ""; say(x.id + " started. Add the steps next."); }));
+      var task = inp("Task, like Grind out cracked weld", "18rem"), j = sel("Job", ["No job"].concat(JOBS)), pp = sel("Main PPE", ["Main PPE...", "Safety glasses", "Hard hat", "Leather gloves", "Face shield", "Harness"]);
+      box.appendChild(task); box.appendChild(j); box.appendChild(pp);
+      box.appendChild(btn("New JHA", function () { var x = T.createJha(s, { task: task.value.trim(), job: j.selectedIndex ? j.value : "", ppe: pp.selectedIndex ? [pp.value] : [] }); task.value = ""; pp.selectedIndex = 0; say(x.id + " started. Add the steps next."); }, false, box, { task: task, ppe: pp }));
     });
     var list = $("jha-list"); list.innerHTML = "";
     s.jhas.forEach(function (j) {
@@ -147,7 +181,7 @@
       r.appendChild(tb);
       var add = el("div", "row"), a = inp("Step"), b = inp("Hazards"), c = inp("Controls");
       add.appendChild(a); add.appendChild(b); add.appendChild(c);
-      add.appendChild(btn("Add step", function () { T.addStep(s, j.id, { step: a.value.trim(), hazards: b.value.trim(), controls: c.value.trim() }); say("Step added. Crew sign-ons were cleared since the JHA changed."); }, true));
+      add.appendChild(btn("Add step", function () { T.addStep(s, j.id, { step: a.value.trim(), hazards: b.value.trim(), controls: c.value.trim() }); say("Step added. Crew sign-ons were cleared since the JHA changed."); }, true, add, { step: a, hazards: b, controls: c }));
       r.appendChild(add);
       var pp = el("div", "row"); pp.appendChild(el("span", "hint", "PPE:"));
       ["Safety glasses", "Hard hat", "Leather gloves", "Cut-resistant gloves", "Hearing protection", "Face shield", "Harness"].forEach(function (x) {
@@ -164,7 +198,7 @@
     once("req-new", function (box) {
       var item = inp("Item", "14rem"), q = inp("Qty", "4rem"), j = sel("Job", ["No job"].concat(JOBS)), v = sel("Vendor", ["Vendor..."].concat(VENDORS));
       [item, q, j, v].forEach(function (x) { box.appendChild(x); });
-      box.appendChild(btn("Request it", function () { var r = T.createReq(s, { item: item.value.trim(), qty: q.value, job: j.selectedIndex ? j.value : "", vendor: v.selectedIndex ? v.value : "", by: me() }); item.value = ""; q.value = ""; say(r.id + " sent for approval."); }));
+      box.appendChild(btn("Request it", function () { var r = T.createReq(s, { item: item.value.trim(), qty: q.value, job: j.selectedIndex ? j.value : "", vendor: v.selectedIndex ? v.value : "", by: me() }); item.value = ""; q.value = ""; say(r.id + " sent for approval."); }, false, box, { item: item, qty: q, vendor: v }));
     });
     var tb = $("rqtbl").querySelector("tbody"); tb.innerHTML = "";
     s.reqs.forEach(function (r) {
@@ -172,7 +206,7 @@
       [r.id, r.item, r.qty, r.job, r.vendor, r.by, r.po].forEach(function (x, i) { tr.appendChild(el("td", i === 2 ? "n" : null, x)); });
       var st = el("td"); st.appendChild(el("span", "pill " + r.status.toLowerCase(), r.status)); if (r.note) st.appendChild(el("div", "hint", r.note)); tr.appendChild(st);
       var a = el("td");
-      if (r.status === "Requested") { var why = inp("Reason if rejecting", "10rem"); a.appendChild(btn("Approve", function () { T.approveReq(s, r.id, me()); say(r.id + " approved, PO " + r.po + "."); })); a.appendChild(why); a.appendChild(btn("Reject", function () { T.rejectReq(s, r.id, me(), why.value.trim()); say(r.id + " rejected."); }, true)); }
+      if (r.status === "Requested") { var why = inp("Reason if rejecting", "10rem"); a.appendChild(btn("Approve", function () { T.approveReq(s, r.id, me()); say(r.id + " approved, PO " + r.po + "."); })); a.appendChild(why); a.appendChild(btn("Reject", function () { T.rejectReq(s, r.id, me(), why.value.trim()); say(r.id + " rejected."); }, true, a, { why: why })); }
       else if (r.status === "Approved") a.appendChild(btn("Mark ordered", function () { T.orderReq(s, r.id); say(r.id + " ordered from " + r.vendor + "."); }));
       else if (r.status === "Ordered") a.appendChild(btn("Mark received", function () { T.receiveReq(s, r.id, me()); say(r.id + " received." + (r.ticket ? " Note added to ticket #" + r.ticket + "." : "")); }));
       if (r.ticket) { a.appendChild(document.createTextNode(" ")); a.appendChild(tlink(r.ticket)); }
@@ -183,7 +217,7 @@
     once("rent-new", function (box) {
       var item = inp("What's rented", "12rem"), v = sel("Vendor", ["Vendor..."].concat(VENDORS)), j = sel("Job", ["No job"].concat(JOBS)), d = inp("Days", "4rem"), rt = inp("Sample $/day", "7rem");
       [item, v, j, d, rt].forEach(function (x) { box.appendChild(x); });
-      box.appendChild(btn("Put on rent", function () { var r = T.createRental(s, { item: item.value.trim(), vendor: v.selectedIndex ? v.value : "", job: j.selectedIndex ? j.value : "", days: +d.value, rate: rt.value }); item.value = ""; say(r.id + " on rent."); }));
+      box.appendChild(btn("Put on rent", function () { var r = T.createRental(s, { item: item.value.trim(), vendor: v.selectedIndex ? v.value : "", job: j.selectedIndex ? j.value : "", days: d.value.trim(), rate: rt.value.trim() }); item.value = ""; d.value = ""; rt.value = ""; say(r.id + " on rent."); }, false, box, { item: item, vendor: v, days: d, rate: rt }));
     });
     var tb = $("rntbl").querySelector("tbody"); tb.innerHTML = "";
     s.rentals.forEach(function (r) {
@@ -199,7 +233,7 @@
     once("loto-new", function (box) {
       var m = sel("Machine", ["Machine..."].concat(s.tools.map(function (t) { return t.id + " " + t.name; }), ["Welder 3", "Bay 2 overhead door", "Paint booth"])), e = inp("Energy sources, comma separated", "18rem"), tk = sel("Ticket", ["No ticket"].concat(s.tickets.map(function (t) { return "#" + t.id + " " + t.title; })));
       [m, e, tk].forEach(function (x) { box.appendChild(x); });
-      box.appendChild(btn("New LOTO record", function () { var mv = m.selectedIndex ? m.value : ""; var l = T.createLoto(s, { machine: mv, toolId: /^T-\d+/.test(mv) ? mv.split(" ")[0] : "", ticket: tk.selectedIndex ? +tk.value.slice(1).split(" ")[0] : null, energy: e.value.split(",").map(function (x) { return x.trim(); }).filter(Boolean) }); e.value = ""; say(l.id + " created. Apply locks next."); }));
+      box.appendChild(btn("New LOTO record", function () { var mv = m.selectedIndex ? m.value : ""; var l = T.createLoto(s, { machine: mv, toolId: /^T-\d+/.test(mv) ? mv.split(" ")[0] : "", ticket: tk.selectedIndex ? +tk.value.slice(1).split(" ")[0] : null, energy: e.value.split(",").map(function (x) { return x.trim(); }).filter(Boolean) }); e.value = ""; say(l.id + " created. Apply locks next."); }, false, box, { machine: m, energy: e }));
     });
     var list = $("loto-list"); list.innerHTML = "";
     s.lotos.forEach(function (l) {
@@ -242,7 +276,7 @@
   $("reset").addEventListener("click", start);
   $("nform").addEventListener("submit", function (e) {
     e.preventDefault(); var f = e.target, eq = f.equipment.value, isTool = /^T-\d+/.test(eq);
-    act(function () {
+    guard(f, { title: f.title, area: f.area, priority: f.priority, equipment: f.equipment }, function () {
       var t = T.createTicket(s, { title: f.title.value.trim(), equipment: isTool ? eq : "", area: f.area.value.trim(), priority: f.priority.value, job: f.job.value, notes: f.notes.value.trim(), requester: me(), toolId: isTool ? eq.split(" ")[0] : "", tagOut: f.tagOut.checked });
       f.reset(); cur = t.id; tab = "detail"; show("detail"); say("Ticket #" + t.id + " is in. It shows up as New until somebody takes it.");
     });
