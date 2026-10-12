@@ -11,7 +11,7 @@ The store site in `public/` is unchanged. This folder is its own static site.
 - Home: `public/index.html`
 - Tool Ticket System: `public/demos/ticket/`
 - Doc Extract: `public/demos/extract/`
-- File Organizer: `public/demos/organizer/`
+- File Organizer: `public/demos/organizer/` (client-side sandbox, tests in `tests/organizer.test.js`)
 - `public/robots.txt` disallows every crawler
 
 Every page sends `noindex, nofollow`. A banner on each page says **Internal preview — not public**.
