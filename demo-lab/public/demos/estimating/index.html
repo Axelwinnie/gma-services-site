@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Steel Estimating | GMA Demo Lab</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Sandbox for the steel estimate packet. Paste a member list and get weights, tons, and a rough price. Runs in your browser.">
+  <meta name="theme-color" content="#12151a">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/demo-lab.css">
+  <link rel="stylesheet" href="estimating.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar no-print">
+    <div class="wrap">
+      <p class="wordmark">Granite Models Automations <span>Demo Lab</span></p>
+    </div>
+  </header>
+  <main id="main" class="wrap stub est">
+    <p class="back no-print"><a href="/">Back to Demo Lab</a></p>
+    <p class="badge no-print">Live sandbox</p>
+    <h1>Steel Estimating</h1>
+    <p class="lede no-print">Paste a member list and this figures the weight of every piece, the total tons, and a rough price at whatever rates you punch in. It's the first pass of the estimate packet I build for shops.</p>
+    <p class="demo-note" role="note">Demo. Sample pricing only. A person reviews every real packet before it goes out. Everything here runs in your browser, nothing gets saved or sent anywhere.</p>
+
+    <section class="panel no-print" aria-labelledby="in-h">
+      <h2 id="in-h">1. Member list</h2>
+      <div class="row">
+        <label for="sample">Sample (fictional jobs)</label>
+        <select id="sample"><option value="">Pick a sample</option></select>
+        <label class="btn btn-ghost" for="file">Upload CSV or TXT</label>
+        <input id="file" type="file" accept=".csv,.txt,.tsv,text/plain,text/csv" class="sr-only">
+      </div>
+      <label for="list" class="sr-only">Member list</label>
+      <textarea id="list" rows="10" spellcheck="false" placeholder="Mark, Shape, Qty, Length&#10;B1, W8x31, 4, 20'-6&quot;&#10;C1  HSS6x6x1/4  6 @ 14'-0&quot;"></textarea>
+      <p class="hint">One piece per line. Mark, shape, qty, length. Commas, tabs, or spaces all work. Shapes like W8x31, HSS6x6x1/4, L4x4x3/8, C10x15.3, MC12x10.6, Pipe3STD, PL1/2x6. Length as 20'-6", 20'-6 1/2", 20' or 20.5.</p>
+      <div class="row">
+        <button class="btn" id="run" type="button">Run estimate</button>
+        <button class="btn btn-ghost" id="reset" type="button">Reset</button>
+      </div>
+    </section>
+
+    <section class="panel no-print" aria-labelledby="rate-h">
+      <h2 id="rate-h">2. Rates (sample numbers, change them)</h2>
+      <div class="row rates">
+        <label>Material $/lb <input id="r-mat" type="number" step="0.01" min="0" value="1.10"></label>
+        <label>Labor $/lb <input id="r-lab" type="number" step="0.01" min="0" value="1.60"></label>
+        <label>Waste % on material <input id="r-waste" type="number" step="0.5" min="0" value="5"></label>
+      </div>
+    </section>
+
+    <section class="panel" id="out" aria-labelledby="out-h" hidden>
+      <h2 id="out-h">3. Estimate</h2>
+      <p class="print-only">Granite Models Automations. Steel estimate summary. Demo, sample pricing. Printed <span id="pdate"></span>.</p>
+      <div class="totals" id="totals"></div>
+      <div id="warn" class="warn" hidden></div>
+      <div class="table-wrap">
+        <table id="tbl">
+          <thead><tr><th>#</th><th>Mark</th><th>Shape</th><th class="n">Qty</th><th class="n">Length</th><th class="n">lb/ft</th><th class="n">lb each</th><th class="n">lb total</th><th class="n">Tons</th><th class="n">Material $</th><th class="n">Labor $</th><th class="n">Line $</th><th>Flags</th></tr></thead>
+          <tbody></tbody>
+          <tfoot></tfoot>
+        </table>
+      </div>
+      <p class="hint">Weights come from a built-in table of common AISC shapes. W, C, MC and WT use the weight in the name. Plate is figured at 490 lb per cubic foot. If a shape isn't in the table it gets flagged and left blank, not guessed. No connections, bolts, paint or freight in here. The real packet covers those.</p>
+      <div class="row no-print">
+        <button class="btn" id="dl-xlsx" type="button">Download XLSX</button>
+        <button class="btn btn-ghost" id="dl-csv" type="button">Download CSV</button>
+        <button class="btn btn-ghost" id="dl-pdf" type="button">Print summary / save PDF</button>
+        <button class="btn btn-ghost" id="dl-json" type="button">Download JSON</button>
+      </div>
+    </section>
+
+    <section class="panel cta" aria-labelledby="cta-h">
+      <h2 id="cta-h">Want a real one?</h2>
+      <p>Send me your drawings with a bill of materials or member list. You get back the estimate workbook, a summary PDF, and a JSON file, and I check every packet myself before it goes out. $149 for up to 8 sheets in 48 hours. $399 for up to 20 sheets in 3 days.</p>
+      <p><a class="btn" href="https://granitemodels.store/steel-estimating/">Order an estimate packet</a> <a class="btn btn-ghost" href="mailto:granitemodels@gmail.com?subject=Steel%20estimate%20packet">Email granitemodels@gmail.com</a></p>
+    </section>
+  </main>
+  <footer class="site-footer no-print">
+    <div class="wrap">
+      <p>Granite Models Automations · <a href="mailto:granitemodels@gmail.com">granitemodels@gmail.com</a> · <a href="tel:+19786473933">(978) 647-3933</a></p>
+    </div>
+  </footer>
+  <script src="shapes.js"></script>
+  <script src="estimate.js"></script>
+  <script src="samples.js"></script>
+  <script src="xlsx.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
