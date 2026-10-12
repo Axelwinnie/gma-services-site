@@ -40,3 +40,6 @@
 .bar b { color: var(--ink); text-align: right; }
 .links { font-size: .85rem; color: var(--muted); }
 .links a { color: var(--blue-soft); cursor: pointer; }
+
+.bad { border-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,.35); }
+.err { flex-basis: 100%; grid-column: 1 / -1; margin: .3rem 0 0; color: #fca5a5; font-weight: 700; font-size: .88rem; }
