@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1294" viewBox="0 0 1000 1294" font-family="Arial, Helvetica, sans-serif">
+<rect width="1000" height="1294" fill="#fbfaf6"/>
+<text x="70" y="94" font-size="34" font-weight="bold" fill="#1d2733" text-anchor="start">Kettle Brook Coatings</text>
+<text x="70" y="129" font-size="19" fill="#444" text-anchor="start">14 Mill Pond Lane, Ashby Falls, MA 01999</text>
+<text x="70" y="157" font-size="19" fill="#444" text-anchor="start">(555) 010-8871</text>
+<text x="930" y="94" font-size="34" font-weight="bold" fill="#b4531a" text-anchor="end">ESTIMATE</text>
+<line x1="70" y1="196" x2="930" y2="196" stroke="#999" stroke-width="2"/>
+<text x="70" y="242" font-size="21" fill="#222" text-anchor="start">Estimate No: KBC-0912</text>
+<text x="70" y="276" font-size="21" fill="#222" text-anchor="start">Date: October 2, 2026</text>
+<text x="70" y="310" font-size="21" fill="#222" text-anchor="start">Customer: Route 9 Car Wash</text>
+<text x="70" y="344" font-size="21" fill="#222" text-anchor="start">Project: Entry canopy steel paint</text>
+<text x="70" y="378" font-size="21" fill="#222" text-anchor="start">Valid for 30 days</text>
+<rect x="60" y="403" width="880" height="38" fill="#e7e2d6"/>
+<text x="70" y="431" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Qty</text>
+<text x="160" y="431" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Unit</text>
+<text x="250" y="431" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Description</text>
+<text x="700" y="431" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Rate</text>
+<text x="860" y="431" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Amount</text>
+<text x="70" y="477" font-size="20" fill="#222" text-anchor="start">1</text>
+<text x="160" y="477" font-size="20" fill="#222" text-anchor="start">LS</text>
+<text x="250" y="477" font-size="20" fill="#222" text-anchor="start">Surface prep, SSPC-SP2 hand tool</text>
+<text x="700" y="477" font-size="20" fill="#222" text-anchor="start">950.00</text>
+<text x="860" y="477" font-size="20" fill="#222" text-anchor="start">950.00</text>
+<text x="70" y="513" font-size="20" fill="#222" text-anchor="start">3400</text>
+<text x="160" y="513" font-size="20" fill="#222" text-anchor="start">SF</text>
+<text x="250" y="513" font-size="20" fill="#222" text-anchor="start">Primer, one coat, shop</text>
+<text x="700" y="513" font-size="20" fill="#222" text-anchor="start">0.85</text>
+<text x="860" y="513" font-size="20" fill="#222" text-anchor="start">2,890.00</text>
+<text x="70" y="549" font-size="20" fill="#222" text-anchor="start">3400</text>
+<text x="160" y="549" font-size="20" fill="#222" text-anchor="start">SF</text>
+<text x="250" y="549" font-size="20" fill="#222" text-anchor="start">Finish coat, polyurethane</text>
+<text x="700" y="549" font-size="20" fill="#222" text-anchor="start">1.10</text>
+<text x="860" y="549" font-size="20" fill="#222" text-anchor="start">3,740.00</text>
+<text x="70" y="585" font-size="20" fill="#222" text-anchor="start">12</text>
+<text x="160" y="585" font-size="20" fill="#222" text-anchor="start">HR</text>
+<text x="250" y="585" font-size="20" fill="#222" text-anchor="start">Touch-up after erection</text>
+<text x="700" y="585" font-size="20" fill="#222" text-anchor="start">78.00</text>
+<text x="860" y="585" font-size="20" fill="#222" text-anchor="start">936.00</text>
+<line x1="560" y1="611" x2="930" y2="611" stroke="#999"/>
+<text x="600" y="650" font-size="21" fill="#222" text-anchor="start">Subtotal</text>
+<text x="930" y="650" font-size="21" fill="#222" text-anchor="end">$8,516.00</text>
+<text x="600" y="686" font-size="21" fill="#222" text-anchor="start">Tax</text>
+<text x="930" y="686" font-size="21" fill="#222" text-anchor="end">$0.00</text>
+<text x="600" y="722" font-size="21" font-weight="bold" fill="#222" text-anchor="start">Estimate Total</text>
+<text x="930" y="722" font-size="21" font-weight="bold" fill="#222" text-anchor="end">$8,516.00</text>
+<text x="70" y="1240" font-size="16" font-weight="bold" fill="#b4531a" text-anchor="start">SAMPLE DOCUMENT. FICTIONAL COMPANY AND JOB. GMA DEMO LAB.</text></svg>
