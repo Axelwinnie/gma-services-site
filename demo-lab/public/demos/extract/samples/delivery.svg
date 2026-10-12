@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1294" viewBox="0 0 1000 1294" font-family="Arial, Helvetica, sans-serif">
+<rect width="1000" height="1294" fill="#fbfaf6"/>
+<text x="70" y="94" font-size="34" font-weight="bold" fill="#1d2733" text-anchor="start">Blue Ledge Building Supply</text>
+<text x="70" y="129" font-size="19" fill="#444" text-anchor="start">220 Depot Street, Harlow, VT 05999</text>
+<text x="930" y="94" font-size="34" font-weight="bold" fill="#b4531a" text-anchor="end">DELIVERY TICKET</text>
+<line x1="70" y1="168" x2="930" y2="168" stroke="#999" stroke-width="2"/>
+<text x="70" y="214" font-size="21" fill="#222" text-anchor="start">Ticket No: BL-77810</text>
+<text x="70" y="248" font-size="21" fill="#222" text-anchor="start">Delivery Date: 10/05/2026</text>
+<text x="70" y="282" font-size="21" fill="#222" text-anchor="start">Ship To: Birch Lane Duplex, lot 4</text>
+<text x="70" y="316" font-size="21" fill="#222" text-anchor="start">Job: Birch Lane stair and rail</text>
+<text x="70" y="350" font-size="21" fill="#222" text-anchor="start">PO #: 6104</text>
+<text x="70" y="384" font-size="21" fill="#222" text-anchor="start">Driver: R. Tanner   Truck 12</text>
+<rect x="60" y="409" width="880" height="38" fill="#e7e2d6"/>
+<text x="70" y="437" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Qty</text>
+<text x="160" y="437" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Unit</text>
+<text x="250" y="437" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Description</text>
+<text x="70" y="483" font-size="20" fill="#222" text-anchor="start">2</text>
+<text x="160" y="483" font-size="20" fill="#222" text-anchor="start">EA</text>
+<text x="250" y="483" font-size="20" fill="#222" text-anchor="start">MC12x10.6 x 16 ft stringer</text>
+<text x="70" y="519" font-size="20" fill="#222" text-anchor="start">8</text>
+<text x="160" y="519" font-size="20" fill="#222" text-anchor="start">EA</text>
+<text x="250" y="519" font-size="20" fill="#222" text-anchor="start">Pipe 1-1/2 STD x 21 ft</text>
+<text x="70" y="555" font-size="20" fill="#222" text-anchor="start">28</text>
+<text x="160" y="555" font-size="20" fill="#222" text-anchor="start">EA</text>
+<text x="250" y="555" font-size="20" fill="#222" text-anchor="start">L2x2x1/4 x 4 ft</text>
+<text x="70" y="591" font-size="20" fill="#222" text-anchor="start">1</text>
+<text x="160" y="591" font-size="20" fill="#222" text-anchor="start">BOX</text>
+<text x="250" y="591" font-size="20" fill="#222" text-anchor="start">1/2 in A325 bolts, 50 ct</text>
+<line x1="560" y1="617" x2="930" y2="617" stroke="#999"/>
+<text x="70" y="685" font-size="20" fill="#222" text-anchor="start">Received by: ______________________   Time: ________</text>
+<text x="70" y="723" font-size="18" fill="#555" text-anchor="start">No prices on delivery tickets. Invoice to follow.</text>
+<text x="70" y="1240" font-size="16" font-weight="bold" fill="#b4531a" text-anchor="start">SAMPLE DOCUMENT. FICTIONAL COMPANY AND JOB. GMA DEMO LAB.</text></svg>

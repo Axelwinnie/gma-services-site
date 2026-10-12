@@ -5,32 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Doc Extract | GMA Demo Lab</title>
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="Internal preview. Demo wiring next. Not public.">
+  <meta name="description" content="Sandbox for document intake. Drop in an invoice, estimate or delivery ticket and review the fields it pulls out. Runs in your browser.">
   <meta name="theme-color" content="#12151a">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/demo-lab.css">
+  <link rel="stylesheet" href="/demos/estimating/estimating.css">
+  <link rel="stylesheet" href="extract.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <p class="preview-banner">Internal preview — not public</p>
   <header class="topbar">
     <div class="wrap">
       <p class="wordmark">Granite Models Automations <span>Demo Lab</span></p>
     </div>
   </header>
-  <main id="main" class="wrap stub">
+  <main id="main" class="wrap stub est">
     <p class="back"><a href="/">Back to Demo Lab</a></p>
+    <p class="badge">Live sandbox</p>
     <h1>Doc Extract</h1>
-    <p class="lede">Demo wiring next — not public yet.</p>
-    <div class="wire-slot" data-demo-id="extract">
-      <!-- WIRE: replace this with live demo embed or SPA -->
-    </div>
+    <p class="lede">Drop in an invoice, an estimate, or a delivery ticket. It pulls out the vendor, date, doc number, job, PO, line items and totals so you can check them and export them instead of retyping.</p>
+    <p class="demo-note" role="note">Demo. Your file stays in your browser and nothing gets saved or sent. The PDF and OCR readers load from a public CDN the first time you upload. On real jobs a person reviews every extraction before it goes anywhere.</p>
+
+    <section class="panel" aria-labelledby="in-h">
+      <h2 id="in-h">1. Pick a doc</h2>
+      <div class="row">
+        <label for="sample">Sample (fictional docs)</label>
+        <select id="sample"><option value="">Pick a sample</option></select>
+        <label class="btn btn-ghost" for="file">Upload PDF, JPG, PNG or TIFF</label>
+        <input id="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff,application/pdf,image/*" class="sr-only">
+        <button class="btn btn-ghost" id="reset" type="button">Reset</button>
+      </div>
+      <div id="drop" class="drop">Or drag a file here.</div>
+      <p id="status" class="hint" aria-live="polite"></p>
+    </section>
+
+    <section class="panel" id="out" aria-labelledby="out-h" hidden>
+      <h2 id="out-h">2. Check what it found</h2>
+      <div class="split">
+        <div class="preview" id="preview" aria-label="Document preview"></div>
+        <div class="review">
+          <p class="hint">Click any value to fix it. Yellow means I'm not sure. Red means it wasn't on the doc, so it's left blank on purpose.</p>
+          <table id="ftbl"><thead><tr><th>Field</th><th>Value</th><th>Check</th></tr></thead><tbody></tbody></table>
+          <h3>Line items</h3>
+          <div class="table-wrap"><table id="itbl"><thead><tr><th class="n">Qty</th><th>Unit</th><th>Description</th><th class="n">Unit price</th><th class="n">Amount</th><th>Check</th></tr></thead><tbody></tbody></table></div>
+          <ul id="checks" class="checks"></ul>
+          <details><summary>Raw text it read</summary><pre id="raw"></pre></details>
+          <div class="row">
+            <button class="btn" id="dl-xlsx" type="button">Download XLSX</button>
+            <button class="btn btn-ghost" id="dl-csv" type="button">Download CSV</button>
+            <button class="btn btn-ghost" id="dl-json" type="button">Download JSON</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel cta" aria-labelledby="cta-h">
+      <h2 id="cta-h">Got a pile of these?</h2>
+      <p>This sandbox reads one doc at a time and guesses at layouts it's never seen. For a real setup I build it around your vendors and your paperwork, it drops the fields into the sheet or system you already use, and someone on your end signs off before anything moves. Send me 3 to 5 sample docs, redacted is fine, and I'll tell you what it would take.</p>
+      <p><a class="btn" href="https://granitemodels.store/document-intake/">Document intake setup</a> <a class="btn btn-ghost" href="mailto:granitemodels@gmail.com?subject=Document%20intake">Email granitemodels@gmail.com</a></p>
+    </section>
   </main>
   <footer class="site-footer">
     <div class="wrap">
       <p>Granite Models Automations · <a href="mailto:granitemodels@gmail.com">granitemodels@gmail.com</a> · <a href="tel:+19786473933">(978) 647-3933</a></p>
     </div>
   </footer>
-  <script src="/js/demo-lab.js"></script>
+  <script src="fields.js"></script>
+  <script src="samples.js"></script>
+  <script src="/demos/estimating/xlsx.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1294" viewBox="0 0 1000 1294" font-family="Arial, Helvetica, sans-serif">
+<rect width="1000" height="1294" fill="#fbfaf6"/>
+<text x="70" y="94" font-size="34" font-weight="bold" fill="#1d2733" text-anchor="start">Northfield Steel Supply</text>
+<text x="70" y="129" font-size="19" fill="#444" text-anchor="start">88 Quarry Road, Millbrook, NH 03999</text>
+<text x="70" y="157" font-size="19" fill="#444" text-anchor="start">(555) 010-2234</text>
+<text x="930" y="94" font-size="34" font-weight="bold" fill="#b4531a" text-anchor="end">INVOICE</text>
+<line x1="70" y1="196" x2="930" y2="196" stroke="#999" stroke-width="2"/>
+<text x="70" y="242" font-size="21" fill="#222" text-anchor="start">Invoice No: NSS-20418</text>
+<text x="70" y="276" font-size="21" fill="#222" text-anchor="start">Invoice Date: 09/18/2026</text>
+<text x="70" y="310" font-size="21" fill="#222" text-anchor="start">Bill To: Pine Hollow Storage LLC</text>
+<text x="70" y="344" font-size="21" fill="#222" text-anchor="start">Job: Pine Hollow mezzanine</text>
+<text x="70" y="378" font-size="21" fill="#222" text-anchor="start">PO #: 5521</text>
+<text x="70" y="412" font-size="21" fill="#222" text-anchor="start">Terms: Net 30</text>
+<rect x="60" y="437" width="880" height="38" fill="#e7e2d6"/>
+<text x="70" y="465" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Qty</text>
+<text x="160" y="465" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Unit</text>
+<text x="250" y="465" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Description</text>
+<text x="700" y="465" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Unit Price</text>
+<text x="860" y="465" font-size="20" font-weight="bold" fill="#222" text-anchor="start">Amount</text>
+<text x="70" y="511" font-size="20" fill="#222" text-anchor="start">6</text>
+<text x="160" y="511" font-size="20" fill="#222" text-anchor="start">EA</text>
+<text x="250" y="511" font-size="20" fill="#222" text-anchor="start">W12x26 x 24 ft beam</text>
+<text x="700" y="511" font-size="20" fill="#222" text-anchor="start">686.40</text>
+<text x="860" y="511" font-size="20" fill="#222" text-anchor="start">4,118.40</text>
+<text x="70" y="547" font-size="20" fill="#222" text-anchor="start">8</text>
+<text x="160" y="547" font-size="20" fill="#222" text-anchor="start">EA</text>
+<text x="250" y="547" font-size="20" fill="#222" text-anchor="start">W10x22 x 12 ft 6 in beam</text>
+<text x="700" y="547" font-size="20" fill="#222" text-anchor="start">302.50</text>
+<text x="860" y="547" font-size="20" fill="#222" text-anchor="start">2,420.00</text>
+<text x="70" y="583" font-size="20" fill="#222" text-anchor="start">6</text>
+<text x="160" y="583" font-size="20" fill="#222" text-anchor="start">EA</text>
+<text x="250" y="583" font-size="20" fill="#222" text-anchor="start">HSS6x6x1/4 x 14 ft column</text>
+<text x="700" y="583" font-size="20" fill="#222" text-anchor="start">292.95</text>
+<text x="860" y="583" font-size="20" fill="#222" text-anchor="start">1,757.70</text>
+<text x="70" y="619" font-size="20" fill="#222" text-anchor="start">8</text>
+<text x="160" y="619" font-size="20" fill="#222" text-anchor="start">EA</text>
+<text x="250" y="619" font-size="20" fill="#222" text-anchor="start">L4x4x3/8 x 20 ft angle</text>
+<text x="700" y="619" font-size="20" fill="#222" text-anchor="start">176.40</text>
+<text x="860" y="619" font-size="20" fill="#222" text-anchor="start">1,411.20</text>
+<text x="70" y="655" font-size="20" fill="#222" text-anchor="start">1</text>
+<text x="160" y="655" font-size="20" fill="#222" text-anchor="start">LS</text>
+<text x="250" y="655" font-size="20" fill="#222" text-anchor="start">Delivery, flatbed</text>
+<text x="700" y="655" font-size="20" fill="#222" text-anchor="start">185.00</text>
+<text x="860" y="655" font-size="20" fill="#222" text-anchor="start">185.00</text>
+<line x1="560" y1="681" x2="930" y2="681" stroke="#999"/>
+<text x="600" y="720" font-size="21" fill="#222" text-anchor="start">Subtotal</text>
+<text x="930" y="720" font-size="21" fill="#222" text-anchor="end">$9,892.30</text>
+<text x="600" y="756" font-size="21" fill="#222" text-anchor="start">Sales Tax 6.25%</text>
+<text x="930" y="756" font-size="21" fill="#222" text-anchor="end">$618.27</text>
+<text x="600" y="792" font-size="21" font-weight="bold" fill="#222" text-anchor="start">Total Due</text>
+<text x="930" y="792" font-size="21" font-weight="bold" fill="#222" text-anchor="end">$10,510.57</text>
+<text x="70" y="1240" font-size="16" font-weight="bold" fill="#b4531a" text-anchor="start">SAMPLE DOCUMENT. FICTIONAL COMPANY AND JOB. GMA DEMO LAB.</text></svg>
