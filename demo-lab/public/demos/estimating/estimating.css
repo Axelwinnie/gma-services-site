@@ -36,3 +36,4 @@ tr.flag td { background: rgba(239,68,68,.08); }
   th, td { border-color: #bbb; font-size: 9pt; }
   .hint { color: #333; }
 }
+.est .badge { display: inline-block; width: auto; max-width: max-content; }
