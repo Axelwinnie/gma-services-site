@@ -1,5 +1,5 @@
-const E=require('./estimate.js'),S=require('./shapes.js');
-global.window={};require('./samples.js');let fail=0;
+const E=require('../public/demos/estimating/estimate.js'),S=require('../public/demos/estimating/shapes.js');
+global.window={};require('../public/demos/estimating/samples.js');let fail=0;
 const ok=(c,m)=>{if(!c){fail++;console.log('FAIL',m)}};
 // AISC v16 nominal / tabulated lb/ft checks
 const aisc={"W8x31":31,"W12x26":26,"C10x15.3":15.3,"MC12x10.6":10.6,"HSS6x6x1/4":19.02,"HSS6X6X.250":19.02,"HSS8x8x3/8":37.69,"HSS4x4x1/4":12.21,"L4x4x3/8":9.8,"L3x3x1/4":4.9,"L2x2x1/4":3.19,"Pipe1-1/2STD":2.72,"Pipe3STD":7.58,"PL1/2x6":10.21,"PL3/4x12":30.63};
