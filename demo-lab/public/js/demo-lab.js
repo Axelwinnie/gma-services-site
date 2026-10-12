@@ -8,7 +8,7 @@
     slots[id].push(nodes[i]);
   }
   window.GMADemoLab = {
-    ids: ["ticket", "extract", "organizer"],
+    ids: ["ticket", "extract", "organizer", "estimating"],
     slots: slots
   };
 })();
