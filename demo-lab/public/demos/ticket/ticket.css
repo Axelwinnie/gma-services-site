@@ -23,3 +23,20 @@
 .thumbs img { height: 5rem; border-radius: 4px; margin: .2rem; border: 1px solid var(--line); }
 #ttbl td .btn { padding: .3rem .7rem; font-size: .8rem; }
 @media (max-width: 900px) { .board { grid-template-columns: repeat(5, 14rem); } }
+
+.rec { background: #0f1318; border: 1px solid var(--line); border-radius: 8px; padding: .7rem .8rem; margin: .6rem 0; }
+.rec h3 { margin: 0 0 .4rem; font-size: 1rem; color: #fdba74; }
+.rec table td { white-space: normal; }
+.mini { background: #0f1318; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: .35rem .5rem; font: inherit; font-size: .88rem; }
+.rec .btn, #rqtbl .btn, #rntbl .btn, .row .btn.sm { padding: .3rem .7rem; font-size: .8rem; }
+.pill.pass, .pill.released, .pill.signed, .pill.received { background: rgba(34,197,94,.15); color: #86efac; }
+.pill.fail, .pill.overdue, .pill.locked { background: rgba(239,68,68,.15); color: #fca5a5; }
+.pill.hold, .pill.call, .pill.requested { background: rgba(234,179,8,.15); color: #fde047; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: .8rem; margin: .8rem 0; }
+.chart { background: #0f1318; border: 1px solid var(--line); border-radius: 8px; padding: .7rem .8rem; }
+.chart h4 { margin: 0 0 .5rem; font-size: .8rem; text-transform: uppercase; color: var(--blue-soft); }
+.bar { display: grid; grid-template-columns: 8.5rem 1fr 3.2rem; gap: .4rem; align-items: center; font-size: .82rem; margin: .25rem 0; color: var(--muted); }
+.bar i { display: block; height: .7rem; border-radius: 4px; background: linear-gradient(90deg, var(--orange), #fdba74); box-shadow: 0 0 8px rgba(59,130,246,.35); }
+.bar b { color: var(--ink); text-align: right; }
+.links { font-size: .85rem; color: var(--muted); }
+.links a { color: var(--blue-soft); cursor: pointer; }
