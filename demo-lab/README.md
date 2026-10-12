@@ -9,7 +9,7 @@ The store site in `public/` is unchanged. This folder is its own static site.
 ## What is live in the files
 
 - Home: `public/index.html`
-- Tool Ticket System: `public/demos/ticket/`
+- Tool Ticket System: `public/demos/ticket/` (client-side sandbox, fictional shop, tests in `tests/tickets.test.js`)
 - Doc Extract: `public/demos/extract/`
 - File Organizer: `public/demos/organizer/` (client-side sandbox, tests in `tests/organizer.test.js`)
 - `public/robots.txt` disallows every crawler

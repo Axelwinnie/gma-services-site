@@ -5,32 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tool Ticket System | GMA Demo Lab</title>
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="Internal preview. Demo wiring next. Not public.">
+  <meta name="description" content="Sandbox of a shop tool and maintenance ticket system. Open a ticket, work it, close it out, and check tools in and out. Fictional data, runs in your browser.">
   <meta name="theme-color" content="#12151a">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/demo-lab.css">
+  <link rel="stylesheet" href="/demos/estimating/estimating.css">
+  <link rel="stylesheet" href="ticket.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <p class="preview-banner">Internal preview — not public</p>
   <header class="topbar">
     <div class="wrap">
       <p class="wordmark">Granite Models Automations <span>Demo Lab</span></p>
     </div>
   </header>
-  <main id="main" class="wrap stub">
+  <main id="main" class="wrap stub est">
     <p class="back"><a href="/">Back to Demo Lab</a></p>
+    <p class="badge">Live sandbox</p>
     <h1>Tool Ticket System</h1>
-    <p class="lede">Demo wiring next — not public yet.</p>
-    <div class="wire-slot" data-demo-id="ticket">
-      <!-- WIRE: replace this with live demo embed or SPA -->
-    </div>
+    <p class="lede">In the real thing, one program runs on a PC in the shop and everyone else opens it in a browser. Somebody reports a problem, it gets assigned and worked, and it's closed out with notes and photos. The tool crib side shows who has what, what's late coming back, and what's tagged out for repair.</p>
+    <p class="demo-note" role="note">Demo on fictional data. Ridgeline Steel Works, its people, tools and jobs are made up. Everything here lives in this browser tab only. Nothing is saved or sent, and it all resets when you reload. No login needed.</p>
+
+    <section class="panel no-print">
+      <div class="row">
+        <label for="who">You are</label>
+        <select id="who"></select>
+        <button class="btn btn-ghost" id="reset" type="button">Reset the demo</button>
+      </div>
+      <div class="totals" id="sum"></div>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" data-tab="board" aria-selected="true">Tickets</button>
+        <button class="tab" role="tab" data-tab="crib" aria-selected="false">Tool crib</button>
+        <button class="tab" role="tab" data-tab="new" aria-selected="false">New request</button>
+      </div>
+      <p id="status" class="hint" aria-live="polite"></p>
+    </section>
+
+    <section class="panel" id="tab-board" aria-label="Tickets">
+      <div class="row"><label for="filter">Show</label>
+        <select id="filter"><option value="open">Open tickets</option><option value="mine">Assigned to me</option><option value="all">All, including done</option></select>
+      </div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <section class="panel" id="tab-detail" hidden aria-label="Ticket detail">
+      <p><button class="btn btn-ghost" id="back" type="button">Back to tickets</button></p>
+      <div id="detail"></div>
+    </section>
+
+    <section class="panel" id="tab-crib" hidden aria-label="Tool crib">
+      <h2>Who has what</h2>
+      <div class="table-wrap"><table id="ttbl"><thead><tr><th>Tool</th><th>Name</th><th>Status</th><th>With</th><th>Job</th><th>Due back</th><th></th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section class="panel" id="tab-new" hidden aria-label="New request">
+      <h2>Report a problem</h2>
+      <form id="nform" class="form">
+        <label>What's wrong (short)<input name="title" required maxlength="90" placeholder="Welder 2 wire feed slipping"></label>
+        <label>Tool or equipment<select name="equipment" id="nequip"></select></label>
+        <label>Where<input name="area" placeholder="Weld bay"></label>
+        <label>Priority<select name="priority" id="nprio"></select></label>
+        <label>Job (if it's holding one up)<select name="job"><option value="">None</option><option>J2041 PineHollow</option><option>J2047 CedarRun</option><option>J2052 MillPond</option></select></label>
+        <label class="wide">Details<textarea name="notes" rows="3" placeholder="What happened, what you tried"></textarea></label>
+        <label class="chk"><input type="checkbox" name="tagOut"> Tag this tool out so nobody checks it out</label>
+        <p class="wide"><button class="btn" type="submit">Submit ticket</button></p>
+      </form>
+    </section>
+
+    <section class="panel cta" aria-labelledby="cta-h">
+      <h2 id="cta-h">Running this off a whiteboard?</h2>
+      <p>The real version installs on a PC you already have in the shop, keeps everything on your own network, and gets set up around your tools, people and the way tickets move in your shop now. Purchase requests, punch lists and QA forms can live in the same place. Tell me how you track this today and I'll tell you what it would take.</p>
+      <p><a class="btn btn-ghost" href="mailto:granitemodels@gmail.com?subject=Tool%20ticket%20system">Email granitemodels@gmail.com</a></p>
+    </section>
   </main>
   <footer class="site-footer">
     <div class="wrap">
       <p>Granite Models Automations · <a href="mailto:granitemodels@gmail.com">granitemodels@gmail.com</a> · <a href="tel:+19786473933">(978) 647-3933</a></p>
     </div>
   </footer>
-  <script src="/js/demo-lab.js"></script>
+  <script src="tickets.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
