@@ -29,3 +29,12 @@
 .tot span { font-weight: 800; color: var(--or); font-size: 15px; } .tot b { font-size: 26px; color: var(--or); font-variant-numeric: tabular-nums; }
 @media (max-width: 1360px) { .g-est { grid-template-columns: 280px minmax(0, 1fr); } .g-col { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; } }
 @media (max-width: 860px) { .g-est, .g-col { grid-template-columns: 1fr; } }
+/* 3D controls: one even row of five */
+.m3t { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 6px; }
+.m3t .btn { width: 100%; padding: 0 4px; gap: 4px; }
+/* input tabs fill the panel instead of spilling out */
+.g-est .tabs, .tabs { max-width: 100%; }
+.panel > .pb > .tabs:first-child { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+.panel > .pb > .tabs:first-child button { padding: 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.flist li > * { flex: none; } .flist li > .fnm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .flist .btn-quiet { width: 28px; padding: 0; }
+.flist li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto 28px; } .flist .fnm small { display: block; overflow: hidden; text-overflow: ellipsis; }
