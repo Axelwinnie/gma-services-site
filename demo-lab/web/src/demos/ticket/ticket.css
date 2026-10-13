@@ -16,7 +16,7 @@
 .kv dt { color: var(--mut); } .kv dd { margin: 0; }
 .note { margin: 6px 0; padding: 7px 9px; border: 1px solid var(--line2); border-radius: 6px; background: var(--bg2); font-size: 12px; display: block; }
 .tagbox { display: grid; gap: 6px; margin: 8px 0 10px; }
-.pf { display: flex; gap: 6px; padding: 10px 12px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.pf { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); flex-wrap: wrap; }
 .pf .btn { flex: 1; }
 .act { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .act li { display: grid; padding-left: 10px; border-left: 2px solid var(--line2); font-size: 12px; } .act small { color: var(--dim); }
