@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { STATIONS, pct } from "./stations";
 import Hud from "./Hud";
+import Footer from "./shell/Footer";
 
 const Lab3D = lazy(() => import("./Lab3D"));
 
@@ -86,7 +87,7 @@ export default function App() {
           ))}
         </ul>
       </main>
-      <footer className="foot"><p>Granite Models Automations. Every demo runs in your browser on made up sample data.</p></footer>
+      <Footer />
     </>
   );
 }

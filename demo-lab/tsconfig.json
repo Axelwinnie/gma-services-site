@@ -4,5 +4,5 @@
     "moduleResolution": "Bundler", "jsx": "react-jsx", "strict": true, "skipLibCheck": true,
     "noEmit": true, "isolatedModules": true, "types": ["vite/client"]
   },
-  "include": ["web/src", "vite.config.mts"]
+  "include": ["web/src"]
 }

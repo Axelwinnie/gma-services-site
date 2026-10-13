@@ -8,135 +8,17 @@
   <link rel="canonical" href="https://gma-demo-lab.onrender.com/demos/ticket/">
   <meta name="theme-color" content="#12151a">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/demo-lab.css">
-  <link rel="stylesheet" href="/demos/estimating/estimating.css">
-  <link rel="stylesheet" href="ticket.css">
+  <script type="module" crossorigin src="/lab/ticket-2PU9evI4.js"></script>
+  <link rel="modulepreload" crossorigin href="/lab/react-D7khRhy5.js">
+  <link rel="modulepreload" crossorigin href="/lab/Footer-zr0jVl9m.js">
+  <link rel="modulepreload" crossorigin href="/lab/shell-d1Bky7-E.js">
+  <link rel="stylesheet" crossorigin href="/lab/shell-E609-py-.css">
+  <link rel="stylesheet" crossorigin href="/lab/ticket-CAEuNqpe.css">
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="topbar">
-    <div class="wrap">
-      <p class="wordmark">Granite Models Automations <span>Demo Lab</span></p>
-    </div>
-  </header>
-  <main id="main" class="wrap stub est">
-    <p class="back"><a href="/">Back to Demo Lab</a></p>
-    <p class="badge">Live sandbox</p>
-    <h1>Tool Ticket System</h1>
-    <p class="lede">In the real thing, one program runs on a PC in the shop and everyone else opens it in a browser. Somebody reports a problem, it gets assigned and worked, and it's closed out with notes and photos. The tool crib side shows who has what, what's late coming back, and what's tagged out for repair. QA/QC checklists, job hazard analyses, requisitions, rental equipment and lockout/tagout all live in the same place and talk to each other.</p>
-    <p class="demo-note" role="note">Demo on fictional data. Ridgeline Steel Works, its people, tools and jobs are made up. Everything here lives in this browser tab only. Nothing is saved or sent, and it all resets when you reload. No login needed.</p>
-
-    <section class="panel no-print">
-      <div class="row">
-        <label for="who">You are</label>
-        <select id="who"></select>
-        <button class="btn btn-ghost" id="reset" type="button">Reset the demo</button>
-      </div>
-      <div class="totals" id="sum"></div>
-      <div class="tabs" role="tablist">
-        <button class="tab" role="tab" data-tab="board" aria-selected="true">Tickets</button>
-        <button class="tab" role="tab" data-tab="crib" aria-selected="false">Tool crib</button>
-        <button class="tab" role="tab" data-tab="new" aria-selected="false">New request</button>
-        <button class="tab" role="tab" data-tab="qa" aria-selected="false">QA/QC</button>
-        <button class="tab" role="tab" data-tab="jha" aria-selected="false">JHA</button>
-        <button class="tab" role="tab" data-tab="req" aria-selected="false">Requisitions</button>
-        <button class="tab" role="tab" data-tab="rent" aria-selected="false">Rentals</button>
-        <button class="tab" role="tab" data-tab="loto" aria-selected="false">Lockout/tagout</button>
-        <button class="tab" role="tab" data-tab="analytics" aria-selected="false">Analytics</button>
-      </div>
-      <p id="status" class="hint" aria-live="polite"></p>
-    </section>
-
-    <section class="panel" id="tab-board" aria-label="Tickets">
-      <div class="row"><label for="filter">Show</label>
-        <select id="filter"><option value="open">Open tickets</option><option value="mine">Assigned to me</option><option value="all">All, including done</option></select>
-      </div>
-      <div class="board" id="board"></div>
-    </section>
-
-    <section class="panel" id="tab-detail" hidden aria-label="Ticket detail">
-      <p><button class="btn btn-ghost" id="back" type="button">Back to tickets</button></p>
-      <div id="detail"></div>
-    </section>
-
-    <section class="panel" id="tab-crib" hidden aria-label="Tool crib">
-      <h2>Who has what</h2>
-      <p class="hint">Add a tool or edit one. ID, name, type and home location are all required.</p>
-      <div class="row" id="crib-form"></div>
-      <div class="table-wrap"><table id="ttbl"><thead><tr><th>Tool</th><th>Name</th><th>Type</th><th>Status</th><th>With</th><th>Job</th><th>Due back</th><th></th></tr></thead><tbody></tbody></table></div>
-    </section>
-
-    <section class="panel" id="tab-new" hidden aria-label="New request">
-      <h2>Report a problem</h2>
-      <form id="nform" class="form" novalidate>
-        <label>What's wrong (short)<input name="title" required maxlength="90" placeholder="Welder 2 wire feed slipping"></label>
-        <label>Tool or equipment<select name="equipment" id="nequip"></select></label>
-        <label>Where<input name="area" required placeholder="Weld bay"></label>
-        <label>Priority<select name="priority" id="nprio"></select></label>
-        <label>Job (if it's holding one up)<select name="job"><option value="">None</option><option>J2041 PineHollow</option><option>J2047 CedarRun</option><option>J2052 MillPond</option></select></label>
-        <label class="wide">Details<textarea name="notes" rows="3" placeholder="What happened, what you tried"></textarea></label>
-        <label class="chk"><input type="checkbox" name="tagOut"> Tag this tool out so nobody checks it out</label>
-        <p class="wide"><button class="btn" type="submit">Submit ticket</button></p>
-      </form>
-    </section>
-
-    <section class="panel" id="tab-qa" hidden aria-label="QA/QC">
-      <h2>QA/QC inspections</h2>
-      <p class="hint">Each part gets a checklist: fit-up, weld visual, dimensions, coating. Anything that fails or gets held can be written up as an NCR, which opens a rework ticket. Sign-off only works once every check passes.</p>
-      <div class="row" id="qa-new"></div>
-      <div id="qa-list"></div>
-    </section>
-
-    <section class="panel" id="tab-jha" hidden aria-label="Job hazard analysis">
-      <h2>Job hazard analysis</h2>
-      <p class="hint">Break the task into steps, list the hazards and controls for each, pick the PPE, and have the crew sign on. Tickets marked as needing a JHA can't move to In progress until one is linked and signed.</p>
-      <div class="row" id="jha-new"></div>
-      <div id="jha-list"></div>
-    </section>
-
-    <section class="panel" id="tab-req" hidden aria-label="Requisitions">
-      <h2>Requisitions</h2>
-      <p class="hint">Ask for material or parts for a job. The office approves it and it gets a PO number, or rejects it with a reason. Marking it received drops a note on the linked ticket.</p>
-      <div class="row" id="req-new"></div>
-      <div class="table-wrap"><table id="rqtbl"><thead><tr><th>Req</th><th>Item</th><th class="n">Qty</th><th>Job</th><th>Vendor</th><th>By</th><th>PO</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div>
-    </section>
-
-    <section class="panel" id="tab-rent" hidden aria-label="Rental equipment">
-      <h2>Rental equipment</h2>
-      <p class="hint">What's on rent, from who, for which job, and when it's due back. Costs run up daily at the sample rates shown. Anything due within a day gets a call off-rent alert so the shop doesn't pay for a day it didn't use.</p>
-      <div class="row" id="rent-new"></div>
-      <div class="table-wrap"><table id="rntbl"><thead><tr><th>Rental</th><th>Item</th><th>Vendor</th><th>Job</th><th>On rent</th><th>Due back</th><th class="n">Days</th><th class="n">Sample rate/day</th><th class="n">Running total</th><th>Alert</th><th></th></tr></thead><tbody></tbody></table></div>
-    </section>
-
-    <section class="panel" id="tab-loto" hidden aria-label="Lockout tagout">
-      <h2>Lockout/tagout</h2>
-      <p class="hint">One record per machine with its energy sources. Apply locks, verify zero energy, release. Each person takes off only their own lock. While a lockout is on, the tool can't be checked out and its ticket can't be closed.</p>
-      <div class="row" id="loto-new"></div>
-      <div id="loto-list"></div>
-    </section>
-
-    <section class="panel" id="tab-analytics" hidden aria-label="Analytics">
-      <h2>Analytics</h2>
-      <p class="hint">Shop-wide view across every module, worked out live from the sample data in this tab. Filter by department to see just one crew.</p>
-      <div class="row"><label for="dept">Department</label><select id="dept"></select></div>
-      <div class="totals" id="kpis"></div>
-      <div class="charts" id="charts"></div>
-      <h3 class="hint">Ways to save money and time</h3>
-      <ul class="checks" id="tips"></ul>
-    </section>
-
-    <section class="panel cta" aria-labelledby="cta-h">
-      <h2 id="cta-h">Running this off a whiteboard?</h2>
-      <p>The real version installs on a PC you already have in the shop, keeps everything on your own network, and gets set up around your tools, people and the way tickets move in your shop now. Purchase requests, punch lists and QA forms can live in the same place. Tell me how you track this today and I'll tell you what it would take.</p>
-      <p><a class="btn btn-ghost" href="mailto:granitemodels@gmail.com?subject=Tool%20ticket%20system">Email granitemodels@gmail.com</a></p>
-    </section>
-  </main>
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>Granite Models Automations · <a href="mailto:granitemodels@gmail.com">granitemodels@gmail.com</a> · <a href="tel:+19786473933">(978) 647-3933</a></p>
-    </div>
-  </footer>
-  <script src="tickets.js"></script>
-  <script src="app.js"></script>
+  <div id="root"></div>
+  <noscript><p>This demo needs JavaScript. Call (978) 647-3933 or email granitemodels@gmail.com.</p></noscript>
+  <script src="/demos/ticket/tickets.js"></script>
+  <script src="/demos/estimating/xlsx.js"></script>
 </body>
 </html>
