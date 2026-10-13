@@ -8,7 +8,9 @@ import { SCENE, STATIONS, type Station } from "./stations";
 const W = 16;
 const H = (W * SCENE.h) / SCENE.w;
 const FOV = 30;
-const BASE_Z = H / 2 / Math.tan(((FOV / 2) * Math.PI) / 180) - 0.45; // slightly inside so parallax never shows an edge
+const TAN = Math.tan(((FOV / 2) * Math.PI) / 180);
+// contain-fit: the whole image is always in frame for the canvas aspect, recomputed on resize
+const fitZ = (aspect: number) => Math.max(H / 2 / TAN, W / 2 / (TAN * aspect));
 const ORANGE = new THREE.Color("#f97316");
 const BLUE = new THREE.Color("#60a5fa");
 const ease = (t: number) => 1 - Math.pow(1 - Math.min(Math.max(t, 0), 1), 3);
@@ -81,15 +83,15 @@ function StationMesh({ s, i, tex, sweep, hot, going, onHover }: {
     const t = clock.elapsedTime;
     if (born.current === null) born.current = t;
     const k = ease((t - born.current - 0.25 - i * 0.14) / 0.9); // staggered entrance
-    const lift = going ? 1.4 : hot ? 0.5 : 0;
+    const lift = going ? 1.4 : 0; // hover stays flat so the painted button and the link line up
     const gr = g.current;
     gr.position.z = damp(gr.position.z, lift, 7, dt);
-    gr.position.y = p.y - (1 - k) * 1.1 + (hot ? 0.06 : 0);
-    const sc = (0.92 + 0.08 * k) * (hot ? 1.035 : 1);
+    gr.position.y = p.y - (1 - k) * 1.1;
+    const sc = 0.92 + 0.08 * k;
     gr.scale.setScalar(damp(gr.scale.x, sc, 8, dt));
-    gr.rotation.x = damp(gr.rotation.x, hot ? -pointer.y * 0.06 : 0, 6, dt);
-    gr.rotation.y = damp(gr.rotation.y, hot ? pointer.x * 0.08 : 0, 6, dt);
-    shade.current.opacity = damp(shade.current.opacity, hot || going ? 0.85 : 0, 8, dt) * k;
+    gr.rotation.x = damp(gr.rotation.x, going ? -pointer.y * 0.06 : 0, 6, dt);
+    gr.rotation.y = damp(gr.rotation.y, going ? pointer.x * 0.08 : 0, 6, dt);
+    shade.current.opacity = damp(shade.current.opacity, going ? 0.85 : 0, 8, dt) * k;
     edge.current.opacity = damp(edge.current.opacity, hot ? 1 : 0.18 * k, 8, dt);
     // light sweep: on hover start, and a quiet idle pass every few seconds
     if (hot && !wasHot.current) sweepT.current = 0;
@@ -161,16 +163,18 @@ function Brackets({ w, h, color, hot }: { w: number; h: number; color: THREE.Col
 }
 
 function Rig({ hot, going }: { hot: string | null; going: string | null }) {
-  const { camera } = useThree();
+  const { camera, size } = useThree();
   const target = useMemo(() => new THREE.Vector3(), []);
   useFrame(({ pointer, clock }, dt) => {
     const id = going ?? hot;
     const s = STATIONS.find((x) => x.id === id);
     const p = s ? toWorld(s) : null;
     const intro = ease(clock.elapsedTime / 1.4);
-    const tx = (p ? p.x * 0.035 : 0) + pointer.x * 0.16;
-    const ty = (p ? p.y * 0.04 : 0) + pointer.y * 0.1;
-    const tz = BASE_Z + (1 - intro) * 1.6 - (going ? 2.2 : hot ? 0.35 : 0);
+    // no idle or hover camera drift: the frame stays exactly fitted; only the launch transition moves in
+    void pointer;
+    const tx = going && p ? p.x * 0.25 : 0;
+    const ty = going && p ? p.y * 0.25 : 0;
+    const tz = fitZ(size.width / Math.max(size.height, 1)) + (1 - intro) * 1.6 - (going ? 2.2 : 0);
     camera.position.x = damp(camera.position.x, tx, going ? 5 : 3, dt);
     camera.position.y = damp(camera.position.y, ty, going ? 5 : 3, dt);
     camera.position.z = damp(camera.position.z, tz, going ? 5 : 3, dt);
@@ -198,7 +202,7 @@ function Scene({ hot, going, onHover, onReady }: Props) {
 
 export default function Lab3D(props: Props) {
   return (
-    <Canvas className="canvas" eventSource={document.getElementById("stage")!} eventPrefix="client" dpr={[1, 1.75]} camera={{ fov: FOV, position: [0, 0, BASE_Z + 1.6], near: 0.1, far: 60 }}
+    <Canvas className="canvas" eventSource={document.getElementById("stage")!} eventPrefix="client" dpr={[1, 1.75]} camera={{ fov: FOV, position: [0, 0, fitZ(SCENE.w / SCENE.h) + 1.6], near: 0.1, far: 60 }}
       gl={{ antialias: true, powerPreference: "high-performance" }} flat>
       <Suspense fallback={null}><Scene {...props} /></Suspense>
     </Canvas>

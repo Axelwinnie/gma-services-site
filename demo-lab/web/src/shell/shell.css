@@ -197,3 +197,16 @@ input[type=checkbox] { accent-color: var(--bl); width: 15px; height: 15px; }
 .toast:not(.on) { visibility: hidden; }
 .t .mono, .lnk.mono { white-space: nowrap; }
 .kpi { min-width: 0; } @media (max-width: 860px) { .kpi b, .kpi strong { overflow-wrap: anywhere; } .kpis > * { min-width: 0; overflow: hidden; } }
+/* alignment: one height for header actions, one for panel tools, equal-width action bars */
+.acts { align-items: center; flex-wrap: nowrap; }
+.acts > .btn, .acts > .chip, .acts > select, .acts > .menu > .btn, .acts .menu > button { height: 36px; }
+.acts > select { padding: 0 10px; border: 1px solid var(--line2); border-radius: 6px; background: var(--bg2); }
+.ph { align-items: center; }
+.ph > :last-child:not(:first-child) { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-left: auto; }
+.ph .btn, .ph .btn.sm, .ph select, .ph input:not([type=checkbox]):not([type=file]):not(.sr-only), .ph .search { height: 30px; }
+.ph .search input { height: 28px; }
+.bar-f select, .bar-f .btn { height: 32px; }
+.row.eq { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+.row.eq > .btn { width: 100%; }
+@media (max-width: 1100px) { .acts { flex-wrap: wrap; } }
+.acts .actas { height: 36px; display: inline-flex; align-items: center; gap: 8px; } .acts .actas select { height: 36px; } .ph .tabs button { height: 30px; } .ph .btn-quiet { height: 30px; }

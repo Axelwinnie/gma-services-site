@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { STATIONS, pct } from "./stations";
+import { STATIONS, btnPct, pct } from "./stations";
 import Hud from "./Hud";
 import Footer from "./shell/Footer";
 
@@ -49,7 +49,7 @@ export default function App() {
       </header>
       <main id="main">
         <h1 className="sr-only">GMA Demo Lab: shop software you can try right now, on made up sample data</h1>
-        <section id="stage" className={`stage${use3D ? " is-3d" : ""}${ready ? " is-ready" : ""}`} aria-label="Demo Lab stations">
+        <div className="stage-wrap"><section id="stage" className={`stage${use3D ? " is-3d" : ""}${ready ? " is-ready" : ""}`} aria-label="Demo Lab stations">
           {use3D && (
             <Suspense fallback={null}>
               <Lab3D hot={hot} going={going} onHover={setHot} onReady={() => setReady(true)} />
@@ -61,6 +61,7 @@ export default function App() {
                 <a href={s.href} onMouseEnter={() => setHot(s.id)} onMouseLeave={() => setHot(null)}
                    onFocus={() => setHot(s.id)} onBlur={() => setHot(null)} onClick={(e) => launch(e, s.id)}>
                   <span className="live" aria-hidden="true"><i />{s.code} / LIVE</span>
+                  <span className="go" style={btnPct(s)} aria-hidden="true" />
                   <span className="sr-only">{s.name}. {s.blurb} Launch demo.</span>
                 </a>
               </li>
@@ -73,7 +74,7 @@ export default function App() {
                  onMouseEnter={() => setHot(s.id)} onMouseLeave={() => setHot(null)} onClick={(e) => launch(e, s.id)} />
             ))}
           </div>
-        </section>
+        </section></div>
         <ul className="tiles" aria-label="Demos">
           {STATIONS.map((s) => (
             <li key={s.id}>

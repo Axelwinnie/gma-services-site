@@ -36,7 +36,11 @@ a { color: var(--ink); }
 .b-quiet:hover { background: rgba(255,255,255,.06); border-color: var(--blue); }
 
 /* the lab: full width, 16:9 art. Static image paints first, the 3D canvas fades in over it. */
-.stage { position: relative; width: 100%; aspect-ratio: 1672 / 941; background: #06090d var(--scene) center / cover no-repeat; overflow: hidden; }
+.stage-wrap { background: #06090d; }
+/* contain: the full art always fits the window under the 56px bar, letterboxed on the dark page color */
+.stage { position: relative; width: min(100%, calc((100vh - 56px) * 1672 / 941)); width: min(100%, calc((100svh - 56px) * 1672 / 941)); margin: 0 auto; aspect-ratio: 1672 / 941; background: #06090d var(--scene) center / 100% 100% no-repeat; overflow: hidden; }
+.go { position: absolute; border-radius: 6px; pointer-events: none; outline: 2px solid transparent; outline-offset: 1px; transition: outline-color .2s var(--ease), box-shadow .2s var(--ease); }
+.hit.on .go, .hit a:focus-visible .go { outline-color: var(--c); box-shadow: 0 0 14px var(--c); }
 .canvas { position: absolute !important; inset: 0; opacity: 0; transition: opacity .6s var(--ease); }
 .is-ready .canvas { opacity: 1; }
 .hits { list-style: none; margin: 0; padding: 0; }

@@ -133,7 +133,7 @@ export default function App() {
             <ul className="cks">{ck.map((c, i) => <li key={i} className={c.ok ? "ok" : "no"}><Icon n={c.ok ? "check" : "x"} />{c.text}</li>)}</ul>
             <div className="row" style={{ marginTop: 10 }}><Btn kind="green" icon="check" style={{ flex: 1 }} disabled={!d} onClick={() => decide("Approved")}>Approve</Btn></div>
             <div className="row" style={{ marginTop: 8 }}><input className={`inp${whyBad ? " bad" : ""}`} aria-invalid={whyBad} aria-label="Reason for rejecting" placeholder="Reason if rejecting" value={why} onChange={(e) => setWhy(e.target.value)} style={{ flex: 1 }} /><Btn kind="red" disabled={!d} onClick={() => decide("Rejected")}>Reject</Btn></div>
-            <div className="row" style={{ marginTop: 10 }}>{(["xlsx", "pdf", "csv", "json"] as const).map((k) => <Btn key={k} className="btn sm" icon="download" disabled={!d} onClick={() => ex(k)}>{k.toUpperCase()}</Btn>)}</div>
+            <div className="row eq" style={{ marginTop: 10 }}>{(["xlsx", "pdf", "csv", "json"] as const).map((k) => <Btn key={k} className="btn sm" icon="download" disabled={!d} onClick={() => ex(k)}>{k.toUpperCase()}</Btn>)}</div>
           </Panel>
           <Panel n="05" title="Raw Text" sub="What the reader saw" className="flush"><pre className="raw">{d?.text || ""}</pre></Panel>
         </div>

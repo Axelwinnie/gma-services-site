@@ -81,7 +81,7 @@ export default function App() {
       </div>
       <div className="g-est">
         <Panel n="01" title="Project Inputs" sub="Load drawings or a member list to generate a takeoff">
-          <Tabs value={tab} onChange={setTab} tabs={[["drawings", "Drawings"], ["model", "Member List"], ["info", "Project Info"]]} />
+          <Tabs value={tab} onChange={setTab} tabs={[["drawings", "Drawings"], ["model", "Members"], ["info", "Project"]]} />
           {tab === "drawings" && <>
             <label className={`drop${over ? " over" : ""}`} style={{ marginTop: 10 }} onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)} onDrop={(e) => { e.preventDefault(); setOver(false); readFiles(e.dataTransfer.files); }}>
               <Icon n="upload" s={24} /><b>Drop drawings or a member list here</b><span>or click to browse</span><span className="small">CSV or TXT member lists are read. PDF, DWG, RVT, IFC are listed only.</span>
@@ -144,7 +144,7 @@ export default function App() {
             </dl>
             <div className="tot"><span>Total Estimate</span><b>{money(t.total)}</b></div>
             {t.flagged > 0 && <p className="small" style={{ color: "#fca5a5", margin: "6px 0 0" }}>{t.flagged} line(s) have no weight and are left out. Check the flags.</p>}
-            <div className="row" style={{ marginTop: 10 }}><Btn kind="green" icon="download" style={{ flex: 1 }} onClick={() => ex("xlsx")}>Export to Excel</Btn><Btn kind="red" icon="file" style={{ flex: 1 }} onClick={() => ex("pdf")}>Export to PDF</Btn></div>
+            <div className="row eq" style={{ marginTop: 10 }}><Btn kind="green" icon="download" style={{ flex: 1 }} onClick={() => ex("xlsx")}>Export to Excel</Btn><Btn kind="red" icon="file" style={{ flex: 1 }} onClick={() => ex("pdf")}>Export to PDF</Btn></div>
             <p className="mut small" style={{ margin: "8px 0 0" }}>Rates are sample numbers. <Badge tone="yellow">Sample data</Badge></p>
           </Panel>
         </div>
