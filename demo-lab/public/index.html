@@ -13,84 +13,22 @@
   <meta property="og:image" content="https://gma-demo-lab.onrender.com/assets/demo-lab-hero-2026-10-06.png">
   <meta name="theme-color" content="#12151a">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" as="image" href="/assets/demo-lab-hero-2026-10-06.png">
-  <link rel="stylesheet" href="/css/home.css">
+  <link rel="preload" as="image" href="/assets/lab-scene.avif.svg" media="(min-width: 761px)">
+  <script type="module" crossorigin src="/lab/index-BC37ifT8.js"></script>
+  <link rel="modulepreload" crossorigin href="/lab/react-D7khRhy5.js">
+  <link rel="stylesheet" crossorigin href="/lab/index-BKpMrmLr.css">
 </head>
 <body class="home">
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="bar">
-    <div class="shell bar-in">
-      <a class="mark" href="/"><span class="full">Granite Models Automations</span><span class="short">GMA</span> <span class="accent">Demo Lab</span></a>
-      <nav class="contact" aria-label="Contact">
-        <a class="b b-quiet" href="tel:+19786473933"><span class="full">(978) 647-3933</span><span class="short">Call</span></a>
-        <a class="b" href="mailto:granitemodels@gmail.com">Email us</a>
-      </nav>
-    </div>
-  </header>
-  <main id="main" class="shell">
-    <section class="intro" aria-labelledby="lab-title">
-      <p class="readout" role="status"><span class="dot" aria-hidden="true"></span>Sandbox online <span class="sep" aria-hidden="true">/</span> 4 demos <span class="sep" aria-hidden="true">/</span> resets on reload</p>
-      <h1 id="lab-title">Shop software you can try right now</h1>
-      <p>Four working demos built for the trades. They run in your browser on made up sample data. No signup, nothing gets saved.</p>
-    </section>
-
-    <section class="floor hud" aria-label="Shop floor">
-      <img src="/assets/demo-lab-hero-2026-10-06.png" width="1440" height="690" alt="The GMA Demo Lab shop floor with three stations: Tool Ticket System, Doc Extract and File Organizer.">
-      <ul class="stations">
-        <li><a class="b b-quiet" href="/demos/ticket/">Try it<span class="sr-only">: Tool Ticket System</span></a></li>
-        <li><a class="b b-quiet" href="/demos/extract/">Try it<span class="sr-only">: Doc Extract</span></a></li>
-        <li><a class="b b-quiet" href="/demos/organizer/">Try it<span class="sr-only">: File Organizer</span></a></li>
-      </ul>
-    </section>
-
-    <section aria-labelledby="demos-h">
-      <h2 id="demos-h" class="sr-only">All demos</h2>
-      <ul class="demos">
-        <li class="demo hud" id="demo-ticket" data-demo-id="ticket">
-          <span class="tag" aria-hidden="true">TKT / LIVE</span>
-          <img src="/assets/thumbs/ticket.svg" width="640" height="400" loading="lazy" alt="Tool Ticket System demo showing open tickets, tool counts and the ticket board.">
-          <div class="demo-body">
-            <h3>Tool Ticket System</h3>
-            <p>Tickets, tool crib, QA/QC, JHAs, rentals and lockout/tagout in one place.</p>
-            <a class="b" href="/demos/ticket/">Try it<span class="sr-only">: Tool Ticket System</span></a>
-          </div>
-        </li>
-        <li class="demo hud" id="demo-extract" data-demo-id="extract">
-          <span class="tag" aria-hidden="true">DOC / LIVE</span>
-          <img src="/assets/thumbs/extract.svg" width="640" height="400" loading="lazy" alt="Doc Extract demo showing a sample invoice next to the fields it pulled out.">
-          <div class="demo-body">
-            <h3>Doc Extract</h3>
-            <p>Drop in an invoice and check the vendor, dates and totals it finds.</p>
-            <a class="b" href="/demos/extract/">Try it<span class="sr-only">: Doc Extract</span></a>
-          </div>
-        </li>
-        <li class="demo hud" id="demo-organizer" data-demo-id="organizer">
-          <span class="tag" aria-hidden="true">ORG / LIVE</span>
-          <img src="/assets/thumbs/organizer.svg" width="640" height="400" loading="lazy" alt="File Organizer demo showing messy file names next to the clean names it suggests.">
-          <div class="demo-body">
-            <h3>File Organizer</h3>
-            <p>Turns a messy pile of files into clear names and job folders.</p>
-            <a class="b" href="/demos/organizer/">Try it<span class="sr-only">: File Organizer</span></a>
-          </div>
-        </li>
-        <li class="demo hud" id="demo-estimating" data-demo-id="estimating">
-          <span class="tag" aria-hidden="true">EST / LIVE</span>
-          <img src="/assets/thumbs/estimating.svg" width="640" height="400" loading="lazy" alt="Steel Estimating demo showing piece weights, tons and a sample price for a job.">
-          <div class="demo-body">
-            <h3>Steel Estimating</h3>
-            <p>Paste a member list and get weights, tons and a price per pound.</p>
-            <a class="b" href="/demos/estimating/">Try it<span class="sr-only">: Steel Estimating</span></a>
-          </div>
-        </li>
-      </ul>
-    </section>
-  </main>
-  <footer class="foot">
-    <div class="shell foot-in">
-      <p>Granite Models Automations</p>
-      <p><a href="mailto:granitemodels@gmail.com">granitemodels@gmail.com</a> <span aria-hidden="true">·</span> <a href="tel:+19786473933">(978) 647-3933</a></p>
-    </div>
-  </footer>
-  <script src="/js/demo-lab.js"></script>
+  <div id="root"></div>
+  <noscript>
+    <h1>GMA Demo Lab</h1>
+    <ul>
+      <li><a href="/demos/ticket/">Tool Ticket System demo</a></li>
+      <li><a href="/demos/extract/">Doc Extract demo</a></li>
+      <li><a href="/demos/organizer/">File Organizer demo</a></li>
+      <li><a href="/demos/estimating/">Steel Estimating demo</a></li>
+    </ul>
+    <p><a href="tel:+19786473933">(978) 647-3933</a> · <a href="mailto:granitemodels@gmail.com">granitemodels@gmail.com</a></p>
+  </noscript>
 </body>
 </html>
