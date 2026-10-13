@@ -35,7 +35,7 @@ const dlg = document.getElementById("picker") as HTMLDialogElement;
 function open(prog: string) {
   const plans = PLANS[prog] || [];
   document.getElementById("picker-t")!.textContent = NAMES[prog];
-  document.getElementById("picker-sub")!.textContent = plans.length ? (prog === "ticket" ? "Pick a plan. Checkout is a secure Stripe page. Licence key provided with your installer." : "Pick a plan. Checkout is a secure Stripe page. After you pay, we build your installer with your licence already inside it and send you a private download link. You never type a key.") : "Pricing for this program is set per shop.";
+  document.getElementById("picker-sub")!.textContent = plans.length ? (prog === "ticket" ? "Pick a plan. Checkout is a secure Stripe page. Licence key provided with your installer." : prog === "extract" ? "Pick a plan. Checkout is a secure Stripe page. After you pay, send us your files — we extract what you need and return it. Your uploads are deleted when we're done." : "Pick a plan. Checkout is a secure Stripe page. After you pay, we build your installer with your licence already inside it and send you a private download link. You never type a key.") : "Pricing for this program is set per shop.";
   const box = document.getElementById("plans")!;
   box.replaceChildren();
   if (!plans.length) {
