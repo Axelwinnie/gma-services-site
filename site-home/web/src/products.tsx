@@ -8,12 +8,13 @@ type Plan = { id: string; name: string; price: string; note: string; url?: strin
 const NAMES: Record<string, string> = { ticket: "Tool Ticket System", estimating: "Steel Estimating", extract: "Doc Extract", organizer: "File Organizer" };
 // Approved prices and their live Stripe Payment Links (from ops/program-pay-links.json).
 const PLANS: Record<string, Plan[]> = {
+  // Tool Ticket sales paused until 1.0.4 is sellable. Restore these plans (and the data-buy="ticket" buttons in products/index.html) to re-enable checkout:
+  //     { id: "monthly", name: "Monthly", price: "$450/mo", note: "Licence key provided with your installer. Billed monthly.", url: "https://buy.stripe.com/dRm8wPeLs91PaLZac1dZ60w" },
+  //     { id: "yearly", name: "Yearly", price: "$4,800/yr", note: "Prepaid for the year.", url: "https://buy.stripe.com/3cIaEXcDkb9X1bp3NDdZ60x" },
+  //     { id: "own", name: "Buy to own", price: "$14,999", note: "Includes 3 months of support, then $2,500/yr for support and updates.", url: "https://buy.stripe.com/cNidR9fPw0vj3jx83TdZ60y" },
+  //     { id: "founding_monthly", name: "Founding shop, monthly", price: "$300/mo", note: "For our first shops. Email and we send the checkout link." },
+  //     { id: "founding_own", name: "Founding shop, buy to own", price: "$9,999", note: "For our first shops. Email and we send the checkout link." },
   ticket: [
-    { id: "monthly", name: "Monthly", price: "$450/mo", note: "Licence key provided with your installer. Billed monthly.", url: "https://buy.stripe.com/dRm8wPeLs91PaLZac1dZ60w" },
-    { id: "yearly", name: "Yearly", price: "$4,800/yr", note: "Prepaid for the year.", url: "https://buy.stripe.com/3cIaEXcDkb9X1bp3NDdZ60x" },
-    { id: "own", name: "Buy to own", price: "$14,999", note: "Includes 3 months of support, then $2,500/yr for support and updates.", url: "https://buy.stripe.com/cNidR9fPw0vj3jx83TdZ60y" },
-    { id: "founding_monthly", name: "Founding shop, monthly", price: "$300/mo", note: "For our first shops. Email and we send the checkout link." },
-    { id: "founding_own", name: "Founding shop, buy to own", price: "$9,999", note: "For our first shops. Email and we send the checkout link." },
   ],
   estimating: [
     { id: "monthly", name: "Monthly", price: "$295/mo", note: "Billed monthly.", url: "https://buy.stripe.com/5kQfZh0UC0vj9HVfwldZ60z" },
