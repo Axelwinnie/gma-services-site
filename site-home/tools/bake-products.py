@@ -1,4 +1,4 @@
-"""Patch the GPT products art: logo subtitle spelling, and each painted VIEW PRODUCT button reads BUY HERE.
+"""Patch the GPT products art: logo subtitle spelling, and painted VIEW PRODUCT buttons read BOOK A DEMO (Tool Ticket), TRY DEMO, BUY HERE (Doc Extract), TRY DEMO.
 Usage: python3 tools/bake-products.py <source.png> ../public/assets/home"""
 import sys, base64
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
@@ -30,7 +30,7 @@ def patch(box, text, f, top, bottom, track=0, glow=None):
 MS = "Montserrat/Montserrat-VariableFont_wght.ttf"
 patch((588, 141, 1078, 167), "GRANITE MODELS AUTOMATIONS", font(MS, 23, 700), (250, 250, 252), (160, 164, 176), track=1.6, glow=(70, 20, 50))
 B = font("Barlow Semi Condensed/BarlowSemiCondensed-Bold.ttf", 22)
-for box, label in [((132, 834, 290, 860), "BUY HERE"), ((572, 834, 738, 860), "TRY DEMO"), ((950, 832, 1088, 858), "BUY HERE"), ((1368, 838, 1516, 865), "TRY DEMO")]:
+for box, label in [((132, 834, 290, 860), "BOOK A DEMO"), ((572, 834, 738, 860), "TRY DEMO"), ((950, 832, 1088, 858), "BUY HERE"), ((1368, 838, 1516, 865), "TRY DEMO")]:
     patch(box, label, B, (246, 246, 248), (222, 224, 230), track=1.2)
 src.save("/tmp/products-baked.png")
 def wrap(img, name):
