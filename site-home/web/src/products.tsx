@@ -5,16 +5,21 @@ import { mount } from "./layer";
 import { PROD, PROD_SRC } from "./stations";
 
 type Plan = { id: string; name: string; price: string; note: string; url?: string };
-const NAMES: Record<string, string> = { ticket: "Tool Ticket System", estimating: "Steel Estimating", extract: "Doc Extract", organizer: "File Organizer" };
-// Approved prices and their live Stripe Payment Links (from ops/program-pay-links.json).
+const NAMES: Record<string, string> = { ticket: "Tool Ticket System", quotes: "Quotes & Proposals", estimating: "Steel Estimating", extract: "Doc Extract", organizer: "File Organizer" };
+// Approved 2026-10-15. Buy it once, own it. Live Stripe Payment Links from ops/program-pay-links-v2.json.
+// Payment plans stop after N payments: see ops/program-installments-RUNBOOK.md.
 const PLANS: Record<string, Plan[]> = {
-  // Tool Ticket sales paused until 1.0.4 is sellable. Restore these plans (and the data-buy="ticket" buttons in products/index.html) to re-enable checkout:
-  //     { id: "monthly", name: "Monthly", price: "$450/mo", note: "Licence key provided with your installer. Billed monthly.", url: "https://buy.stripe.com/dRm8wPeLs91PaLZac1dZ60w" },
-  //     { id: "yearly", name: "Yearly", price: "$4,800/yr", note: "Prepaid for the year.", url: "https://buy.stripe.com/3cIaEXcDkb9X1bp3NDdZ60x" },
-  //     { id: "own", name: "Buy to own", price: "$14,999", note: "Includes 3 months of support, then $2,500/yr for support and updates.", url: "https://buy.stripe.com/cNidR9fPw0vj3jx83TdZ60y" },
-  //     { id: "founding_monthly", name: "Founding shop, monthly", price: "$300/mo", note: "For our first shops. Email and we send the checkout link." },
-  //     { id: "founding_own", name: "Founding shop, buy to own", price: "$9,999", note: "For our first shops. Email and we send the checkout link." },
   ticket: [
+    { id: "founding_own", name: "Founding price, own it", price: "$6,995", note: "First 3 shops. Support year 1 included, then $1,495/yr.", url: "https://buy.stripe.com/bJe4gzavc3HvcU7doddZ60I" },
+    { id: "founding_12x630", name: "Founding, 12 payments", price: "12 x $630/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/6oU6oH1YG2DrdYbdoddZ60J" },
+    { id: "founding_24x327", name: "Founding, 24 payments", price: "24 x $327/mo", note: "Stops after 24 payments. Then it's yours.", url: "https://buy.stripe.com/eVqeVd6eWguh07lbg5dZ60K" },
+    { id: "list_own", name: "Own it", price: "$9,995", note: "Support year 1 included, then $1,495/yr.", url: "https://buy.stripe.com/4gM28r6eW2DrcU7fwldZ60L" },
+  ],
+  quotes: [
+    { id: "founding_own", name: "Founding price, own it", price: "$1,495", note: "First 5 shops. Support year 1 included, then $295/yr.", url: "https://buy.stripe.com/dRm9ATgTA3HvbQ3doddZ60M" },
+    { id: "6x260", name: "6 payments", price: "6 x $260/mo", note: "Stops after 6 payments. Then it's yours.", url: "https://buy.stripe.com/3cIcN59r891P3jx97XdZ60N" },
+    { id: "12x135", name: "12 payments", price: "12 x $135/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/7sYbJ1eLs3Hv1bp0BrdZ60O" },
+    { id: "list_own", name: "Own it", price: "$1,995", note: "Support year 1 included, then $295/yr.", url: "https://buy.stripe.com/dRmeVd9r8em93jxck9dZ60P" },
   ],
   estimating: [],
   extract: [
@@ -26,7 +31,7 @@ const dlg = document.getElementById("picker") as HTMLDialogElement;
 function open(prog: string) {
   const plans = PLANS[prog] || [];
   document.getElementById("picker-t")!.textContent = NAMES[prog];
-  document.getElementById("picker-sub")!.textContent = plans.length ? (prog === "ticket" ? "Pick a plan. Checkout is a secure Stripe page. Licence key provided with your installer." : prog === "extract" ? "Buy it once, own it. Checkout is a secure Stripe page. After you pay, send us your files - we extract what you need and return it. Your uploads are deleted when we're done." : "Pick a plan. Checkout is a secure Stripe page. After you pay, we build your installer with your licence already inside it and send you a private download link. You never type a key.") : "Pricing for this program is set per shop.";
+  document.getElementById("picker-sub")!.textContent = plans.length ? (prog === "ticket" || prog === "quotes" ? "Buy it once, own it. Checkout is a secure Stripe page. Installs on your PC - your data stays with you. Licence key provided with your installer." : prog === "extract" ? "Buy it once, own it. Checkout is a secure Stripe page. After you pay, send us your files - we extract what you need and return it. Your uploads are deleted when we're done." : "Pick a plan. Checkout is a secure Stripe page. After you pay, we build your installer with your licence already inside it and send you a private download link. You never type a key.") : "Pricing for this program is set per shop.";
   const box = document.getElementById("plans")!;
   box.replaceChildren();
   if (!plans.length) {
