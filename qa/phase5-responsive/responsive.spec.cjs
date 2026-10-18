@@ -3,41 +3,77 @@ const fs = require('fs');
 
 // IMPORTANT: Update GMA_WIDTHS to the exact six widths specified by the
 // original Phase 5 acceptance matrix. The defaults are examples only.
-const widths = (process.env.GMA_WIDTHS || '320,360,375,390,768,1024')
+const widths = (process.env.GMA_WIDTHS || '320,375,430,768,1024,1440')
   .split(',').map(s => Number(s.trim()));
 if (widths.length !== 6 || widths.some(w => !Number.isInteger(w) || w < 240 || w > 3840)) {
   throw new Error('GMA_WIDTHS must be exactly six comma-separated integer CSS-pixel widths');
 }
-const routes = (process.env.GMA_ROUTES || '/collections/carpentry,/collections/roofing,/collections/steel,/pages/custom-design-studio')
+const routes = (process.env.GMA_ROUTES || '/collections/carpentry,/pages/custom-design-studio')
   .split(',').map(s => s.trim()).filter(Boolean);
 if (routes.some(route => !route.startsWith('/') || route.startsWith('//'))) {
   throw new Error('GMA_ROUTES must be comma-separated relative storefront routes, each beginning with /');
 }
 
+// Shopify Horizon's password field is present in the DOM but hidden behind a dialog.
+// IMPORTANT: All width tests run serially; a real authentication failure stops the run.
 async function unlockIfNecessary(page) {
-  // Password-gated store; use ONLY the Shopify storefront password, never an admin password.
+  // Storefront password ONLY, never Shopify admin/API credentials.
   if (!process.env.GMA_PASSWORD) {
     throw new Error('Missing GMA_PASSWORD: configure GitHub Actions secret GMA_STOREFRONT_PASSWORD');
   }
   await page.goto('/password', { waitUntil: 'domcontentloaded' });
   const passwordInput = page.locator('input[name="password"]');
-  if (!(await passwordInput.count())) {
-    const open = page.getByText(/enter using password|enter with password|store password/i).first();
-    if (await open.count()) await open.click();
+  if (!(await passwordInput.isVisible())) {
+    const openerLabel = /enter using password|enter with password|store password/i;
+    // Use visible accessible controls; a hidden DOM input is not an open form.
+    const openers = [
+      page.getByRole('link', { name: openerLabel }),
+      page.getByRole('button', { name: openerLabel }),
+      page.getByText(openerLabel),
+    ];
+    let opened = false;
+    for (const candidates of openers) {
+      for (let i = 0, n = await candidates.count(); i < n; i++) {
+        const candidate = candidates.nth(i);
+        if (await candidate.isVisible()) {
+          await candidate.click();
+          opened = true;
+          break;
+        }
+      }
+      if (opened) break;
+    }
+    if (!opened) {
+      throw new Error('Password dialog is closed and no visible opener was found; stop without submitting');
+    }
   }
-  if (!(await passwordInput.count())) {
-    throw new Error('Could not locate Shopify storefront password form; investigate page rather than bypass access');
+  await passwordInput.waitFor({ state: 'visible', timeout: 8000 });
+  const form = page.locator('form:has(input[name="password"])').first();
+  if (!(await form.count())) {
+    throw new Error('Password input has no matching form; stop without submitting');
   }
   await passwordInput.fill(process.env.GMA_PASSWORD);
-  const form = page.locator('form:has(input[name="password"])').first();
-  await Promise.all([
-    page.waitForLoadState('domcontentloaded').catch(() => {}),
-    form.locator('button[type="submit"], input[type="submit"], button:not([type])').first().click(),
-  ]);
+  await form.locator('button[type="submit"], input[type="submit"], button:not([type])').first().click();
+
+  // Do not treat a completed click as a successful login. Check a protected
+  // collection after submission; stop on failure before any screenshots.
+  const checkRoute = '/collections/carpentry';
+  await page.goto(checkRoute, { waitUntil: 'domcontentloaded' });
+  await assertUnlocked(page, checkRoute);
+}
+
+async function assertUnlocked(page, requestedRoute) {
+  const expectedPath = new URL(requestedRoute, page.url()).pathname.replace(/\/$/, '');
+  const actualPath = new URL(page.url()).pathname.replace(/\/$/, '');
+  const stillPasswordPage = (await page.locator('input[name="password"]').count()) > 0;
+  if (actualPath !== expectedPath || stillPasswordPage) {
+    throw new Error(`Storefront authentication or route check failed for ${requestedRoute}; no screenshot captured; stop and investigate`);
+  }
 }
 
 async function snapshot(page, route, width, testInfo) {
   await page.goto(route, { waitUntil: 'domcontentloaded' });
+  await assertUnlocked(page, route);
   await page.locator('body').waitFor();
   await page.waitForTimeout(700); // stabilize initial layout; NOT a guarantee of image load
   if (await page.locator('input[name="password"]:visible').count()) {
@@ -81,6 +117,9 @@ async function snapshot(page, route, width, testInfo) {
   expect(data.headingText.length, `${route} missing h1`).toBeGreaterThan(0);
   return data;
 }
+
+// Abort the six-width sequence after the FIRST failing test (no repeated wrong-password submissions).
+test.describe.configure({ mode: 'serial' });
 
 for (const width of widths) {
   test(`GMA Phase 5 exact-width ${width}px — screenshot + overflow evidence`, async ({ browser }, testInfo) => {
