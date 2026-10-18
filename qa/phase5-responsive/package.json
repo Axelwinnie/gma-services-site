@@ -1,0 +1,8 @@
+{
+  "name": "gma-supply-co-phase5-responsive-evidence",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Read-only responsive QA for password-protected GMA Supply Co. storefront",
+  "scripts": {"test": "playwright test", "check": "node --check responsive.spec.cjs"},
+  "devDependencies": {"@playwright/test": "^1.64.0"}
+}
