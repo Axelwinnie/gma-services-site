@@ -1,0 +1,42 @@
+name: GMA Phase 5 Responsive QA (Read Only)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  responsive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: qa/phase5-responsive
+    env:
+      GMA_STORE_URL: https://rnqe6b-aj.myshopify.com
+      GMA_PASSWORD: ${{ secrets.GMA_STOREFRONT_PASSWORD }}
+      # IMPORTANT: Muse replaces with exactly the six widths in the official Phase 5 matrix.
+      GMA_WIDTHS: "320,375,430,768,1024,1440"
+      # IMPORTANT: Muse verifies this Studio handle and representative routes before running.
+      GMA_ROUTES: "/collections/carpentry,/collections/roofing,/collections/steel,/pages/custom-design-studio"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install read-only QA dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install temporary Chromium for this CI runner
+        run: npx playwright install --with-deps chromium
+      - name: Execute exact-width checks against password-protected storefront
+        run: npm test
+      - name: Upload evidence (including on test failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gma-phase5-responsive-evidence
+          path: |
+            qa/phase5-responsive/playwright-report/
+            qa/phase5-responsive/test-results/
+          retention-days: 14
