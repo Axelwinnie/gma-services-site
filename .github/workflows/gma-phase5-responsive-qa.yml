@@ -19,7 +19,7 @@ jobs:
       # IMPORTANT: Muse replaces with exactly the six widths in the official Phase 5 matrix.
       GMA_WIDTHS: "320,375,430,768,1024,1440"
       # IMPORTANT: Muse verifies this Studio handle and representative routes before running.
-      GMA_ROUTES: "/collections/carpentry,/collections/roofing,/collections/steel,/pages/custom-design-studio"
+      GMA_ROUTES: "/collections/carpentry,/pages/custom-design-studio"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
