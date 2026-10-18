@@ -84,6 +84,30 @@ async function snapshot(page, route, width, testInfo) {
   }
   const data = await page.evaluate(() => {
     const root = document.documentElement;
+    // V1.2: A mobile page with an overflowing min-width element can report
+    // window.innerWidth > the emulated device width (e.g. 324 on a 320px
+    // screen). The layout viewport remains root.clientWidth === 320.
+    // Do not force innerWidth smaller with CDP or use innerWidth as the
+    // overflow denominator: either can conceal a genuine layout defect.
+    const layoutViewportWidth = root.clientWidth;
+    const documentScrollWidth = Math.max(root.scrollWidth, document.body.scrollWidth);
+    const horizontalOverflowPx = Math.max(0, documentScrollWidth - layoutViewportWidth);
+    const overflowCandidates = horizontalOverflowPx ?
+      [...document.body.querySelectorAll('*')].filter(el => {
+        const style = getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 &&
+          (r.right > layoutViewportWidth + 0.5 || r.left < -0.5);
+      }).slice(0, 40).map(el => {
+        const r = el.getBoundingClientRect();
+        return {
+          tag: el.tagName.toLowerCase(), id: el.id || null,
+          className: String(el.className || '').slice(0, 100),
+          left: Math.round(r.left * 10) / 10, right: Math.round(r.right * 10) / 10,
+          width: Math.round(r.width * 10) / 10,
+        };
+      }) : [];
     const displayed = selector => [...document.querySelectorAll(selector)].filter(el => {
       const r = el.getBoundingClientRect(); const cs = getComputedStyle(el);
       return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none';
@@ -94,9 +118,16 @@ async function snapshot(page, route, width, testInfo) {
         return {label: (el.getAttribute('aria-label') || el.textContent || el.getAttribute('value') || '').trim().slice(0, 70), width: Math.round(r.width), height: Math.round(r.height), x: Math.round(r.x)};
       }).filter(c => c.width > 0).slice(0, 300);
     return {
-      viewportWidth: innerWidth, documentScrollWidth: root.scrollWidth,
+      // Strict CSS layout viewport check still uses exact equality below.
+      viewportWidth: layoutViewportWidth,
+      windowInnerWidth: window.innerWidth, // diagnostic: may expand on mobile when content overflows
+      visualViewportWidth: window.visualViewport ? window.visualViewport.width : null,
+      screenWidth: window.screen.width,
+      viewportMeta: document.querySelector('meta[name="viewport"]')?.content || null,
+      documentScrollWidth: root.scrollWidth,
       bodyScrollWidth: document.body.scrollWidth,
-      horizontalOverflowPx: Math.max(0, root.scrollWidth - innerWidth),
+      horizontalOverflowPx,
+      overflowCandidates,
       title: document.title,
       headingText: [...document.querySelectorAll('h1')].map(x => x.textContent.trim()).slice(0, 5),
       controlsUnder44px: controls.filter(c => c.width < 44 || c.height < 44),
