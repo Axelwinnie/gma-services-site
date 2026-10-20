@@ -11,19 +11,27 @@ const NAMES: Record<string, string> = { ticket: "Tool Ticket System", quotes: "Q
 const PLANS: Record<string, Plan[]> = {
   ticket: [
     { id: "founding_own", name: "Founding price, own it", price: "$6,995", note: "First 3 shops. Support year 1 included, then $1,495/yr.", url: "https://buy.stripe.com/bJe4gzavc3HvcU7doddZ60I" },
-    { id: "founding_12x630", name: "Founding, 12 payments", price: "12 x $641.21/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/14AfZhfPwem9cU7fwldZ60W" },
-    { id: "founding_24x327", name: "Founding, 24 payments", price: "24 x $320.61/mo", note: "Stops after 24 payments. Then it's yours.", url: "https://buy.stripe.com/3cI6oH6eW3Hvf2f6ZPdZ60X" },
+    { id: "founding_12x64121", name: "Founding, 12 payments", price: "12 x $641.21/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/14AfZhfPwem9cU7fwldZ60W" },
+    { id: "founding_24x32061", name: "Founding, 24 payments", price: "24 x $320.61/mo", note: "Stops after 24 payments. Then it's yours.", url: "https://buy.stripe.com/3cI6oH6eW3Hvf2f6ZPdZ60X" },
     { id: "list_own", name: "Own it", price: "$9,995", note: "Support year 1 included, then $1,495/yr.", url: "https://buy.stripe.com/4gM28r6eW2DrcU7fwldZ60L" },
   ],
   quotes: [
     { id: "founding_own", name: "Founding price, own it", price: "$1,495", note: "First 5 shops. Support year 1 included, then $295/yr.", url: "https://buy.stripe.com/dRm9ATgTA3HvbQ3doddZ60M" },
-    { id: "6x260", name: "6 payments", price: "6 x $274.09/mo", note: "Stops after 6 payments. Then it's yours.", url: "https://buy.stripe.com/dRmeVdbzg4LzaLZeshdZ60Y" },
-    { id: "12x135", name: "12 payments", price: "12 x $137.05/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/5kQaEXcDk7XL1bp5VLdZ60Z" },
+    { id: "founding_6x27409", name: "6 payments", price: "6 x $274.09/mo", note: "Stops after 6 payments. Then it's yours.", url: "https://buy.stripe.com/dRmeVdbzg4LzaLZeshdZ60Y" },
+    { id: "founding_12x13705", name: "12 payments", price: "12 x $137.05/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/5kQaEXcDk7XL1bp5VLdZ60Z" },
     { id: "list_own", name: "Own it", price: "$1,995", note: "Support year 1 included, then $295/yr.", url: "https://buy.stripe.com/dRmeVd9r8em93jxck9dZ60P" },
   ],
   estimating: [],
-  extract: [],
-  organizer: [],
+  extract: [
+    { id: "own", name: "Own it", price: "$1,995", note: "Buy it once, own it. Installs on your PC.", url: "https://buy.stripe.com/dRmcN532K4Lz5rFeshdZ60U" },
+    { id: "12x18288", name: "12 payments", price: "12 x $182.88/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/bJeaEX9r8ce1f2f6ZPdZ612" },
+  ],
+  organizer: [
+    { id: "founding_own", name: "Founding price, own it", price: "$745", note: "Founding price for our first shops. Support and updates $195/yr.", url: "https://buy.stripe.com/9B628rcDk2Drg6jdoddZ60Q" },
+    { id: "founding_6x13659", name: "Founding, 6 payments", price: "6 x $136.59/mo", note: "Stops after 6 payments. Then it's yours.", url: "https://buy.stripe.com/5kQ6oH1YGdi5bQ3eshdZ610" },
+    { id: "founding_12x6830", name: "Founding, 12 payments", price: "12 x $68.30/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/4gMfZh9r8a5TaLZ4RHdZ611" },
+    { id: "list_own", name: "Own it", price: "$995", note: "Support and updates $195/yr.", url: "https://buy.stripe.com/3cI8wPdHo5PD4nB3NDdZ60T" },
+  ],
 };
 const dlg = document.getElementById("picker") as HTMLDialogElement;
 function open(prog: string) {
