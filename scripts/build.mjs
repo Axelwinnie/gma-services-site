@@ -1366,6 +1366,11 @@ function termsMain() {
     <h1>Terms</h1>
     <p>${launch ? "The working rules for a workflow job are" : "Until Jon approves this page, the working rules for a workflow job are"} the <a href="/refund-policy/">refund policy</a>, the <a href="/revision-policy/">revision policy</a>, the <a href="/file-retention-policy/">file retention policy</a>, and the <a href="/policies/">client requirements, payment, and delay rule</a>.</p>
     <p>Nothing on this draft page adds a fee, a warranty, or a promise of savings.</p>
+    <h2>GMA Trades Fit Finder</h2>
+    <p>GMA Trades Fit Finder is a GMA-owned workflow-mapping and product-finding assistant for ChatGPT. It provides general process suggestions and optional links to GMA products and services. It does not compare the entire market. You can use its process suggestions without buying a GMA product.</p>
+    <p>Review the assistant&#x27;s output before relying on it. It can make mistakes and does not provide a final bid, certified quantity takeoff, structural design, code determination, safety plan, or professional legal, tax, or financial advice. No savings, business result, product availability, or suitability is guaranteed by an assistant response.</p>
+    <p>The plugin does not contact GMA, submit forms, operate business systems, or complete purchases on your behalf. Product features, prices, availability, licenses, payment terms, and refund terms are those shown on the relevant current offer and checkout pages. A custom service requires separately agreed scope and terms; a chat response does not establish that agreement.</p>
+    <p>ChatGPT use remains subject to OpenAI&#x27;s terms. OpenAI does not endorse GMA by hosting or reviewing this plugin. For plugin questions or support, contact <a href="mailto:support@granitemodels.store">support@granitemodels.store</a>.</p>
   </div></article>`;
 }
 
@@ -1402,6 +1407,11 @@ function privacyMain() {
       <li>3 to 5 examples</li>
     </ul>
     <p>Do not send passwords, card numbers, health information, or bank details. ${emailFallback()}</p>`}
+    <h2>GMA Trades Fit Finder in ChatGPT</h2>
+    <p>This section applies to GMA Trades Fit Finder, a skills-only assistant published by Granite Models Automations (GMA). The plugin package supplies instructions and public offer links. It contains no GMA server connection, account integration, analytics code, or mechanism for sending your chat to GMA. It does not create a GMA customer account or store your conversation in a GMA system.</p>
+    <p>You use the assistant through your ChatGPT account. OpenAI&#x27;s terms, privacy policy, and your account or workspace settings govern how ChatGPT handles your conversation. Do not interpret GMA&#x27;s file-deletion policy for separately commissioned jobs as a promise about ChatGPT conversation retention. Share only general process descriptions or redacted examples; do not include passwords, payment information, customer or employee personal data, confidential drawings, or sensitive business records.</p>
+    <p>If you choose to visit a GMA, Payhip, or other external page, you leave the chat and that site&#x27;s policies apply. If you separately email GMA, request a service, or make a purchase, the information you provide through that channel is handled under the applicable service and website policies. The plugin does not automatically submit your conversation with those requests.</p>
+    <p>For plugin privacy questions, contact <a href="mailto:support@granitemodels.store">support@granitemodels.store</a>. For ChatGPT data controls or deletion requests, use OpenAI&#x27;s account controls and support channels.</p>
   </div></article>`;
 }
 
@@ -2151,3 +2161,4 @@ function esc(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 }
+
