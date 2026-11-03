@@ -200,6 +200,21 @@ writePage("/file-retention-policy/", page({
   main: retentionMain(),
 }));
 
+writePage("/gma-trades-fit-finder/", page({
+  title: "GMA Trades Fit Finder",
+  description: "Map one trade-business workflow with GMA Trades Fit Finder for ChatGPT. Start with a no-cost process improvement.",
+  path: "/gma-trades-fit-finder/",
+  active: "",
+  crumbs: [["GMA Trades Fit Finder"]],
+  main: `<article class="section"><div class="wrap">
+    <h1>GMA Trades Fit Finder for ChatGPT</h1>
+    <p>Map one recurring paperwork or shop-office bottleneck before buying another tool. GMA Trades Fit Finder helps contractors, fabricators, and small trade offices describe a process, identify likely friction, and choose a practical next step. It suggests a no-cost improvement first and may link to a relevant GMA spreadsheet, installed program, or workflow service.</p>
+    <p>This assistant is published by Granite Models Automations (GMA). It recommends from GMA&#x27;s offerings and does not provide an independent comparison of every vendor. A purchase is optional. The plugin is being prepared for public release; no public installation link is available yet.</p>
+    <p>Use general descriptions or redacted examples. The plugin does not connect to your business accounts, operate your software, process payments, or submit requests for you. Its suggestions require your review; it does not certify estimates, bids, engineering, code compliance, or safety decisions.</p>
+    <p>Plugin support: <a href="mailto:support@granitemodels.store">support@granitemodels.store</a>. See our <a href="https://granitemodels.store/privacy/">privacy note</a> and <a href="https://granitemodels.store/terms/">terms</a>.</p>
+</div></article>`,
+}));
+
 writePage("/terms/", page({
   title: "Terms",
   description: launch ? "Not legal advice." : `${DRAFT} Not legal advice.`,
