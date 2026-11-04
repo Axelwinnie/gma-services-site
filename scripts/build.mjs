@@ -201,13 +201,13 @@ writePage("/file-retention-policy/", page({
 }));
 
 writePage("/gma-trades-fit-finder/", page({
-  title: "GMA Trades Fit Finder",
-  description: "Map one trade-business workflow with GMA Trades Fit Finder for ChatGPT. Start with a no-cost process improvement.",
+  title: "GMA Trade Workflow Kits (formerly GMA Trades Fit Finder)",
+  description: "Map one trade-business workflow with GMA Trade Workflow Kits (formerly GMA Trades Fit Finder) for ChatGPT. Start with a no-cost process improvement.",
   path: "/gma-trades-fit-finder/",
   active: "",
-  crumbs: [["GMA Trades Fit Finder"]],
+  crumbs: [["GMA Trade Workflow Kits (formerly GMA Trades Fit Finder)"]],
   main: `<article class="section"><div class="wrap">
-<h1>GMA Trades Fit Finder for ChatGPT</h1>
+<h1>GMA Trade Workflow Kits (formerly GMA Trades Fit Finder) for ChatGPT</h1>
 <p>Measure repeated trade-office administration and get a practical workflow starter kit. Connected version 0.2.0 calculates duplicate-entry and missed-handoff recovery time from rough aggregate counts, supplies editable CSV trackers and checklists, and compares a current-tools path with optional GMA offers.</p>
 <p>Choose quote intake, tool checkout, job handoff, or document intake, with solo and shared-role kits. The files are manual trackers with fictional DEMO examples. They do not synchronize users, send reminders, certify bids or inspections, or operate your software. No customer-record or document upload is needed.</p>
 <p>This is a Granite Models Automations (GMA) product, not an independent comparison service. A purchase is optional. The connected development version is being prepared for host testing; the ChatGPT directory listing is not published and no public installation link is available yet.</p>
@@ -1381,8 +1381,8 @@ function termsMain() {
     <h1>Terms</h1>
     <p>${launch ? "The working rules for a workflow job are" : "Until Jon approves this page, the working rules for a workflow job are"} the <a href="/refund-policy/">refund policy</a>, the <a href="/revision-policy/">revision policy</a>, the <a href="/file-retention-policy/">file retention policy</a>, and the <a href="/policies/">client requirements, payment, and delay rule</a>.</p>
     <p>Nothing on this draft page adds a fee, a warranty, or a promise of savings.</p>
-    <h2>GMA Trades Fit Finder</h2>
-    <p>GMA Trades Fit Finder is a GMA-owned workflow assistant. Connected tools calculate reported administrative workload from aggregate estimates and supply editable manual starter kits. A reduction percentage is a user-selected hypothetical assumption, not measured savings, a forecast, or proof of product benefit.</p>
+    <h2>GMA Trade Workflow Kits (formerly GMA Trades Fit Finder)</h2>
+    <p>GMA Trade Workflow Kits (formerly GMA Trades Fit Finder) is a GMA-owned workflow assistant. Connected tools calculate reported administrative workload from aggregate estimates and supply editable manual starter kits. A reduction percentage is a user-selected hypothetical assumption, not measured savings, a forecast, or proof of product benefit.</p>
     <p>Review outputs before use. The service does not certify quantities, bids, structural designs, code compliance, safety plans, or professional legal, tax, or financial advice. Kits do not synchronize users, send reminders, enforce access controls, or operate business software. No savings, availability, or suitability is guaranteed by an assistant response.</p>
     <p>You may use and edit the included starter kits inside your own business. Do not resell or redistribute them as your own product. Separately purchased GMA products have their own terms. Buying is optional. Current offer and checkout pages govern product features, prices, licenses, payment and refund terms. Custom work requires separately agreed scope and terms.</p>
     <p>The plugin does not contact GMA or customers, submit forms, execute purchases, or agree work on your behalf. ChatGPT use remains subject to OpenAI's terms. OpenAI does not endorse GMA by hosting or reviewing a plugin. Support: <a href="mailto:support@granitemodels.store">support@granitemodels.store</a>.</p>
@@ -1422,7 +1422,7 @@ function privacyMain() {
       <li>3 to 5 examples</li>
     </ul>
     <p>Do not send passwords, card numbers, health information, or bank details. ${emailFallback()}</p>`}
-    <h2>GMA Trades Fit Finder in ChatGPT</h2>
+    <h2>GMA Trade Workflow Kits (formerly GMA Trades Fit Finder) in ChatGPT</h2>
     <p>Version 0.1 is a skills-only assistant. Connected version 0.2.0 sends selected workflow/team choices and the aggregate counts needed for a requested calculation to a GMA-operated service hosted on Render at <a href="https://granite-models-store.onrender.com">granite-models-store.onrender.com</a>. Do not send names, email addresses, customer or employee records, documents, passwords, payment information, confidential drawings, or conversation transcripts. The tools accept fixed choices and bounded aggregate numbers.</p>
     <p>The connected service processes those inputs in memory to calculate reported administrative workload, return workflow options, or supply a starter kit. It does not deliberately write analysis inputs or results to a database, files, or request-body logs. It has no user accounts, cookies, or analytics SDK. Public kit downloads contain fixed templates and fictional DEMO records, not chat or analysis data. Edits to a downloaded tracker stay in the application or storage location you choose; this service does not receive them.</p>
     <p>OpenAI handles the chat and tool results under its terms, privacy policy, and your account or workspace settings. Render processes network and operational metadata to host the service under <a href="https://render.com/privacy">Render's privacy policy</a>. GMA's deletion timeline for separately commissioned jobs does not describe ChatGPT retention or hosting-provider logs.</p>
