@@ -54,7 +54,6 @@ export function notifications(s: any, T: any) {
   const out: { id: string; tone: string; title: string; text: string; view: string; ticket?: number }[] = [];
   s.tickets.filter((t: any) => t.status !== "Done" && t.priority.indexOf("Down") === 0).forEach((t: any) => out.push({ id: "down-" + t.id, tone: "red", title: "Work stopped", text: `#${t.id} ${t.title}`, view: "dashboard", ticket: t.id }));
   s.tickets.filter((t: any) => t.status === "New" && !t.assignee).forEach((t: any) => out.push({ id: "new-" + t.id, tone: "orange", title: "Needs an assignee", text: `#${t.id} ${t.title}`, view: "dashboard", ticket: t.id }));
-  T.overdue(s).forEach((tl: any) => out.push({ id: "late-" + tl.id, tone: "orange", title: "Tool late back to the crib", text: `${tl.id} ${tl.name}, out with ${tl.holder}`, view: "records" }));
   s.rentals.forEach((r: any) => { const a = T.rentalAlert(r, s.now); if (a === "overdue" || a === "call off-rent") out.push({ id: "rent-" + r.id + a, tone: a === "overdue" ? "red" : "yellow", title: a === "overdue" ? "Rental past due back" : "Call off-rent today", text: `${r.id} ${r.item}`, view: "rent" }); });
   s.reqs.filter((r: any) => r.status === "Requested").forEach((r: any) => out.push({ id: "req-" + r.id, tone: "blue", title: "Requisition waiting on approval", text: `${r.id} ${r.item} x${r.qty}`, view: "req" }));
   s.qa.forEach((q: any) => { const st = T.qaState(q); if (st === "hold" || st === "fail") out.push({ id: "qa-" + q.id + st, tone: "yellow", title: "Inspection " + st, text: `${q.id} ${q.part}`, view: "qa" }); });
@@ -72,7 +71,7 @@ export function healthChecks(s: any, T: any) {
   const orphanReq = s.reqs.filter((r: any) => r.ticket && !T.find(s, r.ticket));
   return [
     { name: "Sandbox data store", ok: true, text: "In memory in this tab. Nothing is saved or sent." },
-    { name: "Tool tag state matches tickets and LOTO", ok: before === after, text: before === after ? "All " + s.tools.length + " crib tools agree." : "Tag state drifted, run Reset Demo." },
+    { name: "Tool tag state matches tickets and LOTO", ok: before === after, text: before === after ? "All " + s.tools.length + " tool tags agree." : "Tag state drifted, run Reset Demo." },
     { name: "JHA signed before work starts", ok: !jhaMiss.length, text: jhaMiss.length ? jhaMiss.length + " ticket(s) in progress without a signed JHA." : "Every in-progress ticket that needs a JHA has one." },
     { name: "No closed ticket with an active lockout", ok: !doneLocked.length, text: doneLocked.length ? doneLocked.length + " found." : "None found." },
     { name: "Requisitions link to real tickets", ok: !orphanReq.length, text: orphanReq.length ? orphanReq.length + " broken link(s)." : "All links resolve." },

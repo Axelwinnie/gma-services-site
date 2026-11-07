@@ -15,7 +15,7 @@ export type Station = {
 };
 
 export const STATIONS: Station[] = [
-  { id: "ticket", code: "TKT", name: "Tool Ticket System", blurb: "Tickets, tool crib, QA/QC, JHAs, rentals and lockout/tagout.", href: "/demos/ticket/", accent: "orange", box: [124, 414, 500, 787], btn: [227, 742, 404, 777] },
+  { id: "ticket", code: "TKT", name: "Tool Ticket System", blurb: "Tickets, QA/QC, JHAs, rentals and lockout/tagout.", href: "/demos/ticket/", accent: "orange", box: [124, 414, 500, 787], btn: [227, 742, 404, 777] },
   { id: "extract", code: "DOC", name: "Doc Extract", blurb: "Pull fields off PDFs, drawings and invoices.", href: "/demos/extract/", accent: "blue", box: [523, 414, 873, 787], btn: [614, 742, 789, 777] },
   { id: "organizer", code: "ORG", name: "File Organizer", blurb: "Turn a messy pile of files into named job folders.", href: "/demos/organizer/", accent: "blue", box: [893, 414, 1249, 787], btn: [987, 742, 1162, 777] },
   { id: "estimating", code: "EST", name: "Steel Estimating", blurb: "Weights and tons from a member list.", href: "/demos/estimating/", accent: "orange", box: [1270, 414, 1643, 787], btn: [1368, 742, 1543, 777] },

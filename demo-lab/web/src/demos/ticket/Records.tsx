@@ -2,43 +2,11 @@
 import { useState } from "react";
 import { Badge, Btn, Field, Kpi, Menu, Panel, Tabs, Toggle } from "../../shell/ui";
 import { NOTE, csv, json, pdf, save, xlsx } from "../../shell/files";
-import { JOBS, day, money, useForm, useT, when } from "./ctx";
+import { JOBS, money, useForm, useT, when } from "./ctx";
 import { healthChecks, notifications } from "./extras";
 import { Trend, weekly } from "./Ops";
 
 const PPE = ["Safety glasses", "Hard hat", "Leather gloves", "Cut-resistant gloves", "Hearing protection", "Face shield", "Harness"];
-
-function Crib() {
-  const { s, T, me, act, go } = useT();
-  const f = useForm({ id: "", name: "", type: "", area: "" });
-  const [editing, setEditing] = useState<string | null>(null);
-  return <>
-    <Panel n="01" title={editing ? `Edit ${editing}` : "Add a tool to the crib"}>
-      <form className="form" noValidate onSubmit={(e) => { e.preventDefault(); let msg = ""; if (f.run(() => { if (editing) { T.editTool(s, editing, f.v); msg = editing + " saved."; } else msg = T.addTool(s, f.v).id + " added to the crib."; })) { act(() => 0, msg); f.reset(); setEditing(null); } }}>
-        <Field label="Tool ID *" error={f.bad("id")}><input data-f="id" value={f.v.id} disabled={!!editing} onChange={f.set("id")} placeholder="T-109" /></Field>
-        <Field label="Name *" error={f.bad("name")}><input data-f="name" value={f.v.name} onChange={f.set("name")} /></Field>
-        <Field label="Type *" error={f.bad("type")}><select data-f="type" value={f.v.type} onChange={f.set("type")}><option value="">Type...</option>{T.TOOL_TYPES.map((x: string) => <option key={x}>{x}</option>)}</select></Field>
-        <Field label="Home location *" error={f.bad("area")}><input data-f="area" value={f.v.area} onChange={f.set("area")} /></Field>
-        <div className="row"><Btn kind="primary" type="submit">{editing ? "Save changes" : "Add tool"}</Btn>{editing && <Btn onClick={() => { f.reset(); setEditing(null); }}>Cancel</Btn>}</div>
-        {f.msg && <p className="err wide" role="alert">{f.msg}</p>}
-      </form>
-    </Panel>
-    <Panel n="02" title="Tool crib" className="flush">
-      <div className="tw"><table className="t"><thead><tr><th>ID</th><th>Tool</th><th>Type</th><th>Status</th><th>With / where</th><th>Job</th><th>Due back</th><th></th></tr></thead>
-        <tbody>{s.tools.map((tl: any) => { const late = tl.status === "out" && tl.dueAt < s.now; return <tr key={tl.id} className={late ? "flag" : ""}>
-          <td className="mono">{tl.id}</td><td>{tl.name}</td><td>{tl.type}</td>
-          <td><Badge tone={late ? "red" : tl.status === "in" ? "green" : tl.status === "out" ? "blue" : "orange"}>{late ? "overdue" : tl.status === "repair" && tl.loto ? "locked out" : ({ in: "in crib", out: "checked out", repair: "tagged out" } as any)[tl.status]}</Badge></td>
-          <td>{tl.holder || (tl.status === "repair" ? [tl.ticket ? "Ticket #" + tl.ticket : "", tl.loto || ""].filter(Boolean).join(", ") : tl.area)}</td><td>{tl.job}</td><td>{tl.status === "out" ? day(tl.dueAt) : ""}</td>
-          <td><div className="row">
-            {tl.status === "out" && <Btn className="btn sm" onClick={() => act(() => T.checkin(s, tl.id), tl.name + " is back in the crib.")}>Check in</Btn>}
-            {tl.status === "in" && <Btn className="btn btn-blue sm" onClick={() => act(() => T.checkout(s, tl.id, me, 2, ""), `${tl.name} checked out to ${me}, due back in 2 days.`)}>Check out to me</Btn>}
-            {tl.status === "repair" && tl.ticket && <Btn className="btn sm" onClick={() => go("dashboard", tl.ticket)}>Open ticket</Btn>}
-            {tl.status === "repair" && !tl.ticket && <Btn className="btn sm" onClick={() => go("records:loto")}>Open LOTO</Btn>}
-            <Btn className="btn sm" onClick={() => { setEditing(tl.id); f.put({ id: tl.id, name: tl.name, type: tl.type || "Other", area: tl.area }); }}>Edit</Btn>
-          </div></td></tr>; })}</tbody></table></div>
-    </Panel>
-  </>;
-}
 
 function Jha() {
   const { s, T, me, act, go } = useT();
@@ -93,7 +61,7 @@ function Loto() {
         <Btn className="btn sm" onClick={() => act(() => T.releaseLock(s, l.id, me), () => (l.released ? l.id + " fully released." : me + "'s lock is off."))}>3. Release my lock</Btn></> :
         <Btn className="btn sm" onClick={() => act(() => T.applyLock(s, l.id, me), `${l.id} re-applied by ${me}.`)}>Lock out again</Btn>}
         {l.ticket && <button type="button" className="lnk" onClick={() => go("dashboard", l.ticket)}>blocks closing #{l.ticket}</button>}
-        {l.toolId && <span className="mut small">blocks checkout of {l.toolId}</span>}
+        {l.toolId && <span className="mut small">equipment {l.toolId}</span>}
       </div>
     </Panel>)}</div>
   </>;
@@ -103,16 +71,14 @@ function Analytics() {
   const { s, T } = useT();
   const [d, setD] = useState("");
   const A = T.analytics(s, d), k = A.kpis;
-  const crib: Record<string, number> = { "In crib": 0, "Checked out": 0, "Of those, overdue": k.overdueTools, "Tagged out": 0 }; s.tools.forEach((t: any) => { crib[t.status === "in" ? "In crib" : t.status === "repair" ? "Tagged out" : "Checked out"]++; });
   const rc: Record<string, number> = {}; A.rentals.forEach((r: any) => { rc[r.item] = r.cost; });
   const lo: Record<string, number> = { "Not applied": 0, Locked: 0, Released: 0 }; s.lotos.forEach((l: any) => { lo[l.released ? "Released" : l.locks.length ? "Locked" : "Not applied"]++; });
-  const charts: [string, Record<string, number>, boolean?][] = [["Tickets by status", A.byStatus], ["Tool crib", crib], ["QA/QC inspections", A.qaBy], ["JHA before work", { Required: A.jha.need, "Signed and ready": A.jha.ok, Missing: A.jha.need - A.jha.ok }], ["Requisitions", A.reqBy], ["Rental running total (sample $)", rc, true], ["Lockout/tagout", lo]];
+  const charts: [string, Record<string, number>, boolean?][] = [["Tickets by status", A.byStatus], ["QA/QC inspections", A.qaBy], ["JHA before work", { Required: A.jha.need, "Signed and ready": A.jha.ok, Missing: A.jha.need - A.jha.ok }], ["Requisitions", A.reqBy], ["Rental running total (sample $)", rc, true], ["Lockout/tagout", lo]];
   return <>
     <div className="split"><p className="mut small">Company-wide view across every module. Filter by department.</p>
       <select className="inp" style={{ width: 190 }} aria-label="Department" value={d} onChange={(e) => setD(e.target.value)}><option value="">All departments</option>{T.DEPTS.map((x: string) => <option key={x}>{x}</option>)}</select></div>
-    <div className="kpis" style={{ ["--n" as string]: 6 }}>
+    <div className="kpis" style={{ ["--n" as string]: 5 }}>
       <Kpi label="Open tickets" value={k.open} sub={`${k.down} stopping work`} tone="orange" />
-      <Kpi label="Tools out" value={k.toolsOut} sub={`${k.overdueTools} overdue`} />
       <Kpi label="QA open or held" value={k.qaOpen} sub={`${k.ncrOpen} open NCRs`} />
       <Kpi label="JHA compliance" value={k.jhaPct + "%"} sub="Signed before work" tone="green" />
       <Kpi label="Reqs to approve" value={k.reqsPending} sub={`${k.lotoActive} active LOTO`} />
@@ -127,7 +93,6 @@ function Analytics() {
 
 function exportsFor(s: any, T: any, tab: string) {
   const sets: Record<string, () => { name: string; rows: unknown[][] }> = {
-    crib: () => ({ name: "Tool crib", rows: [["ID", "Tool", "Type", "Status", "Holder", "Job", "Due back"], ...s.tools.map((t: any) => [t.id, t.name, t.type, t.status, t.holder, t.job, t.dueAt ? day(t.dueAt) : ""])] }),
     jha: () => ({ name: "JHA", rows: [["JHA", "Task", "Job", "Step", "Hazards", "Controls", "PPE", "Crew"], ...s.jhas.flatMap((j: any) => (j.steps.length ? j.steps : [{}]).map((x: any) => [j.id, j.task, j.job, x.step || "", x.hazards || "", x.controls || "", j.ppe.join("; "), j.crew.map((c: any) => c.who).join("; ")]))] }),
     loto: () => ({ name: "LOTO", rows: [["LOTO", "Machine", "State", "Energy", "Locks", "Ticket"], ...s.lotos.map((l: any) => [l.id, l.machine, T.lotoState(l), l.energy.join("; "), l.locks.map((k: any) => k.owner).join("; "), l.ticket || ""])] }),
     analytics: () => { const k = T.analytics(s).kpis; return { name: "Analytics", rows: [["Metric", "Value"], ...Object.keys(k).map((x) => [x, k[x]]), [], ["Suggestion"], ...T.analytics(s).tips.map((t: string) => [t])] }; },
@@ -135,23 +100,26 @@ function exportsFor(s: any, T: any, tab: string) {
   return sets[tab]();
 }
 
+const RECORD_TABS: [string, string][] = [["jha", "JHA"], ["loto", "Lockout/tagout"], ["analytics", "Analytics"]];
+
 export function RecordsHub({ sub, setSub }: { sub: string; setSub: (v: string) => void }) {
   const { s, T, say } = useT();
+  const shown = RECORD_TABS.some(([id]) => id === sub) ? sub : "jha";
   const ex = (kind: string) => {
-    const set = exportsFor(s, T, sub), base = "gma-tts-demo-" + sub;
+    const set = exportsFor(s, T, shown), base = "gma-tts-demo-" + shown;
     if (kind === "csv") save(csv([[NOTE], ...set.rows]), base + ".csv");
     if (kind === "xlsx") save(xlsx([{ name: set.name, rows: [[NOTE], [], ...set.rows] }]), base + ".xlsx");
     if (kind === "json") save(json({ note: NOTE, record: set.name, rows: set.rows }), base + ".json");
     if (kind === "pdf") save(pdf("Tool Ticket System, " + set.name + " records", [{ table: set.rows }]), base + ".pdf");
-    if (kind === "all") save(xlsx(["crib", "jha", "loto", "analytics"].map((x) => exportsFor(s, T, x))), "gma-tts-demo-records.xlsx");
+    if (kind === "all") save(xlsx(["jha", "loto", "analytics"].map((x) => exportsFor(s, T, x))), "gma-tts-demo-records.xlsx");
     say("Downloaded " + set.name + " export. Sample data only.");
   };
   return <>
     <div className="split">
-      <Tabs value={sub} onChange={setSub} tabs={[["crib", "Tool crib"], ["jha", "JHA"], ["loto", "Lockout/tagout"], ["analytics", "Analytics"]]} />
+      <Tabs value={shown} onChange={setSub} tabs={RECORD_TABS} />
       <div className="row"><Menu label="Export" icon="download" kind="ghost" items={[["Excel (.xlsx)", () => ex("xlsx")], ["PDF", () => ex("pdf")], ["CSV", () => ex("csv")], ["JSON", () => ex("json")], ["All records, one workbook", () => ex("all")]]} /></div>
     </div>
-    {sub === "crib" && <Crib />}{sub === "jha" && <Jha />}{sub === "loto" && <Loto />}{sub === "analytics" && <Analytics />}
+    {shown === "jha" && <Jha />}{shown === "loto" && <Loto />}{shown === "analytics" && <Analytics />}
   </>;
 }
 

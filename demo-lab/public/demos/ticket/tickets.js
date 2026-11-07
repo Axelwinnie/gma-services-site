@@ -72,7 +72,7 @@
     need(f, [["id", "tool ID"], ["name", "name"], ["type", "type"], ["area", "home location"]]);
     var id = String(f.id).trim().toUpperCase();
     if (!/^[A-Z]{1,4}-?\d{1,5}$/.test(id)) throw err("Tool ID should look like T-109.", ["id"]);
-    if (tool(s, id)) throw err(id + " is already in the crib.", ["id"]);
+    if (tool(s, id)) throw err(id + " is already on the tool list.", ["id"]);
     if (TOOL_TYPES.indexOf(f.type) < 0) throw err("Pick a type.", ["type"]);
     var t = { id: id, type: f.type, name: f.name.trim(), area: f.area.trim(), status: "in", holder: "", outAt: 0, dueAt: 0, job: "" }; s.tools.push(t); return t;
   }
@@ -211,7 +211,6 @@
     rent.filter(function (r) { return r.alert === "overdue"; }).forEach(function (r) { tips.push("Call off " + r.item + " (" + r.id + "). It's " + r.daysOver + " day(s) past due back, about $" + (r.daysOver * r.rate) + " so far at the sample daily rate, and $" + r.rate + " more each day it sits."); });
     rent.filter(function (r) { return r.alert === "call off-rent"; }).forEach(function (r) { tips.push(r.item + " (" + r.id + ") is due back within a day. Call the off-rent in now so the next day isn't billed."); });
     var late = overdue(s).filter(function (t) { return inD(t.holder); });
-    if (late.length) tips.push(late.length + " crib tool(s) are late coming back. Chasing them down beats buying or renting a second one.");
     var wop = tk.filter(function (t) { return t.status === "Waiting on parts"; }); if (wop.length) tips.push(wop.length + " ticket(s) waiting on parts. Check the linked requisitions so equipment isn't down longer than it has to be.");
     var pend = reqBy.Requested; if (pend > 1) tips.push(pend + " requisitions are waiting on approval. Approving them together means fewer orders and fewer delivery charges from the same vendor.");
     if (qaBy.hold + qaBy.fail) tips.push((qaBy.hold + qaBy.fail) + " inspection(s) on hold or failed. Catching rework before coating and shipping is cheaper than fixing it in the field.");
