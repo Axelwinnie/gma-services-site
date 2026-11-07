@@ -155,10 +155,40 @@ const splatRedirects = [
   ["/api/*", "/contact/"],
 ];
 
+const htmlAliasPages = [
+  "about",
+  "ads-video",
+  "ai-document-packs",
+  "contact",
+  "contractor-lead-follow-up",
+  "custom-workflow-systems",
+  "demos",
+  "document-intake",
+  "fabrication-shop-workflow-map",
+  "file-retention-policy",
+  "gma-trades-fit-finder",
+  "how-it-works",
+  "lead-follow-up",
+  "policies",
+  "privacy",
+  "products",
+  "quote-proposal-automation",
+  "refund-policy",
+  "revision-policy",
+  "steel-estimating",
+  "terms",
+  "trade-office-workflow",
+  "websites-seo-aeo",
+  "workflow-automation",
+  "workflow-map",
+  "zapier-make-consultant",
+];
+
 export function legacyRedirectRules() {
   const rules = [];
   for (const [from, to] of pageRedirects) rules.push({ from, to, splat: false });
   for (const slug of projectSlugs) rules.push({ from: `/project/${slug}`, to: projectDestination(slug), splat: false });
+  for (const slug of htmlAliasPages) rules.push({ from: `/${slug}.html`, to: `/${slug}/`, splat: false, htmlFile: true });
   for (const [from, to] of splatRedirects) rules.push({ from, to, splat: true });
   return rules;
 }
@@ -187,14 +217,14 @@ export function writeLegacyRedirects({ publicDir, siteRoot, domain }) {
   const lines = [];
   const rows = [];
   for (const rule of rules) {
-    const sources = rule.splat || rule.from === "/" ? [rule.from] : [rule.from, `${rule.from}/`];
+    const sources = rule.splat || rule.htmlFile || rule.from === "/" ? [rule.from] : [rule.from, `${rule.from}/`];
     for (const source of sources) {
       lines.push(`${source} ${rule.to} 301`);
       rows.push(`| \`${source}\` | \`${rule.to}\` | Redirect | 301 |`);
     }
     if (rule.splat) continue;
     const rel = rule.from.replace(/^\/+/, "");
-    const file = join(publicDir, rel, "index.html");
+    const file = rule.htmlFile ? join(publicDir, rel) : join(publicDir, rel, "index.html");
     if (existsSync(file)) {
       const existing = readFileSync(file, "utf8");
       if (!existing.includes('data-legacy-redirect="1"')) {

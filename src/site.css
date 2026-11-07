@@ -648,6 +648,7 @@ fieldset {
   align-items: flex-start;
   gap: 0.2rem;
 }
+.also-on { margin: 0.75rem 0 0; }
 
 .site-footer {
   background: #0B1426;
