@@ -367,7 +367,7 @@ function workflowMapMain() {
     <p>Jon Anderson<br>${esc(brand)}</p>
     ${contactCallout()}
     <p><a href="${esc(domain)}/">granitemodels.store</a></p>
-    <p>${esc(brand)} · 231 Arah St, Manchester, NH 03104</p>
+    <p>${esc(brand)} · Manchester, New Hampshire</p>
   </div></article>
   ${faqSection(workflowMapFaqs())}`;
 }
@@ -1572,6 +1572,17 @@ function emailLink(href) {
 function emailFallback() {
   return `${callLink()} <span class="phone-note">— ${esc(phoneNote)}</span> ${emailLink()}`;
 }
+function alsoOnLinks() {
+  const links = [
+    ["https://www.youtube.com/@granitemodels", "YouTube"],
+    ["https://www.youtube.com/watch?v=E2S5-mL7Kro", "YouTube video"],
+    ["https://www.fiverr.com/granitemodels", "Fiverr"],
+    ["https://payhip.com/JonGMA", "Payhip"],
+    ["https://granitemodels.gumroad.com", "Gumroad"],
+  ];
+  const anchors = links.map(([href, label]) => `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`).join(" · ");
+  return `<p class="also-on">Also on: ${anchors}</p>`;
+}
 function contactCallout(mailtoHref) {
   return `<div class="contact-callout">
     <p class="contact-phone">${callLink("call-prominent")}</p>
@@ -1786,6 +1797,7 @@ ${banner}  <header class="site-header">
         ${lockup("lockup-footer")}
         <p>AI workflow setup for real work.</p>
         <p class="footer-contact">${emailFallback()}</p>
+        ${alsoOnLinks()}
       </div>
       <nav aria-label="Footer">
         <ul class="footer-links">

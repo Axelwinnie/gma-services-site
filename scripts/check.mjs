@@ -459,7 +459,7 @@ function checkLegacyRedirects() {
   const redirects = readFileSync(join(publicDir, "_redirects"), "utf8");
   const guide = readFileSync(join(siteRoot, "render-redirects.md"), "utf8");
   for (const rule of rules) {
-    const sources = rule.splat ? [rule.from] : [rule.from, `${rule.from}/`];
+    const sources = rule.splat || rule.htmlFile ? [rule.from] : [rule.from, `${rule.from}/`];
     for (const source of sources) {
       const line = `${source} ${rule.to} 301`;
       if (!redirects.includes(line)) errors.push(`_redirects missing ${line}`);
@@ -468,7 +468,8 @@ function checkLegacyRedirects() {
       }
     }
     if (rule.splat) continue;
-    const file = join(publicDir, rule.from.replace(/^\/+/, ""), "index.html");
+    const rel = rule.from.replace(/^\/+/, "");
+    const file = rule.htmlFile ? join(publicDir, rel) : join(publicDir, rel, "index.html");
     if (!existsSync(file)) {
       errors.push(`missing redirect stub for ${rule.from}`);
       continue;
