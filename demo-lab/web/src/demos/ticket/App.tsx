@@ -33,7 +33,10 @@ export default function App() {
   const [s, setS] = useState<any>(() => load(KEY, fresh));
   const [ver, setVer] = useState(0);
   const [view, setView] = useState(() => (location.hash.slice(1).split(":")[0] in TITLES ? location.hash.slice(1).split(":")[0] : "dashboard"));
-  const [sub, setSub] = useState(() => location.hash.split(":")[1] || "crib");
+  const [sub, setSub] = useState(() => {
+    const h = location.hash.split(":")[1] || "";
+    return h === "jha" || h === "loto" || h === "analytics" ? h : "jha";
+  });
   const [sel, setSel] = useState<number | null>(s.tickets[0]?.id ?? null);
   const [me, setMe] = useState<string>(() => load("ticket-me", () => "Dana (office)"));
   const [prefill, setPrefill] = useState<any>(null);
@@ -65,7 +68,6 @@ export default function App() {
     const lines: string[] = [];
     const MAINT: Record<string, string> = { Paint: "Lou (maintenance)", "Weld bay": "Lou (maintenance)", Yard: "Lou (maintenance)", QA: "Marco (fab)", "Tool crib": "Lou (maintenance)" };
     s.tickets.filter((t: any) => t.status === "New" && !t.assignee).forEach((t: any) => { const who = MAINT[t.area] || "Lou (maintenance)"; T.assign(s, t.id, who, "Automation"); lines.push(`Assigned #${t.id} to ${who}`); });
-    T.overdue(s).forEach((tl: any) => lines.push(`Reminder queued for ${tl.holder}: ${tl.id} is late (demo, not sent)`));
     s.rentals.forEach((r: any) => { const a = T.rentalAlert(r, s.now); if (a === "overdue" || a === "call off-rent") lines.push(`Flagged ${r.id} ${r.item}: ${a}`); });
     s.punch.filter((p: any) => p.status !== "Verified" && p.due < s.now).forEach((p: any) => lines.push(`Reminder queued for ${p.assignee}: ${p.id} past due (demo, not sent)`));
     if (!lines.length) lines.push("Nothing to do. Every new ticket already has an owner.");

@@ -34,7 +34,7 @@ export function TicketTable({ sel, onSel, full }: { sel: number | null; onSel: (
               <tr key={t.id} className={`click${sel === t.id ? " sel" : ""}`} onClick={() => onSel(t.id)}>
                 <td onClick={(e) => e.stopPropagation()}><input type="checkbox" aria-label={`Select #${t.id}`} checked={checked.includes(t.id)} onChange={(e) => setChecked((c) => e.target.checked ? [...c, t.id] : c.filter((x) => x !== t.id))} /></td>
                 <td><button type="button" className="lnk mono" onClick={(e) => { e.stopPropagation(); onSel(t.id); }}>TT-{t.id}</button></td>
-                <td><b>{t.title}</b><div className="mut small">{t.equipment || "No crib tool"}</div></td>
+                <td><b>{t.title}</b><div className="mut small">{t.equipment || "No equipment listed"}</div></td>
                 <td>{t.job || t.area}</td>
                 <td>{T.dept(s, t.requester)}</td>
                 <td>{t.assignee || <span className="mut">Unassigned</span>}</td>
@@ -76,7 +76,7 @@ export function Detail({ id, onClose }: { id: number; onClose?: () => void }) {
         {tab === "details" && !edit && <>
           <div className="split"><h3 className="dt">{t.title}</h3>{t.status !== "Done" && <Btn kind="quiet" onClick={() => setEdit(true)}>Edit</Btn>}</div>
           <dl className="kv">
-            <dt>Equipment</dt><dd>{t.equipment || "Not a crib tool"}</dd>
+            <dt>Equipment</dt><dd>{t.equipment || "Not listed"}</dd>
             <dt>Where</dt><dd>{t.area}{t.job ? ", " + t.job : ""}</dd>
             <dt>Priority</dt><dd><Badge tone={PRIO_TONE(t.priority)}>{t.priority}</Badge></dd>
             <dt>Department</dt><dd>{T.dept(s, t.requester)}</dd>
@@ -99,7 +99,7 @@ export function Detail({ id, onClose }: { id: number; onClose?: () => void }) {
           {reqs.map((r: any) => <p key={r.id} className="note">{r.id} {r.item}, {r.status}{r.po ? ", PO " + r.po : ""}.</p>)}
           <div className="tagbox">
             <span className="mut small">{(t.tags || []).length ? "Tagged out on this ticket:" : "No tools tagged out on this ticket."}</span>
-            {(t.tags || []).map((tid: string) => <span key={tid} className="row"><Badge tone="red">{tid} {T.tool(s, tid).name}</Badge>{t.status !== "Done" && <Btn className="btn sm" onClick={() => act(() => T.untagTool(s, t.id, tid), tid + " untagged. Back in the crib unless a lockout is still on it.")}>Remove tag</Btn>}</span>)}
+            {(t.tags || []).map((tid: string) => <span key={tid} className="row"><Badge tone="red">{tid} {T.tool(s, tid).name}</Badge>{t.status !== "Done" && <Btn className="btn sm" onClick={() => act(() => T.untagTool(s, t.id, tid), tid + " untagged, unless a lockout is still on it.")}>Remove tag</Btn>}</span>)}
             {t.status !== "Done" && <div className="row">
               <select className={`inp${tagBad ? " bad" : ""}`} aria-label="Tag out a tool" aria-invalid={!!tagBad} value={tagId} onChange={(e) => setTagId(e.target.value)}><option value="">Tag out a tool...</option>{s.tools.map((x: any) => <option key={x.id} value={x.id}>{x.id} {x.name}</option>)}</select>
               <Btn className="btn sm" onClick={() => { try { T.tagTool(s, t.id, tagId); setTagBad(""); act(() => 0, tagId + " tagged out on #" + t.id + "."); setTagId(""); } catch (e: any) { setTagBad(e.message); } }}>Tag out</Btn>
@@ -175,7 +175,7 @@ export function NewTicket({ onDone, prefill }: { onDone: (id: number) => void; p
     <Panel n="01" title="New ticket" sub={`Filed as ${me}. It shows up as New until somebody takes it.`}>
       <form className="form" noValidate onSubmit={(e) => { e.preventDefault(); let id = 0; if (f.run(() => { id = T.createTicket(s, { title: f.v.title.trim(), equipment: isTool ? f.v.equipment : f.v.equipment.trim(), area: f.v.area.trim(), priority: f.v.priority, job: f.v.job, notes: f.v.notes.trim(), requester: me, toolId: isTool ? f.v.equipment.split(" ")[0] : "", tagOut: f.v.tagOut }).id; })) { act(() => 0, `Ticket #${id} is in.`); f.reset(); onDone(id); } }}>
         <Field label="What's wrong *" error={f.bad("title")}><input data-f="title" value={f.v.title} onChange={f.set("title")} aria-invalid={f.bad("title")} placeholder="Welder 3 ground clamp cracked" /></Field>
-        <Field label="Equipment" error={f.bad("equipment")}><select data-f="equipment" value={f.v.equipment} onChange={f.set("equipment")}><option value="">Other / not a crib tool</option>{tools.map((t: any) => <option key={t.id} value={`${t.id} ${t.name}`}>{t.id} {t.name}</option>)}</select></Field>
+        <Field label="Equipment" error={f.bad("equipment")}><select data-f="equipment" value={f.v.equipment} onChange={f.set("equipment")}><option value="">Other equipment</option>{tools.map((t: any) => <option key={t.id} value={`${t.id} ${t.name}`}>{t.id} {t.name}</option>)}</select></Field>
         <Field label="Where *" error={f.bad("area")}><input data-f="area" value={f.v.area} onChange={f.set("area")} aria-invalid={f.bad("area")} placeholder="Fab bay 1" /></Field>
         <Field label="Priority *" error={f.bad("priority")}><select data-f="priority" value={f.v.priority} onChange={f.set("priority")}><option value="">Pick one</option>{T.PRIORITIES.map((p: string) => <option key={p}>{p}</option>)}</select></Field>
         <Field label="Job"><select value={f.v.job} onChange={f.set("job")}><option value="">No job</option>{JOBS.map((j) => <option key={j}>{j}</option>)}</select></Field>
