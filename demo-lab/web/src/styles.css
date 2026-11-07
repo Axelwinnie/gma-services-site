@@ -55,6 +55,10 @@ a { color: var(--ink); }
 @keyframes sweep { from { left: -40%; opacity: 1; } to { left: 120%; opacity: 0; } }
 /* live label on each station */
 .live { position: absolute; top: -2px; right: 10px; transform: translateY(-100%); display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1px solid rgba(147,197,253,.3); border-bottom: 0; border-radius: 4px 4px 0 0; background: rgba(6,10,15,.92); font: 600 11px/16px var(--mono); letter-spacing: .12em; color: #cfe0f5; }
+.hit a.watch { inset: auto; top: -2px; left: 0; right: auto; bottom: auto; z-index: 3; transform: translateY(-100%); display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border: 1px solid rgba(249,115,22,.65); border-bottom: 0; border-radius: 4px 4px 0 0; background: rgba(6,10,15,.94); color: #fdba74; font: 600 11px/16px var(--mono); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+.hit a.watch::after { content: none; }
+.hit a.watch:hover, .hit a.watch:focus-visible { color: #fff; background: rgba(249,115,22,.22); outline: none; }
+.is-3d .hit a.watch { animation: rise .6s var(--ease) both .9s; }
 .hit { overflow: visible; } .hit a { overflow: visible; }
 .live i { width: 6px; height: 6px; border-radius: 50%; background: #34d399; animation: pulse 1.8s var(--ease) infinite calc(var(--i) * .3s); }
 .is-3d .live { animation: rise .6s var(--ease) both calc(.9s + var(--i) * .14s); }
@@ -77,11 +81,15 @@ a { color: var(--ink); }
   .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; list-style: none; margin: 0; padding: 16px; }
   .tile { --c: var(--orange); display: grid; gap: 8px; height: 100%; padding: 16px; border: 1px solid rgba(147,197,253,.22); border-radius: 6px; text-decoration: none; background: #0a1017 repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px); }
   .tile.blue { --c: var(--blue); }
-  .tile:hover, .tile:focus-visible { border-color: var(--c); outline: none; }
+  .tile:hover, .tile:focus-visible, .tile:has(:focus-visible) { border-color: var(--c); outline: none; }
   .t-c { font: 600 11px/16px var(--mono); letter-spacing: .12em; color: #93c5fd; }
   .t-n { font-weight: 700; line-height: 20px; }
   .t-d { font-size: 14px; line-height: 20px; color: var(--muted); }
   .t-b { align-self: end; justify-self: start; height: 32px; display: inline-flex; align-items: center; padding: 0 12px; border: 1px solid var(--c); border-radius: 6px; font-size: 14px; font-weight: 600; }
+  .tile-go { display: grid; gap: 8px; color: inherit; text-decoration: none; }
+  .tile-go:focus-visible { outline: none; }
+  .t-w { justify-self: start; height: 32px; display: inline-flex; align-items: center; padding: 0 12px; border: 1px solid rgba(249,115,22,.7); border-radius: 6px; color: #fdba74; font-size: 14px; font-weight: 600; text-decoration: none; }
+  .t-w:hover, .t-w:focus-visible { color: #fff; background: rgba(249,115,22,.16); }
 }
 
 .side a { position: absolute; left: 0; width: 8.6%; height: 3.4%; border-left: 2px solid transparent; transition: border-color .2s var(--ease), background-color .2s var(--ease); }

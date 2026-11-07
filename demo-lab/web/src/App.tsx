@@ -64,6 +64,7 @@ export default function App() {
                   <span className="go" style={btnPct(s)} aria-hidden="true" />
                   <span className="sr-only">{s.name}. {s.blurb} Launch demo.</span>
                 </a>
+                {s.id === "ticket" && <a className="watch" href="/demos/ticket/#walkthrough" onClick={(e) => e.stopPropagation()}>Watch walkthrough</a>}
               </li>
             ))}
           </ul>
@@ -78,12 +79,24 @@ export default function App() {
         <ul className="tiles" aria-label="Demos">
           {STATIONS.map((s) => (
             <li key={s.id}>
-              <a className={`tile ${s.accent}`} href={s.href}>
-                <span className="t-c">{s.code} / LIVE</span>
-                <span className="t-n">{s.name}</span>
-                <span className="t-d">{s.blurb}</span>
-                <span className="t-b">Launch demo</span>
-              </a>
+              {s.id === "ticket" ? (
+                <div className={`tile ${s.accent}`}>
+                  <a className="tile-go" href={s.href}>
+                    <span className="t-c">{s.code} / LIVE</span>
+                    <span className="t-n">{s.name}</span>
+                    <span className="t-d">{s.blurb}</span>
+                    <span className="t-b">Launch demo</span>
+                  </a>
+                  <a className="t-w" href="/demos/ticket/#walkthrough">Watch walkthrough</a>
+                </div>
+              ) : (
+                <a className={`tile ${s.accent}`} href={s.href}>
+                  <span className="t-c">{s.code} / LIVE</span>
+                  <span className="t-n">{s.name}</span>
+                  <span className="t-d">{s.blurb}</span>
+                  <span className="t-b">Launch demo</span>
+                </a>
+              )}
             </li>
           ))}
         </ul>

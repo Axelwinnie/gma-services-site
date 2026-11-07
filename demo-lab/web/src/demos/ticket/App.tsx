@@ -8,6 +8,7 @@ import { notifications, seedExtras } from "./extras";
 import { Board, Dashboard, NewTicket } from "./Maint";
 import { Punchlist, QA, QASummary, QATrends, Rentals, Requisitions, Templates } from "./Ops";
 import { Health, Notifications, RecordsHub } from "./Records";
+import { Walkthrough, WatchWalkthrough } from "./Walkthrough";
 
 const T = window.GMATickets;
 const KEY = "ticket";
@@ -41,18 +42,24 @@ export default function App() {
   const [me, setMe] = useState<string>(() => load("ticket-me", () => "Dana (office)"));
   const [prefill, setPrefill] = useState<any>(null);
   const [project, setProject] = useState(() => load("project", () => "J2041"));
+  const [landing] = useState(() => location.hash.slice(1).split(":")[0]);
   const { say, node } = useToast();
 
   useEffect(() => { s.now = Date.now(); keep(KEY, s); }, [s, ver]);
   useEffect(() => { keep("ticket-me", me); }, [me]);
   useEffect(() => { history.replaceState(null, "", "#" + view + (view === "records" ? ":" + sub : "")); }, [view, sub]);
+  useEffect(() => {
+    if (landing === "walkthrough") document.getElementById("walkthrough")?.scrollIntoView({ block: "start" });
+    else if (landing in TITLES && landing !== "dashboard") document.getElementById("workspace")?.scrollIntoView({ block: "start" });
+  }, [landing]);
 
   const act = useCallback<Ctx["act"]>((fn, ok) => {
     try { s.now = Date.now(); fn(); setVer((v) => v + 1); if (ok) say(typeof ok === "function" ? ok() : ok); return true; }
     catch (e: any) { say(e.message, true); setVer((v) => v + 1); return false; }
   }, [s, say]);
   const go = useCallback((v: string, ticket?: number) => {
-    const [a, b] = v.split(":"); setView(a); if (b) setSub(b); if (ticket) setSel(ticket); window.scrollTo(0, 0);
+    const [a, b] = v.split(":"); setView(a); if (b) setSub(b); if (ticket) setSel(ticket);
+    window.requestAnimationFrame(() => document.getElementById("workspace")?.scrollIntoView({ block: "start" }));
   }, []);
   const ctx = useMemo<Ctx>(() => ({ s, T, me, ver, act, go, say }), [s, me, ver, act, go, say]);
 
@@ -93,11 +100,14 @@ export default function App() {
       <Shell demo="ticket" kicker="Tool management" title="Tool Ticket System" sub={`${TITLES[view]}. Track, assign and resolve tool and equipment requests across the shop. Saved in this browser until you reset.`}
         project={project} onProject={(id) => { setProject(id); keep("project", id); say("Sample project: " + PROJECTS.find((p) => p.id === id)!.name + "."); }} nav={nav} toast={node}
         actions={<>
+          <WatchWalkthrough />
           <label className="actas"><span>Acting as</span><select value={me} onChange={(e) => { setMe(e.target.value); say("You're now " + e.target.value + "."); }}>{s.people.map((p: string) => <option key={p}>{p}</option>)}</select></label>
           <Btn icon="reset" onClick={reset}>Reset Demo</Btn>
           <Btn icon="upload" onClick={loadSample}>Load Sample Data</Btn>
           <Btn kind="primary" icon="bolt" onClick={runAutomation}>Run Automation</Btn>
         </>}>
+        <Walkthrough />
+        <div id="workspace">
         {view === "dashboard" && <Dashboard sel={sel} setSel={setSel} />}
         {view === "tickets" && <Board onOpen={(id) => go("dashboard", id)} />}
         {view === "new" && <NewTicket key={JSON.stringify(prefill)} prefill={prefill} onDone={(id) => { setPrefill(null); go("dashboard", id); }} />}
@@ -111,6 +121,7 @@ export default function App() {
         {view === "records" && <RecordsHub sub={sub} setSub={setSub} />}
         {view === "notify" && <Notifications />}
         {view === "health" && <Health />}
+        </div>
       </Shell>
     </C.Provider>
   );
