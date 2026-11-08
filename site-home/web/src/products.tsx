@@ -31,15 +31,14 @@ const PLANS: Record<string, Plan[]> = {
     { id: "list_own", name: "Own it", price: "$995", note: "Support and updates $195/yr.", url: "https://buy.stripe.com/3cI8wPdHo5PD4nB3NDdZ60T" },
   ],
   processor: [
-    { id: "list_own", name: "Own it", price: "$1,295", note: "Support and updates $195/yr, year 1 included.", textOnly: true },
-    { id: "founding_own", name: "Founding price, own it", price: "$995", note: "Founding price for the first 5 shops.", textOnly: true },
+    { id: "list_own", name: "Own it", price: "$499", note: "Buy it once. No monthly plan and no yearly support fee.", url: "https://buy.stripe.com/eVq5kD6eW3Hvg6jbg5dZ613" },
   ],
 };
 const dlg = document.getElementById("picker") as HTMLDialogElement;
 function open(prog: string) {
   const plans = PLANS[prog] || [];
   document.getElementById("picker-t")!.textContent = NAMES[prog];
-  document.getElementById("picker-sub")!.textContent = plans.length ? (prog === "processor" ? "Send the programs you want files to go to so we can check the fit." : prog === "ticket" || prog === "quotes" ? "Buy it once, own it. Checkout is a secure Stripe page. Installs on your PC - your data stays with you. Licence key provided with your installer." : "Pick a plan. Checkout is a secure Stripe page. After you pay, we build your installer with your licence already inside it and send you a private download link. You never type a key.") : "Pricing for this program is set per shop.";
+  document.getElementById("picker-sub")!.textContent = plans.length ? (prog === "processor" ? "Buy it once, own it. Checkout is a secure Stripe page. Installs on your shop's Windows PC." : prog === "ticket" || prog === "quotes" ? "Buy it once, own it. Checkout is a secure Stripe page. Installs on your PC - your data stays with you. Licence key provided with your installer." : "Pick a plan. Checkout is a secure Stripe page. After you pay, we build your installer with your licence already inside it and send you a private download link. You never type a key.") : "Pricing for this program is set per shop.";
   const box = document.getElementById("plans")!;
   box.replaceChildren();
   if (!plans.length) {
