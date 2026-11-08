@@ -24,6 +24,7 @@ const allowlistedNegations = [
   "don't guarantee",
   "do not guarantee",
   "no guarantee",
+  "no savings, availability, or suitability is guaranteed",
 ];
 
 const banned = [

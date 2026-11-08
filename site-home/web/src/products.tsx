@@ -5,7 +5,7 @@ import { mount } from "./layer";
 import { PROD, PROD_SRC } from "./stations";
 
 type Plan = { id: string; name: string; price: string; note: string; url?: string; textOnly?: boolean };
-const NAMES: Record<string, string> = { ticket: "Tool Ticket System", quotes: "Quotes & Proposals", estimating: "Steel Estimating", extract: "Doc Extract", organizer: "File Organizer" };
+const NAMES: Record<string, string> = { ticket: "Tool Ticket System", quotes: "Quotes & Proposals", estimating: "Steel Estimating", extract: "Doc Extract", organizer: "File Organizer", processor: "File Processor" };
 // Approved 2026-10-15. Buy it once, own it. Live Stripe Payment Links from ops/program-pay-links-v2.json.
 // Payment plans stop after N payments: see ops/program-installments-RUNBOOK.md.
 const PLANS: Record<string, Plan[]> = {
@@ -30,12 +30,16 @@ const PLANS: Record<string, Plan[]> = {
     { id: "founding_12x6830", name: "Founding, 12 payments", price: "12 x $68.30/mo", note: "Stops after 12 payments. Then it's yours.", url: "https://buy.stripe.com/4gMfZh9r8a5TaLZ4RHdZ611" },
     { id: "list_own", name: "Own it", price: "$995", note: "Support and updates $195/yr.", url: "https://buy.stripe.com/3cI8wPdHo5PD4nB3NDdZ60T" },
   ],
+  processor: [
+    { id: "list_own", name: "Own it", price: "$1,295", note: "Support and updates $195/yr, year 1 included.", textOnly: true },
+    { id: "founding_own", name: "Founding price, own it", price: "$995", note: "Founding price for the first 5 shops.", textOnly: true },
+  ],
 };
 const dlg = document.getElementById("picker") as HTMLDialogElement;
 function open(prog: string) {
   const plans = PLANS[prog] || [];
   document.getElementById("picker-t")!.textContent = NAMES[prog];
-  document.getElementById("picker-sub")!.textContent = plans.length ? (prog === "ticket" || prog === "quotes" ? "Buy it once, own it. Checkout is a secure Stripe page. Installs on your PC - your data stays with you. Licence key provided with your installer." : "Pick a plan. Checkout is a secure Stripe page. After you pay, we build your installer with your licence already inside it and send you a private download link. You never type a key.") : "Pricing for this program is set per shop.";
+  document.getElementById("picker-sub")!.textContent = plans.length ? (prog === "processor" ? "Send the programs you want files to go to so we can check the fit." : prog === "ticket" || prog === "quotes" ? "Buy it once, own it. Checkout is a secure Stripe page. Installs on your PC - your data stays with you. Licence key provided with your installer." : "Pick a plan. Checkout is a secure Stripe page. After you pay, we build your installer with your licence already inside it and send you a private download link. You never type a key.") : "Pricing for this program is set per shop.";
   const box = document.getElementById("plans")!;
   box.replaceChildren();
   if (!plans.length) {
