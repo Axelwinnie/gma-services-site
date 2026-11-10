@@ -13,6 +13,7 @@ The store site in `public/` is unchanged. This folder is its own static site.
 - Doc Extract: `public/demos/extract/`
 - File Organizer: `public/demos/organizer/` (client-side sandbox, tests in `tests/organizer.test.js`)
 - Steel Estimating: `public/demos/estimating/`
+- File Processor: `public/demos/processor/` (shop replica: Inbox, Review, Filed, Activity, Settings, Licence; sample files only)
 - `public/robots.txt` allows all crawlers and points to `public/sitemap.xml`
 
 Pages are indexable (only `404.html` is noindex). Every demo keeps its "Demo on fictional data" note. No real customer or shop names anywhere. If the custom domain goes on, update the canonical/og URLs, robots.txt and sitemap.xml.
@@ -40,6 +41,7 @@ Expected paths once the domain is on:
 - `https://demo.granitemodels.store/demos/ticket/`
 - `https://demo.granitemodels.store/demos/extract/`
 - `https://demo.granitemodels.store/demos/organizer/`
+- `https://demo.granitemodels.store/demos/processor/`
 
 ## Wire a real demo
 

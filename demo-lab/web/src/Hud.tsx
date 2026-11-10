@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { STATIONS } from "./stations";
+import { CATALOG } from "./stations";
 
-const LINES = ["Sandbox online", "4 demos live", "Resets on reload", "Fake data only"];
+const LINES = ["Sandbox online", `${CATALOG.length} demos live`, "FP / File Processor", "Resets on reload", "Fake data only"];
 
 // Animated status readout. Every line is true: no invented figures.
 export default function Hud({ hot }: { hot: string | null }) {
@@ -15,7 +15,7 @@ export default function Hud({ hot }: { hot: string | null }) {
     }, 1000);
     return () => window.clearInterval(t);
   }, []);
-  const st = STATIONS.find((s) => s.id === hot);
+  const st = CATALOG.find((s) => s.id === hot);
   const line = st ? `${st.code} / ${st.name}` : LINES[Math.floor(n / 3) % LINES.length];
   const mm = String(Math.floor(secs / 60)).padStart(2, "0"), ss = String(secs % 60).padStart(2, "0");
   return (

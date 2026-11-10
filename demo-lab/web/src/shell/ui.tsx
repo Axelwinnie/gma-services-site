@@ -27,6 +27,7 @@ const P: Record<string, string> = {
   tag: "M3 12V3h9l9 9-9 9zM7.5 7.5h.01",
   bolt: "M13 2L4 14h7l-1 8 9-12h-7z",
   file: "M6 3h8l5 5v13H6zM14 3v5h5",
+  inbox: "M3 13l2-8h14l2 8M3 13h5l1 3h6l1-3h5M3 13v6h18v-6",
   archive: "M3 4h18v4H3zM5 8v12h14V8M10 12h4",
   shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z",
   lock: "M6 11h12v10H6zM8 11V7a4 4 0 118 0v4",

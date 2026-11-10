@@ -21,6 +21,14 @@ export const STATIONS: Station[] = [
   { id: "estimating", code: "EST", name: "Steel Estimating", blurb: "Weights and tons from a member list.", href: "/demos/estimating/", accent: "orange", box: [1270, 414, 1643, 787], btn: [1368, 742, 1543, 777] },
 ];
 
+// The baked lab scene has four painted stations. File Processor is listed beside
+// them (home bar, mobile tile, HUD) and is not given a fifth hit box on the art.
+export const EXTRA: { id: string; code: string; name: string; blurb: string; href: string; accent: "orange" | "blue" }[] = [
+  { id: "processor", code: "FP", name: "File Processor", blurb: "Sends files to your other programs. Sample files only.", href: "/demos/processor/", accent: "orange" },
+];
+
+export const CATALOG = [...STATIONS, ...EXTRA];
+
 export const pct = (s: Station) => ({
   left: `${(s.box[0] / SCENE.w) * 100}%`,
   top: `${(s.box[1] / SCENE.h) * 100}%`,

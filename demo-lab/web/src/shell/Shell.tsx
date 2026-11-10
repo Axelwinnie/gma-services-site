@@ -7,6 +7,7 @@ export const DEMOS = [
   { id: "extract", name: "Doc Extract", href: "/demos/extract/", icon: "doc" },
   { id: "organizer", name: "File Organizer", href: "/demos/organizer/", icon: "folder" },
   { id: "estimating", name: "Steel Estimating", href: "/demos/estimating/", icon: "steel" },
+  { id: "processor", name: "File Processor", href: "/demos/processor/", icon: "inbox" },
 ];
 export const PROJECTS = [
   { id: "J2041", name: "Pine Hollow Storage", job: "J2041 PineHollow" },
