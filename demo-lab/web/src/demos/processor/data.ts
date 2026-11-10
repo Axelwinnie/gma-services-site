@@ -1,179 +1,230 @@
-// Sample shop for the File Processor demo. Destination names are the
-// labels a shop sees. This demo never sends a file anywhere.
+// Labels and sample rows for the File Processor shop replica.
+// Destination keys stay in this file. The screen shows the labels only.
 
-export type DestId = "takeoff" | "documents" | "bookkeeping" | "keep";
-export type FileStatus = "inbox" | "review" | "filed";
+export type Bucket = "inbox" | "review" | "filed";
+export type Kind = "job" | "upload" | "route";
 export type PageId = "inbox" | "review" | "filed" | "activity" | "settings" | "licence";
 
-export const PAGES: { id: PageId; label: string }[] = [
-  { id: "inbox", label: "Inbox" },
-  { id: "review", label: "Review" },
-  { id: "filed", label: "Filed" },
-  { id: "activity", label: "Activity" },
-  { id: "settings", label: "Settings" },
-  { id: "licence", label: "Licence" },
-];
+export const PAGES: PageId[] = ["inbox", "review", "filed", "activity", "settings", "licence"];
 
-export const DESTINATIONS: { id: DestId; label: string; note: string }[] = [
-  { id: "takeoff", label: "Takeoff", note: "Steel Estimating on this PC" },
-  { id: "documents", label: "Documents", note: "Doc Extract on this PC" },
-  { id: "bookkeeping", label: "Bookkeeping", note: "The bookkeeping folder on this PC" },
-  { id: "keep", label: "Keep in this shop", note: "Stays in File Processor" },
-];
+export const LEADS: Record<PageId, [string, string]> = {
+  inbox: ["Inbox", "New files land here. Drop one in, then check it before it goes to another program."],
+  review: ["Review", "These files are waiting on you before they go anywhere."],
+  filed: ["Filed", "Files that were sent on, or kept in this shop."],
+  activity: ["Activity", "What this program has been doing on this PC."],
+  settings: ["Settings", "Where files sit on this PC, and which programs they can go to."],
+  licence: ["Licence", "The licence file that sits with this program."],
+};
 
-export type ShopFile = {
-  id: string;
+export const WHERE: Record<string, string> = {
+  scope_id: "Takeoff",
+  doc_automation: "Documents",
+  financier: "Bookkeeping",
+  archive: "Keep in this shop",
+};
+
+export const DOC: Record<string, string> = {
+  structural_drawing: "Structural drawing",
+  architectural_drawing: "Architectural drawing",
+  rfq_bid_package: "Bid package",
+  rfq: "Request for quote",
+  shop_drawing: "Shop drawing",
+  submittal: "Submittal",
+  material_schedule: "Material list",
+  invoice_po: "Purchase order or invoice",
+  invoice: "Invoice",
+  purchase_order: "Purchase order",
+  contract_proposal: "Contract or proposal",
+  general_correspondence: "Letter",
+  mill_cert: "Mill certificate",
+  rfi: "Question on the job",
+  delivery_ticket: "Delivery ticket",
+  bid_package: "Bid package",
+  unknown: "Not sure yet",
+};
+
+export const ACCEPTED = /\.(pdf|docx|xlsx|xls|dwg|dxf|jpg|jpeg|png|tif|tiff)$/i;
+export const ACCEPT_ATTR = ".pdf,.docx,.xlsx,.xls,.dwg,.dxf,.jpg,.jpeg,.png,.tif,.tiff";
+
+export type Item = {
+  key: string;
+  bucket: Bucket;
   name: string;
-  jobId: string;
-  kind: string;
-  size: string;
-  arrived: string;
-  path: string;
-  excerpt: string;
-  suggested: DestId;
-  status: FileStatus;
-  destination: DestId | null;
-  filedAt: string | null;
+  state: string;
+  where: string;
+  whereKey: string;
+  when: string;
+  kind: Kind;
+  docType: string;
+  project: string;
+  jobNumber: string;
+  notes: string;
+  note: string;
 };
 
-export type ActivityRow = { at: string; action: string; detail: string };
-
-export type Settings = { shopName: string; inbox: string; ask: boolean };
-
-export type ShopState = {
-  version: 1;
-  selectedId: string;
-  settings: Settings;
-  files: ShopFile[];
-  activity: ActivityRow[];
+export type Fields = {
+  docType: string;
+  project: string;
+  jobNumber: string;
+  notes: string;
+  whereKey: string;
 };
 
-export const destLabel = (id: DestId | null) => DESTINATIONS.find((d) => d.id === id)?.label ?? "";
-
-export const statusLabel = (s: FileStatus) => (s === "inbox" ? "Waiting" : s === "review" ? "In review" : "Filed");
-
-const FILES: ShopFile[] = [
-  {
-    id: "f1",
-    name: "PineHollow-W12x26.pdf",
-    jobId: "J2041",
-    kind: "PDF",
-    size: "842 KB",
-    arrived: "2026-11-08 13:40",
-    path: "C:\\Shops\\Pine Hollow\\Inbox\\PineHollow-W12x26.pdf",
-    excerpt: "W12×26 beams along grid B. Pine Hollow Storage, sample takeoff sheet. 18 pieces, 4.2 tons.",
-    suggested: "takeoff",
-    status: "inbox",
-    destination: null,
-    filedAt: null,
-  },
-  {
-    id: "f2",
-    name: "CedarRun-invoice-8841.pdf",
-    jobId: "J2047",
-    kind: "PDF",
-    size: "210 KB",
-    arrived: "2026-11-08 13:44",
-    path: "C:\\Shops\\Cedar Run\\Inbox\\CedarRun-invoice-8841.pdf",
-    excerpt: "Invoice 8841. Cedar Run Stair, sample. Steel stair and rails, $4,280.00.",
-    suggested: "bookkeeping",
-    status: "inbox",
-    destination: null,
-    filedAt: null,
-  },
-  {
-    id: "f3",
-    name: "MillPond-canopy-drawing.pdf",
-    jobId: "J2052",
-    kind: "PDF",
-    size: "2.4 MB",
-    arrived: "2026-11-08 13:51",
-    path: "C:\\Shops\\Mill Pond\\Inbox\\MillPond-canopy-drawing.pdf",
-    excerpt: "Shop drawing, Mill Pond Canopy, sheet S2. Sample. Canopy framing at the south entry.",
-    suggested: "documents",
-    status: "inbox",
-    destination: null,
-    filedAt: null,
-  },
-  {
-    id: "f4",
-    name: "PineHollow-RFI-12.pdf",
-    jobId: "J2041",
-    kind: "PDF",
-    size: "380 KB",
-    arrived: "2026-11-09 08:02",
-    path: "C:\\Shops\\Pine Hollow\\Inbox\\PineHollow-RFI-12.pdf",
-    excerpt: "RFI 12. Anchor bolts at line 4, Pine Hollow Storage. Sample question for the detailer.",
-    suggested: "documents",
-    status: "review",
-    destination: null,
-    filedAt: null,
-  },
-  {
-    id: "f5",
-    name: "CedarRun-field-notes.txt",
-    jobId: "J2047",
-    kind: "TXT",
-    size: "12 KB",
-    arrived: "2026-11-09 08:11",
-    path: "C:\\Shops\\Cedar Run\\Inbox\\CedarRun-field-notes.txt",
-    excerpt: "Field notes, Cedar Run Stair. Landing height checked on site. Sample. Keep with the job.",
-    suggested: "keep",
-    status: "review",
-    destination: null,
-    filedAt: null,
-  },
-  {
-    id: "f6",
-    name: "MillPond-bolt-list.xlsx",
-    jobId: "J2052",
-    kind: "XLSX",
-    size: "64 KB",
-    arrived: "2026-11-07 15:12",
-    path: "C:\\Shops\\Mill Pond\\Inbox\\MillPond-bolt-list.xlsx",
-    excerpt: "Bolt list for Mill Pond Canopy. Sample. A325, 3/4 inch, quantities by mark.",
-    suggested: "takeoff",
-    status: "filed",
-    destination: "takeoff",
-    filedAt: "2026-11-07 16:05",
-  },
-  {
-    id: "f7",
-    name: "PineHollow-pay-app-03.pdf",
-    jobId: "J2041",
-    kind: "PDF",
-    size: "510 KB",
-    arrived: "2026-11-06 08:40",
-    path: "C:\\Shops\\Pine Hollow\\Inbox\\PineHollow-pay-app-03.pdf",
-    excerpt: "Pay application 03, Pine Hollow Storage. Sample. Period ending 31 Oct 2026.",
-    suggested: "bookkeeping",
-    status: "filed",
-    destination: "bookkeeping",
-    filedAt: "2026-11-06 09:18",
-  },
+export const FOLDERS: [string, string][] = [
+  ["This PC", "Running"],
+  ["New files", "C:\\GMA\\File Processor\\new (sample)"],
+  ["Finished files", "C:\\GMA\\File Processor\\finished (sample)"],
+  ["Problem files", "C:\\GMA\\File Processor\\problems (sample)"],
+  ["Kept here", "C:\\GMA\\File Processor\\kept (sample)"],
 ];
 
-const ACTIVITY: ActivityRow[] = [
-  { at: "2026-11-09 08:20", action: "Opened for review", detail: "CedarRun-field-notes.txt" },
-  { at: "2026-11-09 08:12", action: "Opened for review", detail: "PineHollow-RFI-12.pdf" },
-  { at: "2026-11-08 13:51", action: "Arrived", detail: "MillPond-canopy-drawing.pdf" },
-  { at: "2026-11-08 13:44", action: "Arrived", detail: "CedarRun-invoice-8841.pdf" },
-  { at: "2026-11-08 13:40", action: "Arrived", detail: "PineHollow-W12x26.pdf" },
-  { at: "2026-11-07 16:05", action: "Sent", detail: "MillPond-bolt-list.xlsx to Takeoff" },
-  { at: "2026-11-06 09:18", action: "Sent", detail: "PineHollow-pay-app-03.pdf to Bookkeeping" },
+export const LICENCE_ROWS: [string, string][] = [
+  ["Status", "In force"],
+  ["Detail", "Sample licence for this demo."],
+  ["Shop", "Demo Shop (sample)"],
+  ["Issued", "2026-03-01"],
+  ["End date", "None"],
 ];
 
-export function fresh(): ShopState {
+export const HOURS_OPEN = 6;
+
+export function whereLabel(key: string) {
+  if (!key) return "Not chosen yet";
+  return WHERE[key] || "Another program";
+}
+
+export function docLabel(key: string) {
+  if (!key) return "Not sure yet";
+  return DOC[key] || "Not sure yet";
+}
+
+export function whenLabel(iso: string) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+
+export function fieldsFor(item: Item | null): Fields {
+  const whereKey = item && item.whereKey && WHERE[item.whereKey] ? item.whereKey : "archive";
+  const docType = item && item.docType && DOC[item.docType] ? item.docType : "unknown";
   return {
-    version: 1,
-    selectedId: "f1",
-    settings: { shopName: "Demo Shop (sample)", inbox: "C:\\GMA\\File Processor\\Inbox", ask: true },
-    files: FILES.map((f) => ({ ...f })),
-    activity: ACTIVITY.map((a) => ({ ...a })),
+    docType,
+    project: item?.project || "",
+    jobNumber: item?.jobNumber || "",
+    notes: item?.notes || "",
+    whereKey,
   };
 }
 
-export function stamp(d = new Date()) {
-  const p = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+export function keptWhere() {
+  return { whereKey: "archive", where: WHERE.archive };
+}
+
+const SAMPLE: Item[] = [
+  {
+    key: "job:w12",
+    bucket: "inbox",
+    name: "PineHollow-W12x26.pdf",
+    state: "Waiting",
+    where: "In this shop",
+    whereKey: "",
+    when: "2026-11-10T13:40:00.000Z",
+    kind: "job",
+    docType: "structural_drawing",
+    project: "Pine Hollow Storage",
+    jobNumber: "J2041",
+    notes: "",
+    note: "",
+  },
+  {
+    key: "job:canopy",
+    bucket: "inbox",
+    name: "MillPond-canopy-drawing.pdf",
+    state: "Waiting",
+    where: "In this shop",
+    whereKey: "",
+    when: "2026-11-10T13:51:00.000Z",
+    kind: "job",
+    docType: "shop_drawing",
+    project: "Mill Pond Canopy",
+    jobNumber: "J2052",
+    notes: "",
+    note: "",
+  },
+  {
+    key: "upload:rfi",
+    bucket: "review",
+    name: "PineHollow-RFI-12.pdf",
+    state: "Needs you",
+    where: "Documents",
+    whereKey: "doc_automation",
+    when: "2026-11-10T08:12:00.000Z",
+    kind: "upload",
+    docType: "rfi",
+    project: "Pine Hollow Storage",
+    jobNumber: "J2041",
+    notes: "",
+    note: "Dropped today. Check it before it goes out.",
+  },
+  {
+    key: "upload:invoice",
+    bucket: "review",
+    name: "CedarRun-invoice-8841.pdf",
+    state: "Needs you",
+    where: "Bookkeeping",
+    whereKey: "financier",
+    when: "2026-11-09T15:20:00.000Z",
+    kind: "upload",
+    docType: "invoice",
+    project: "Cedar Run Stair",
+    jobNumber: "J2047",
+    notes: "",
+    note: "Dropped today. Check it before it goes out.",
+  },
+  {
+    key: "route:bolts",
+    bucket: "filed",
+    name: "MillPond-bolt-list.xlsx",
+    state: "Sent",
+    where: "Takeoff",
+    whereKey: "scope_id",
+    when: "2026-11-07T16:05:00.000Z",
+    kind: "route",
+    docType: "material_schedule",
+    project: "Mill Pond Canopy",
+    jobNumber: "J2052",
+    notes: "",
+    note: "",
+  },
+  {
+    key: "upload:pay",
+    bucket: "filed",
+    name: "PineHollow-pay-app-03.pdf",
+    state: "Kept here",
+    where: "Keep in this shop",
+    whereKey: "archive",
+    when: "2026-11-06T09:18:00.000Z",
+    kind: "upload",
+    docType: "invoice",
+    project: "Pine Hollow Storage",
+    jobNumber: "J2041",
+    notes: "",
+    note: "",
+  },
+];
+
+export function freshItems(): Item[] {
+  return SAMPLE.map((item) => ({ ...item }));
+}
+
+export function listFor(items: Item[], bucket: Bucket) {
+  return items.filter((item) => item.bucket === bucket).sort((a, b) => String(b.when).localeCompare(String(a.when)));
+}
+
+export function isToday(iso: string) {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return false;
+  const now = new Date();
+  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
 }
