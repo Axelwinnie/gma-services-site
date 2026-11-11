@@ -291,6 +291,44 @@ a { color: var(--accent); }
 .path { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--muted); }
 .demo-note { color: var(--dim); }
 
+/* Same player chrome as the Tool Ticket walkthrough panel. */
+.walk {
+  margin: 12px 14px 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid #1b2737;
+  border-radius: 8px;
+  background: #0d1520;
+  color: #e8edf4;
+  font: 400 13px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  scroll-margin-top: 12px;
+}
+.walk .ph {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px 9px;
+  border-bottom: 1px solid #1b2737;
+}
+.walk .ph h2 {
+  margin: 0;
+  font: 700 14px/20px system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #e8edf4;
+}
+.walk .ph p { margin: 1px 0 0; color: #93a1b3; font-size: 11.5px; }
+.walk .pb { padding: 12px 14px; min-width: 0; }
+.walk-body { display: grid; gap: 14px; align-items: center; }
+.walk-copy p { margin: 0 0 8px; color: #93a1b3; font-size: 12.5px; }
+.walk-copy p:last-child { margin: 0; }
+.walk-fallback a { color: #60a5fa; }
+.walk-frame { position: relative; width: min(100%, 640px); aspect-ratio: 16 / 9; background: #05080c; border: 1px solid #243447; border-radius: 6px; overflow: hidden; }
+.walk-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (min-width: 980px) { .walk-body { grid-template-columns: minmax(200px, 280px) minmax(0, 640px); } }
+
 @media (max-width: 980px) {
   .shop { grid-template-columns: 1fr; }
   .panel-nav, .panel-detail { position: static; height: auto; min-height: 0; }
