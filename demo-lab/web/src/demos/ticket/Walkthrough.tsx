@@ -1,7 +1,7 @@
 import { Icon } from "../../shell/ui";
 
-export const WALKTHROUGH_WATCH = "https://www.youtube.com/watch?v=YCg37se9Qyk";
-export const WALKTHROUGH_EMBED = "https://www.youtube.com/embed/YCg37se9Qyk";
+export const WALKTHROUGH_WATCH = "https://www.youtube.com/watch?v=1mgAM7LIPIc";
+export const WALKTHROUGH_EMBED = "https://www.youtube.com/embed/1mgAM7LIPIc";
 
 const SECTIONS = "Dashboard, All Tickets, New Ticket, Requisitions, Punchlist, Rental, QA/QC, QA/QC Summary, QA/QC Trends, Templates, Records Hub, Notifications, and Health";
 
