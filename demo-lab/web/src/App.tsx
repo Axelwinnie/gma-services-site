@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { STATIONS, btnPct, pct } from "./stations";
+import { CATALOG, STATIONS, btnPct, pct } from "./stations";
 import Hud from "./Hud";
 import Footer from "./shell/Footer";
 
@@ -76,9 +76,17 @@ export default function App() {
             ))}
           </div>
         </section></div>
+        <section className="more-demo" aria-label="File Processor">
+          <a href="/demos/processor/">
+            <span className="md-c"><i />FP / LIVE</span>
+            <span className="md-n">File Processor</span>
+            <span className="md-d">Sends files to your other programs. Sample files only.</span>
+            <span className="md-b">Launch demo</span>
+          </a>
+        </section>
         <ul className="tiles" aria-label="Demos">
-          {STATIONS.map((s) => (
-            <li key={s.id}>
+          {CATALOG.map((s) => (
+            <li key={s.id} className={s.id === "processor" ? "wide" : undefined}>
               {s.id === "ticket" ? (
                 <div className={`tile ${s.accent}`}>
                   <a className="tile-go" href={s.href}>

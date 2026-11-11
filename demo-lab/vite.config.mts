@@ -24,6 +24,7 @@ export default defineConfig({
         estimating: at("./web/demos/estimating/index.html"),
         organizer: at("./web/demos/organizer/index.html"),
         extract: at("./web/demos/extract/index.html"),
+        processor: at("./web/demos/processor/index.html"),
       },
       output: {
         manualChunks: (id) => (/node_modules\/(react|react-dom|scheduler)\//.test(id) ? "react" : /node_modules\/(three|@react-three|three-stdlib|troika|maath|zustand|its-fine|suspend-react)/.test(id) ? "three" : undefined),

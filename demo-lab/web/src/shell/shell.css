@@ -1,4 +1,4 @@
-/* GMA demo design system: one shell, one set of parts for all four demos. */
+/* GMA demo design system: one shell, one set of parts for the demos. */
 :root {
   --bg: #070c13; --bg2: #0a111b; --pan: #0d1520; --pan2: #111b28; --line: #1b2737; --line2: #243447;
   --ink: #e8edf4; --mut: #93a1b3; --dim: #64748b;
@@ -188,6 +188,10 @@ input[type=checkbox] { accent-color: var(--bl); width: 15px; height: 15px; }
   .sgrp.ttn a { flex: none; width: auto; } .sgrp.ttn a span { position: static; width: auto; height: auto; clip: auto; }
   .brand { display: none; }
   .top { padding: 0 12px; } .env { display: none; }
+  .crumbs { flex: 1; min-width: 0; }
+  .crumbs > :nth-last-child(-n+2) { display: none; }
+  .proj { min-width: 0; }
+  .proj select { max-width: 30vw; }
   .work { padding: 12px; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .head h1 { font-size: 22px; }
