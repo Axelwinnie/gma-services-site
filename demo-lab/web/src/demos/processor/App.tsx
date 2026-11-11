@@ -5,12 +5,17 @@ import {
   docLabel, fieldsFor, freshItems, isToday, keptWhere, listFor, whenLabel, whereLabel,
   type Bucket, type Fields, type Item, type PageId,
 } from "./data";
+import { scrollToWalkthrough, Walkthrough } from "./Walkthrough";
 
 type Flash = { text: string; kind: "ok" | "bad" } | null;
 type Save = { version: 2; items: Item[] };
 
+function hashName(hash: string) {
+  return hash.replace(/^#/, "").toLowerCase();
+}
+
 function pageOf(hash: string): PageId {
-  const part = hash.replace(/^#/, "").toLowerCase();
+  const part = hashName(hash);
   return (PAGES as string[]).includes(part) ? (part as PageId) : "inbox";
 }
 
@@ -33,9 +38,18 @@ export default function App() {
 
   useEffect(() => { keep("processor", { version: 2, items }); }, [items]);
   useEffect(() => {
-    const on = () => setPage(pageOf(window.location.hash));
+    const on = () => {
+      if (hashName(window.location.hash) === "walkthrough") {
+        scrollToWalkthrough();
+        return;
+      }
+      setPage(pageOf(window.location.hash));
+    };
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
+  }, []);
+  useEffect(() => {
+    if (hashName(window.location.hash) === "walkthrough") document.getElementById("walkthrough")?.scrollIntoView({ block: "start" });
   }, []);
   useEffect(() => { document.title = title + " — File Processor"; }, [title]);
   useEffect(() => { setFlash(null); }, [page]);
@@ -142,6 +156,7 @@ export default function App() {
         <p>Sample files only. Nothing is sent to a server.</p>
         <button type="button" onClick={reset}>Reset demo</button>
       </div>
+      <Walkthrough />
       <div className="shop" data-screen={page}>
         <aside className="panel-nav">
           <div className="brand">

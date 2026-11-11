@@ -77,17 +77,20 @@ export default function App() {
           </div>
         </section></div>
         <section className="more-demo" aria-label="File Processor">
-          <a href="/demos/processor/">
+          <a className="md-go" href="/demos/processor/">
             <span className="md-c"><i />FP / LIVE</span>
             <span className="md-n">File Processor</span>
             <span className="md-d">Sends files to your other programs. Sample files only.</span>
             <span className="md-b">Launch demo</span>
           </a>
+          <a className="t-w" href="/demos/processor/#walkthrough">Watch walkthrough</a>
         </section>
         <ul className="tiles" aria-label="Demos">
-          {CATALOG.map((s) => (
+          {CATALOG.map((s) => {
+            const walk = s.id === "ticket" ? "/demos/ticket/#walkthrough" : s.id === "processor" ? "/demos/processor/#walkthrough" : "";
+            return (
             <li key={s.id} className={s.id === "processor" ? "wide" : undefined}>
-              {s.id === "ticket" ? (
+              {walk ? (
                 <div className={`tile ${s.accent}`}>
                   <a className="tile-go" href={s.href}>
                     <span className="t-c">{s.code} / LIVE</span>
@@ -95,7 +98,7 @@ export default function App() {
                     <span className="t-d">{s.blurb}</span>
                     <span className="t-b">Launch demo</span>
                   </a>
-                  <a className="t-w" href="/demos/ticket/#walkthrough">Watch walkthrough</a>
+                  <a className="t-w" href={walk}>Watch walkthrough</a>
                 </div>
               ) : (
                 <a className={`tile ${s.accent}`} href={s.href}>
@@ -106,7 +109,8 @@ export default function App() {
                 </a>
               )}
             </li>
-          ))}
+            );
+          })}
         </ul>
       </main>
       <Footer />
